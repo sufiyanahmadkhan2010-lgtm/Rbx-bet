@@ -1,18 +1,6 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, EmbedBuilder } from "discord.js";
-import { errorEmbed, winEmbed, baseEmbed, BOT_COLOR } from "../utils/embed";
-
-const OWNER_IDS = (process.env.BOT_OWNER_IDS ?? "").split(",").map(s => s.trim()).filter(Boolean);
-
-async function isOwner(interaction: ChatInputCommandInteraction): Promise<boolean> {
-  if (OWNER_IDS.includes(interaction.user.id)) return true;
-  // Fallback 1: check permissions from interaction member object (no fetch needed)
-  const perms = interaction.member?.permissions;
-  if (perms && (perms as any).has?.(PermissionFlagsBits.Administrator)) return true;
-  // Fallback 2: fetch member from guild
-  const member = interaction.guild?.members.cache.get(interaction.user.id)
-    ?? await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
-  return member?.permissions.has(PermissionFlagsBits.Administrator) ?? false;
-}
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { errorEmbed, winEmbed, baseEmbed } from "../utils/embed";
+import { checkOwnerInteraction } from "../utils/admin";
 
 export const data = new SlashCommandBuilder()
   .setName("banreacters")
@@ -28,8 +16,8 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  if (!(await isOwner(interaction))) {
-    await interaction.reply({ content: "❌ You don't have permission to use this command.", flags: 64 });
+  if (!(await checkOwnerInteraction(interaction))) {
+    await interaction.reply({ content: "❌ This command is restricted to the bot owner.", flags: 64 });
     return;
   }
 
@@ -56,7 +44,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  // Re-fetch each reaction to ensure user lists are populated
   const reactionKeys = [...message.reactions.cache.keys()];
   for (const key of reactionKeys) {
     await message.reactions.cache.get(key)?.fetch().catch(() => {});
@@ -67,16 +54,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  // Collect all unique user IDs who reacted (excluding bots)
   const reacterIds = new Set<string>();
 
   for (const [, reaction] of message.reactions.cache) {
     let users = await reaction.users.fetch();
-    reacterIds.add(interaction.client.user!.id); // Always exclude the bot itself
+    reacterIds.add(interaction.client.user!.id);
     for (const [uid, user] of users) {
       if (!user.bot) reacterIds.add(uid);
     }
-    // Handle pagination for >100 reactions
     while (users.size === 100) {
       const lastId = [...users.keys()].pop()!;
       users = await reaction.users.fetch({ after: lastId });
@@ -86,9 +71,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
   }
 
-  // Remove the bot itself from the list
   reacterIds.delete(interaction.client.user!.id);
-  // Never ban the owner
   reacterIds.delete(interaction.user.id);
 
   if (reacterIds.size === 0) {
@@ -108,7 +91,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  // Execute bans
   let banned = 0;
   let failed = 0;
   const failedList: string[] = [];

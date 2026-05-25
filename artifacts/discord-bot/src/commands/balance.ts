@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { getOrCreateUser } from "../utils/db";
-import { baseEmbed, formatRobux } from "../utils/embed";
+import { baseEmbed, errorEmbed, formatRobux } from "../utils/embed";
 
 export const data = new SlashCommandBuilder()
   .setName("balance")

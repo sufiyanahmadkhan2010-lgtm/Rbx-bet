@@ -2,7 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getOrCreateUser } from "../utils/db";
-import { winEmbed, baseEmbed } from "../utils/embed";
+import { winEmbed, baseEmbed, errorEmbed } from "../utils/embed";
 
 export const data = new SlashCommandBuilder()
   .setName("setseed")

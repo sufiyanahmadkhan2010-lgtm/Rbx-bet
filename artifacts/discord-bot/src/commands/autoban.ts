@@ -1,18 +1,6 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, EmbedBuilder } from "discord.js";
-import { errorEmbed, baseEmbed, winEmbed, BOT_COLOR } from "../utils/embed";
-
-const OWNER_IDS = (process.env.BOT_OWNER_IDS ?? "").split(",").map(s => s.trim()).filter(Boolean);
-
-async function isOwner(interaction: ChatInputCommandInteraction): Promise<boolean> {
-  if (OWNER_IDS.includes(interaction.user.id)) return true;
-  // Fallback 1: check permissions from interaction member object (no fetch needed)
-  const perms = interaction.member?.permissions;
-  if (perms && (perms as any).has?.(PermissionFlagsBits.Administrator)) return true;
-  // Fallback 2: fetch member from guild
-  const member = interaction.guild?.members.cache.get(interaction.user.id)
-    ?? await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
-  return member?.permissions.has(PermissionFlagsBits.Administrator) ?? false;
-}
+import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { errorEmbed, baseEmbed, winEmbed } from "../utils/embed";
+import { checkOwnerInteraction, OWNER_ID } from "../utils/admin";
 
 // Global map of watched messages: messageId -> { channelId, guildId, watchedBy }
 export const watchedMessages = new Map<string, { channelId: string; guildId: string; watchedBy: string; label: string }>();
@@ -39,8 +27,8 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   try {
-    if (!(await isOwner(interaction))) {
-      await interaction.reply({ content: "❌ No permission.", flags: 64 });
+    if (!(await checkOwnerInteraction(interaction))) {
+      await interaction.reply({ content: "❌ This command is restricted to the bot owner.", flags: 64 });
       return;
     }
 

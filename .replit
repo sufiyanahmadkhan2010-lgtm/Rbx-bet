@@ -43,3 +43,8 @@ externalPort = 3000
 
 [deployment]
 deploymentTarget = "cloudrun"
+
+[userenv]
+
+[userenv.shared]
+BOT_OWNER_IDS = "1456636693095383119"

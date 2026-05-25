@@ -1,8 +1,9 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { db, promoCodesTable, promoClaimsTable } from "@workspace/db";
 import { eq, and, sql } from "drizzle-orm";
 import { getOrCreateUser, updateBalance } from "../utils/db";
-import { winEmbed, errorEmbed, baseEmbed, formatRobux, BOT_COLOR } from "../utils/embed";
+import { winEmbed, errorEmbed, baseEmbed, formatRobux } from "../utils/embed";
+import { checkOwnerInteraction } from "../utils/admin";
 
 export const data = new SlashCommandBuilder()
   .setName("promo")
@@ -14,19 +15,19 @@ export const data = new SlashCommandBuilder()
   )
   .addSubcommand(sub => sub
     .setName("create")
-    .setDescription("Create a new promo code (admin only)")
+    .setDescription("Create a new promo code (owner only)")
     .addStringOption(opt => opt.setName("code").setDescription("The promo code").setRequired(true))
     .addIntegerOption(opt => opt.setName("amount").setDescription("Robux amount per claim").setRequired(true).setMinValue(1))
     .addIntegerOption(opt => opt.setName("uses").setDescription("Max number of claims").setRequired(true).setMinValue(1))
   )
   .addSubcommand(sub => sub
     .setName("delete")
-    .setDescription("Deactivate a promo code (admin only)")
+    .setDescription("Deactivate a promo code (owner only)")
     .addStringOption(opt => opt.setName("code").setDescription("Code to deactivate").setRequired(true))
   )
   .addSubcommand(sub => sub
     .setName("list")
-    .setDescription("List all promo codes (admin only)")
+    .setDescription("List all promo codes (owner only)")
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -65,11 +66,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   }
 
   await interaction.deferReply({ flags: 64 });
-  const member = interaction.guild?.members.cache.get(interaction.user.id)
-    ?? await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
-  const isAdmin = member?.permissions.has(PermissionFlagsBits.Administrator) || member?.permissions.has(PermissionFlagsBits.ManageGuild);
-  if (!isAdmin) {
-    await interaction.editReply({ embeds: [errorEmbed("Only admins can manage promo codes.")] });
+
+  if (!(await checkOwnerInteraction(interaction))) {
+    await interaction.editReply({ embeds: [errorEmbed("Only the bot owner can manage promo codes.")] });
     return;
   }
 
