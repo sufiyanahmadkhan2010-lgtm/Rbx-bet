@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits, Collection, Events, Interaction, Message } from "discord.js";
 import { handleTicketButton } from "./handlers/ticketHandler";
 import { handlePrefixMessage } from "./handlers/prefixHandler";
+import express from "express";
 
 import * as balance from "./commands/balance";
 import * as daily from "./commands/daily";
@@ -170,4 +171,49 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+// ── Anti-crash handlers ───────────────────────────────────────────────────────
+process.on("unhandledRejection", (reason: unknown) => {
+  console.error("[UnhandledRejection]", reason);
+});
+
+process.on("uncaughtException", (err: Error) => {
+  console.error("[UncaughtException]", err.message, err.stack);
+});
+
+// ── Discord reconnect logging ─────────────────────────────────────────────────
+client.on(Events.ShardDisconnect, (event, shardId) => {
+  console.warn(`[Shard ${shardId}] Disconnected (code ${event.code}). Discord.js will reconnect automatically.`);
+});
+
+client.on(Events.ShardReconnecting, (shardId) => {
+  console.log(`[Shard ${shardId}] Reconnecting...`);
+});
+
+client.on(Events.ShardResume, (shardId, replayedEvents) => {
+  console.log(`[Shard ${shardId}] Resumed (replayed ${replayedEvents} events).`);
+});
+
+client.on(Events.Error, (err) => {
+  console.error("[Client Error]", err.message);
+});
+
+// ── Express keep-alive server ─────────────────────────────────────────────────
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (_req, res) => {
+  res.send("Bot is alive");
+});
+
+app.listen(PORT, () => {
+  console.log(`[Express] Keep-alive server listening on port ${PORT}`);
+});
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+const token = process.env.TOKEN ?? process.env.DISCORD_TOKEN;
+if (!token) {
+  console.error("[FATAL] No bot token found. Set TOKEN or DISCORD_TOKEN environment variable.");
+  process.exit(1);
+}
+
+client.login(token);

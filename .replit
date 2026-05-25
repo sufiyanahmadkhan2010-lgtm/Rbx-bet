@@ -30,6 +30,10 @@ args = "pnpm --filter @workspace/discord-bot run build && pnpm --filter @workspa
 outputType = "console"
 
 [[ports]]
+localPort = 3000
+externalPort = 3001
+
+[[ports]]
 localPort = 8080
 externalPort = 8080
 
