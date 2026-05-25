@@ -14,3 +14,5 @@ services:
         value: "1456636693095383119"
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: "8080"
