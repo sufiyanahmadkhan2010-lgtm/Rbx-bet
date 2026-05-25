@@ -78,118 +78,127 @@ function buildEmbed(username: string, bet: number, multiplier: number, crashPoin
 }
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const bet = interaction.options.getInteger("bet", true);
-  const isDemo = interaction.options.getBoolean("demo") ?? false;
-  const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
+  try {
+    const bet = interaction.options.getInteger("bet", true);
+    const isDemo = interaction.options.getBoolean("demo") ?? false;
+    const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
-  if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
+    if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
 
-  const balance = isDemo ? user.demoBalance : user.balance;
-  const label = isDemo ? "Demo Robux" : "Robux";
-  if (balance < bet) {
-    await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)], ephemeral: true });
-    return;
-  }
-  if (activeGames.has(interaction.user.id)) {
-    await interaction.reply({ embeds: [errorEmbed("You already have an active crash game!")], ephemeral: true });
-    return;
-  }
-
-  const fair = await getFairContext(interaction.user.id);
-  const honeypot = !isDemo && isHoneypotActive(user.gameCount);
-  const crashPoint = calculateCrashPoint(fair.serverSeed, fair.nonce, honeypot);
-
-  activeGames.add(interaction.user.id);
-  const startTime = Date.now();
-  let active = true;
-
-  const cashOutRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(`crash_cashout_${interaction.user.id}`)
-      .setLabel("💸 Cash Out")
-      .setStyle(ButtonStyle.Success),
-  );
-  const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setCustomId(`crash_cashout_${interaction.user.id}_done`)
-      .setLabel("💸 Cash Out")
-      .setStyle(ButtonStyle.Success)
-      .setDisabled(true),
-  );
-
-  const initialEmbed = buildEmbed(interaction.user.username, bet, 1.00, crashPoint, isDemo, "live");
-  const reply = await interaction.reply({ embeds: [initialEmbed], components: [cashOutRow], withResponse: true });
-  const message = reply.resource?.message;
-  if (!message) { activeGames.delete(interaction.user.id); return; }
-
-  const collector = message.createMessageComponentCollector({
-    componentType: ComponentType.Button,
-    filter: i => i.customId === `crash_cashout_${interaction.user.id}` && i.user.id === interaction.user.id,
-    time: MAX_GAME_MS,
-  });
-
-  const endGame = async (cashedOut: boolean, cashoutMultiplier?: number) => {
-    if (!active) return;
-    active = false;
-    activeGames.delete(interaction.user.id);
-    clearInterval(ticker);
-    collector.stop();
-    await incrementCounts(interaction.user.id, isDemo);
-
-    if (cashedOut && cashoutMultiplier !== undefined) {
-      const payout = Math.floor(bet * cashoutMultiplier * HOUSE_EDGE);
-      const profit = payout - bet;
-      const updated = await updateBalance(interaction.user.id, profit, "crash_win", `Crash cashout at ${formatMultiplier(cashoutMultiplier)}`, isDemo);
-      if (!isDemo) await applyAffiliateBonus(interaction.user.id, profit > 0 ? profit : 0);
-      const newBal = isDemo ? updated.demoBalance : updated.balance;
-      const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "crash", fair, bet, payout: profit, resultData: { cashoutMultiplier, crashPoint, won: true }, isDemo });
-      const embed = buildEmbed(interaction.user.username, bet, cashoutMultiplier, crashPoint, isDemo, "cashed", cashoutMultiplier)
-        .setFooter({ text: `Game ID: ${gameId} • /verify ${gameId} • Crashed at ${formatMultiplier(crashPoint)}` });
-      await message.edit({ embeds: [embed], components: [disabledRow] });
-    } else {
-      const updated = await updateBalance(interaction.user.id, -bet, "crash_loss", `Crash loss at ${formatMultiplier(crashPoint)}`, isDemo);
-      const newBal = isDemo ? updated.demoBalance : updated.balance;
-      const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "crash", fair, bet, payout: -bet, resultData: { crashPoint, won: false }, isDemo });
-      const embed = buildEmbed(interaction.user.username, bet, crashPoint, crashPoint, isDemo, "crashed")
-        .addFields({ name: "New Balance", value: formatRobux(newBal) + ` ${label}`, inline: true })
-        .setFooter({ text: `Game ID: ${gameId} • /verify ${gameId}` });
-      await message.edit({ embeds: [embed], components: [disabledRow] });
+    const balance = isDemo ? user.demoBalance : user.balance;
+    const label = isDemo ? "Demo Robux" : "Robux";
+    if (balance < bet) {
+      await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)], flags: 64 });
+      return;
     }
-  };
-
-  collector.on("collect", async (btn: ButtonInteraction) => {
-    if (!active) return;
-    await btn.deferUpdate().catch(() => {});
-    const elapsed = (Date.now() - startTime) / 1000;
-    const cashoutMultiplier = getMultiplierAt(elapsed);
-    if (cashoutMultiplier >= crashPoint) {
-      await endGame(false);
-    } else {
-      await endGame(true, cashoutMultiplier);
-    }
-  });
-
-  collector.on("end", async (_, reason) => {
-    if (reason !== "time") return;
-    await endGame(false);
-  });
-
-  const ticker = setInterval(async () => {
-    if (!active) { clearInterval(ticker); return; }
-    const elapsed = (Date.now() - startTime) / 1000;
-    const current = getMultiplierAt(elapsed);
-
-    if (current >= crashPoint) {
-      clearInterval(ticker);
-      await endGame(false);
+    if (activeGames.has(interaction.user.id)) {
+      await interaction.reply({ embeds: [errorEmbed("You already have an active crash game!")], flags: 64 });
       return;
     }
 
-    const embed = buildEmbed(interaction.user.username, bet, current, crashPoint, isDemo, "live");
-    await message.edit({ embeds: [embed], components: [cashOutRow] }).catch(() => {
-      clearInterval(ticker);
+    await interaction.deferReply();
+
+    const fair = await getFairContext(interaction.user.id);
+    const honeypot = !isDemo && isHoneypotActive(user.gameCount);
+    const crashPoint = calculateCrashPoint(fair.serverSeed, fair.nonce, honeypot);
+
+    activeGames.add(interaction.user.id);
+    const startTime = Date.now();
+    let active = true;
+
+    const cashOutRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`crash_cashout_${interaction.user.id}`)
+        .setLabel("💸 Cash Out")
+        .setStyle(ButtonStyle.Success),
+    );
+    const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`crash_cashout_${interaction.user.id}_done`)
+        .setLabel("💸 Cash Out")
+        .setStyle(ButtonStyle.Success)
+        .setDisabled(true),
+    );
+
+    const initialEmbed = buildEmbed(interaction.user.username, bet, 1.00, crashPoint, isDemo, "live");
+    const message = await interaction.editReply({ embeds: [initialEmbed], components: [cashOutRow] });
+    if (!message) { activeGames.delete(interaction.user.id); return; }
+
+    const collector = message.createMessageComponentCollector({
+      componentType: ComponentType.Button,
+      filter: i => i.customId === `crash_cashout_${interaction.user.id}` && i.user.id === interaction.user.id,
+      time: MAX_GAME_MS,
+    });
+
+    const endGame = async (cashedOut: boolean, cashoutMultiplier?: number) => {
+      if (!active) return;
       active = false;
       activeGames.delete(interaction.user.id);
+      clearInterval(ticker);
+      collector.stop();
+      await incrementCounts(interaction.user.id, isDemo);
+
+      if (cashedOut && cashoutMultiplier !== undefined) {
+        const payout = Math.floor(bet * cashoutMultiplier * HOUSE_EDGE);
+        const profit = payout - bet;
+        const updated = await updateBalance(interaction.user.id, profit, "crash_win", `Crash cashout at ${formatMultiplier(cashoutMultiplier)}`, isDemo);
+        if (!isDemo) await applyAffiliateBonus(interaction.user.id, profit > 0 ? profit : 0);
+        const newBal = isDemo ? updated.demoBalance : updated.balance;
+        const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "crash", fair, bet, payout: profit, resultData: { cashoutMultiplier, crashPoint, won: true }, isDemo });
+        const embed = buildEmbed(interaction.user.username, bet, cashoutMultiplier, crashPoint, isDemo, "cashed", cashoutMultiplier)
+          .setFooter({ text: `Game ID: ${gameId} • /verify ${gameId} • Crashed at ${formatMultiplier(crashPoint)}` });
+        await message.edit({ embeds: [embed], components: [disabledRow] });
+      } else {
+        const updated = await updateBalance(interaction.user.id, -bet, "crash_loss", `Crash loss at ${formatMultiplier(crashPoint)}`, isDemo);
+        const newBal = isDemo ? updated.demoBalance : updated.balance;
+        const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "crash", fair, bet, payout: -bet, resultData: { crashPoint, won: false }, isDemo });
+        const embed = buildEmbed(interaction.user.username, bet, crashPoint, crashPoint, isDemo, "crashed")
+          .addFields({ name: "New Balance", value: formatRobux(newBal) + ` ${label}`, inline: true })
+          .setFooter({ text: `Game ID: ${gameId} • /verify ${gameId}` });
+        await message.edit({ embeds: [embed], components: [disabledRow] });
+      }
+    };
+
+    collector.on("collect", async (btn: ButtonInteraction) => {
+      if (!active) return;
+      await btn.deferUpdate().catch(() => {});
+      const elapsed = (Date.now() - startTime) / 1000;
+      const cashoutMultiplier = getMultiplierAt(elapsed);
+      if (cashoutMultiplier >= crashPoint) {
+        await endGame(false);
+      } else {
+        await endGame(true, cashoutMultiplier);
+      }
     });
-  }, TICK_MS);
+
+    collector.on("end", async (_, reason) => {
+      if (reason !== "time") return;
+      await endGame(false);
+    });
+
+    const ticker = setInterval(async () => {
+      if (!active) { clearInterval(ticker); return; }
+      const elapsed = (Date.now() - startTime) / 1000;
+      const current = getMultiplierAt(elapsed);
+
+      if (current >= crashPoint) {
+        clearInterval(ticker);
+        await endGame(false);
+        return;
+      }
+
+      const embed = buildEmbed(interaction.user.username, bet, current, crashPoint, isDemo, "live");
+      await message.edit({ embeds: [embed], components: [cashOutRow] }).catch(() => {
+        clearInterval(ticker);
+        active = false;
+        activeGames.delete(interaction.user.id);
+      });
+    }, TICK_MS);
+  } catch (err: any) {
+    console.error("[Crash Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed("Something went wrong. Please try again.")] });
+      else await interaction.reply({ embeds: [errorEmbed("Something went wrong. Please try again.")], flags: 64 });
+    } catch {}
+  }
 }

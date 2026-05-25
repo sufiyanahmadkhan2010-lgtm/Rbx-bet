@@ -33,17 +33,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const sub = interaction.options.getSubcommand();
 
   if (sub === "claim") {
+    await interaction.deferReply();
     const code = interaction.options.getString("code", true).toUpperCase().trim();
     const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
     const promos = await db.select().from(promoCodesTable).where(eq(promoCodesTable.code, code)).limit(1);
     if (!promos[0] || !promos[0].active) {
-      await interaction.reply({ embeds: [errorEmbed(`Promo code **${code}** is invalid or expired.`)], ephemeral: true });
+      await interaction.editReply({ embeds: [errorEmbed(`Promo code **${code}** is invalid or expired.`)] });
       return;
     }
     const promo = promos[0];
     if (promo.usesLeft <= 0) {
-      await interaction.reply({ embeds: [errorEmbed(`Promo code **${code}** has run out of uses.`)], ephemeral: true });
+      await interaction.editReply({ embeds: [errorEmbed(`Promo code **${code}** has run out of uses.`)] });
       return;
     }
 
@@ -51,7 +52,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       .where(and(eq(promoClaimsTable.userId, user.id), eq(promoClaimsTable.code, code)))
       .limit(1);
     if (alreadyClaimed.length > 0) {
-      await interaction.reply({ embeds: [errorEmbed(`You've already claimed promo code **${code}**.`)], ephemeral: true });
+      await interaction.editReply({ embeds: [errorEmbed(`You've already claimed promo code **${code}**.`)] });
       return;
     }
 
@@ -59,15 +60,16 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     await db.insert(promoClaimsTable).values({ userId: user.id, code });
     const updated = await updateBalance(user.id, promo.amount, "promo", `Promo code: ${code}`);
 
-    await interaction.reply({ embeds: [winEmbed("🎁 Promo Claimed!", `You received ${formatRobux(promo.amount)} from code **${code}**!\nBalance: ${formatRobux(updated.balance)}`)] });
+    await interaction.editReply({ embeds: [winEmbed("🎁 Promo Claimed!", `You received ${formatRobux(promo.amount)} from code **${code}**!\nBalance: ${formatRobux(updated.balance)}`)] });
     return;
   }
 
+  await interaction.deferReply({ flags: 64 });
   const member = interaction.guild?.members.cache.get(interaction.user.id)
     ?? await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
   const isAdmin = member?.permissions.has(PermissionFlagsBits.Administrator) || member?.permissions.has(PermissionFlagsBits.ManageGuild);
   if (!isAdmin) {
-    await interaction.reply({ embeds: [errorEmbed("Only admins can manage promo codes.")], ephemeral: true });
+    await interaction.editReply({ embeds: [errorEmbed("Only admins can manage promo codes.")] });
     return;
   }
 
@@ -78,27 +80,27 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     const existing = await db.select().from(promoCodesTable).where(eq(promoCodesTable.code, code)).limit(1);
     if (existing.length > 0) {
-      await interaction.reply({ embeds: [errorEmbed(`Code **${code}** already exists.`)], ephemeral: true });
+      await interaction.editReply({ embeds: [errorEmbed(`Code **${code}** already exists.`)] });
       return;
     }
 
     await db.insert(promoCodesTable).values({ code, amount, maxUses: uses, usesLeft: uses, createdBy: interaction.user.username });
-    await interaction.reply({ embeds: [winEmbed("✅ Promo Created!", `Code: **${code}**\nAmount: ${formatRobux(amount)}\nUses: ${uses}`)] });
+    await interaction.editReply({ embeds: [winEmbed("✅ Promo Created!", `Code: **${code}**\nAmount: ${formatRobux(amount)}\nUses: ${uses}`)] });
 
   } else if (sub === "delete") {
     const code = interaction.options.getString("code", true).toUpperCase().trim();
     await db.update(promoCodesTable).set({ active: false }).where(eq(promoCodesTable.code, code));
-    await interaction.reply({ embeds: [baseEmbed("🗑️ Promo Deactivated").setDescription(`Code **${code}** has been deactivated.`)] });
+    await interaction.editReply({ embeds: [baseEmbed("🗑️ Promo Deactivated").setDescription(`Code **${code}** has been deactivated.`)] });
 
   } else if (sub === "list") {
     const codes = await db.select().from(promoCodesTable).orderBy(promoCodesTable.createdAt).limit(20);
     if (codes.length === 0) {
-      await interaction.reply({ embeds: [baseEmbed("Promo Codes").setDescription("No promo codes yet.")], ephemeral: true });
+      await interaction.editReply({ embeds: [baseEmbed("Promo Codes").setDescription("No promo codes yet.")] });
       return;
     }
     const lines = codes.map(c =>
       `**${c.code}** — ${formatRobux(c.amount)} — ${c.usesLeft}/${c.maxUses} uses — ${c.active ? "✅ Active" : "❌ Inactive"}`
     );
-    await interaction.reply({ embeds: [baseEmbed("🎟️ Promo Codes").setDescription(lines.join("\n"))], ephemeral: true });
+    await interaction.editReply({ embeds: [baseEmbed("🎟️ Promo Codes").setDescription(lines.join("\n"))] });
   }
 }

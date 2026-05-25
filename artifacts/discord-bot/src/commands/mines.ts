@@ -115,47 +115,47 @@ function buildEmbed(game: MinesGame, label: string, status: "active" | "won" | "
 }
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const bet = interaction.options.getInteger("bet", true);
-  const mineCount = interaction.options.getInteger("mines", true);
-  const isDemo = interaction.options.getBoolean("demo") ?? false;
-  const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
+  try {
+    await interaction.deferReply();
+    const bet = interaction.options.getInteger("bet", true);
+    const mineCount = interaction.options.getInteger("mines", true);
+    const isDemo = interaction.options.getBoolean("demo") ?? false;
+    const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
-  if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
+    if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
 
-  const balance = isDemo ? user.demoBalance : user.balance;
-  const label = isDemo ? "Demo Robux" : "Robux";
-  if (balance < bet) {
-    await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)], ephemeral: true });
-    return;
-  }
-  if (activeGames.has(interaction.user.id)) {
-    await interaction.reply({ embeds: [errorEmbed("You already have an active mines game!")], ephemeral: true });
-    return;
-  }
+    const balance = isDemo ? user.demoBalance : user.balance;
+    const label = isDemo ? "Demo Robux" : "Robux";
+    if (balance < bet) {
+      await interaction.editReply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)] });
+      return;
+    }
+    if (activeGames.has(interaction.user.id)) {
+      await interaction.editReply({ embeds: [errorEmbed("You already have an active mines game!")] });
+      return;
+    }
 
-  const fair = await getFairContext(interaction.user.id);
-  const honeypot = !isDemo && isHoneypotActive(user.gameCount);
+    const fair = await getFairContext(interaction.user.id);
+    const honeypot = !isDemo && isHoneypotActive(user.gameCount);
 
-  // Honeypot: place mines away from likely first clicks (corners/edges)
-  const minePositions = generateMinePositions(fair.serverSeed, fair.nonce, honeypot ? Math.max(1, mineCount - 1) : mineCount);
+    const minePositions = generateMinePositions(fair.serverSeed, fair.nonce, honeypot ? Math.max(1, mineCount - 1) : mineCount);
 
-  const game: MinesGame = {
-    userId: interaction.user.id,
-    bet,
-    mines: mineCount,
-    minePositions,
-    revealed: new Set(),
-    isDemo,
-    cashoutMultiplier: 1,
-    active: true,
-  };
-  activeGames.set(interaction.user.id, game);
+    const game: MinesGame = {
+      userId: interaction.user.id,
+      bet,
+      mines: mineCount,
+      minePositions,
+      revealed: new Set(),
+      isDemo,
+      cashoutMultiplier: 1,
+      active: true,
+    };
+    activeGames.set(interaction.user.id, game);
 
-  const embed = buildEmbed(game, label, "active");
-  const components = buildGrid(game);
-  const reply = await interaction.reply({ embeds: [embed], components, withResponse: true });
-  const message = reply.resource?.message;
-  if (!message) { activeGames.delete(interaction.user.id); return; }
+    const embed = buildEmbed(game, label, "active");
+    const components = buildGrid(game);
+    const message = await interaction.editReply({ embeds: [embed], components });
+    if (!message) { activeGames.delete(interaction.user.id); return; }
 
   const collector = message.createMessageComponentCollector({
     componentType: ComponentType.Button,
@@ -238,4 +238,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       await endGame(false);
     }
   });
+  } catch (err: any) {
+    console.error("[Mines Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed("Something went wrong. Please try again.")] });
+      else await interaction.reply({ embeds: [errorEmbed("Something went wrong. Please try again.")], flags: 64 });
+    } catch {}
+  }
 }

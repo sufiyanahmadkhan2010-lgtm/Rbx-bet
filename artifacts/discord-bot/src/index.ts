@@ -161,7 +161,11 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     if (id.startsWith("ticket_approve_") || id.startsWith("ticket_deny_") || id === "ticket_close") {
       await handleTicketButton(interaction).catch(err => {
         console.error("Ticket button error:", err);
-        interaction.reply({ content: "Something went wrong.", ephemeral: true }).catch(() => {});
+        if (!interaction.replied && !interaction.deferred) {
+          interaction.reply({ content: "Something went wrong.", flags: 64 }).catch(() => {});
+        } else {
+          interaction.followUp({ content: "Something went wrong.", flags: 64 }).catch(() => {});
+        }
       });
     }
     return;
@@ -172,13 +176,17 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   if (!command) return;
   try {
     await command.execute(interaction);
-  } catch (err) {
-    console.error(`Error in /${interaction.commandName}:`, err);
-    const msg = { content: "Something went wrong running that command.", ephemeral: true };
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(msg).catch(() => {});
-    } else {
-      await interaction.reply(msg).catch(() => {});
+  } catch (err: any) {
+    console.error(`Error in /${interaction.commandName}:`, err?.message ?? err);
+    const msg = { content: "Something went wrong running that command.", flags: 64 };
+    try {
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp(msg);
+      } else {
+        await interaction.reply(msg);
+      }
+    } catch {
+      // Interaction likely expired — nothing we can do
     }
   }
 });

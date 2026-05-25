@@ -15,44 +15,52 @@ export const data = new SlashCommandBuilder()
   .addBooleanOption(opt => opt.setName("demo").setDescription("Use demo balance?").setRequired(false));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const bet = interaction.options.getInteger("bet", true);
-  const isDemo = interaction.options.getBoolean("demo") ?? false;
-  const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
+  try {
+    await interaction.deferReply();
+    await new Promise(r => setTimeout(r, 800));
 
-  if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
+    const bet = interaction.options.getInteger("bet", true);
+    const isDemo = interaction.options.getBoolean("demo") ?? false;
+    const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
-  const balance = isDemo ? user.demoBalance : user.balance;
-  const label = isDemo ? "Demo Robux" : "Robux";
-  if (balance < bet) {
-    await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}!`)], ephemeral: true });
-    return;
-  }
+    if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
 
-  await interaction.deferReply();
-  await new Promise(r => setTimeout(r, 800));
+    const balance = isDemo ? user.demoBalance : user.balance;
+    const label = isDemo ? "Demo Robux" : "Robux";
+    if (balance < bet) {
+      await interaction.editReply({ embeds: [errorEmbed(`Not enough ${label}!`)] });
+      return;
+    }
 
-  const fair = await getFairContext(interaction.user.id);
-  const honeypot = !isDemo && isHoneypotActive(user.gameCount);
-  const rolls = honeypot ? honeypotRolls(fair.rolls, user.gameCount) : fair.rolls;
-  const { reels, multiplier, won } = playSlots(rolls, isDemo, honeypot);
+    const fair = await getFairContext(interaction.user.id);
+    const honeypot = !isDemo && isHoneypotActive(user.gameCount);
+    const rolls = honeypot ? honeypotRolls(fair.rolls, user.gameCount) : fair.rolls;
+    const { reels, multiplier, won } = playSlots(rolls, isDemo, honeypot);
 
-  const grossWin = won ? Math.floor(bet * multiplier) : 0;
-  const winnings = won ? Math.floor((grossWin - bet) * HOUSE_EDGE) : 0;
-  const payout = won ? winnings : -bet;
-  const display = `[ ${reels[0]} | ${reels[1]} | ${reels[2]} ]`;
+    const grossWin = won ? Math.floor(bet * multiplier) : 0;
+    const winnings = won ? Math.floor((grossWin - bet) * HOUSE_EDGE) : 0;
+    const payout = won ? winnings : -bet;
+    const display = `[ ${reels[0]} | ${reels[1]} | ${reels[2]} ]`;
 
-  const updated = await updateBalance(interaction.user.id, payout, "slots", `Slots ${won ? `win x${multiplier}` : "loss"}`, isDemo);
-  await incrementCounts(interaction.user.id, isDemo);
-  if (won && !isDemo) await applyAffiliateBonus(interaction.user.id, winnings);
+    const updated = await updateBalance(interaction.user.id, payout, "slots", `Slots ${won ? `win x${multiplier}` : "loss"}`, isDemo);
+    await incrementCounts(interaction.user.id, isDemo);
+    if (won && !isDemo) await applyAffiliateBonus(interaction.user.id, winnings);
 
-  const newBal = isDemo ? updated.demoBalance : updated.balance;
-  const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "slots", fair, bet, payout, resultData: { reels, multiplier, won }, isDemo });
-  const demoTag = isDemo ? " 🎮 Demo" : "";
-  const verifyLine = `\n\`Game ID: ${gameId}\` • \`/verify ${gameId}\``;
+    const newBal = isDemo ? updated.demoBalance : updated.balance;
+    const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "slots", fair, bet, payout, resultData: { reels, multiplier, won }, isDemo });
+    const demoTag = isDemo ? " 🎮 Demo" : "";
+    const verifyLine = `\n\`Game ID: ${gameId}\` • \`/verify ${gameId}\``;
 
-  if (won) {
-    await interaction.editReply({ embeds: [winEmbed(`🎰 Slots Win!${demoTag}`, `${display}\n**${multiplier}x!** Won ${formatRobux(winnings)} ${label}!\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
-  } else {
-    await interaction.editReply({ embeds: [loseEmbed(`🎰 No Match!${demoTag}`, `${display}\nLost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    if (won) {
+      await interaction.editReply({ embeds: [winEmbed(`🎰 Slots Win!${demoTag}`, `${display}\n**${multiplier}x!** Won ${formatRobux(winnings)} ${label}!\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    } else {
+      await interaction.editReply({ embeds: [loseEmbed(`🎰 No Match!${demoTag}`, `${display}\nLost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    }
+  } catch (err: any) {
+    console.error("[Slots Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed("Something went wrong. Please try again.")] });
+      else await interaction.reply({ embeds: [errorEmbed("Something went wrong. Please try again.")], flags: 64 });
+    } catch {}
   }
 }

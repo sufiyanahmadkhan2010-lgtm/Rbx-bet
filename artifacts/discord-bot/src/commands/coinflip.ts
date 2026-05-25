@@ -17,42 +17,52 @@ export const data = new SlashCommandBuilder()
   .addBooleanOption(opt => opt.setName("demo").setDescription("Use demo balance?").setRequired(false));
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const bet = interaction.options.getInteger("bet", true);
-  const choice = interaction.options.getString("side", true) as CoinSide;
-  const isDemo = interaction.options.getBoolean("demo") ?? false;
-  const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
+  try {
+    await interaction.deferReply();
 
-  if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
+    const bet = interaction.options.getInteger("bet", true);
+    const choice = interaction.options.getString("side", true) as CoinSide;
+    const isDemo = interaction.options.getBoolean("demo") ?? false;
+    const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
-  const balance = isDemo ? user.demoBalance : user.balance;
-  const label = isDemo ? "Demo Robux" : "Robux";
-  if (balance < bet) {
-    await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)], ephemeral: true });
-    return;
-  }
+    if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
 
-  const fair = await getFairContext(interaction.user.id);
-  const honeypot = !isDemo && isHoneypotActive(user.gameCount);
-  const roll = honeypot ? honeypotRoll(fair.roll, user.gameCount) : fair.roll;
-  const { result, won } = playCoinflip(choice, roll, isDemo);
+    const balance = isDemo ? user.demoBalance : user.balance;
+    const label = isDemo ? "Demo Robux" : "Robux";
+    if (balance < bet) {
+      await interaction.editReply({ embeds: [errorEmbed(`Not enough ${label}! Balance: ${formatRobux(balance)}`)] });
+      return;
+    }
 
-  const winnings = won ? Math.floor(bet * HOUSE_EDGE) : 0;
-  const payout = won ? winnings : -bet;
-  const coinEmoji = result === "heads" ? "🪙" : "🌕";
-  const sideText = result === "heads" ? "**Heads**" : "**Tails**";
+    const fair = await getFairContext(interaction.user.id);
+    const honeypot = !isDemo && isHoneypotActive(user.gameCount);
+    const roll = honeypot ? honeypotRoll(fair.roll, user.gameCount) : fair.roll;
+    const { result, won } = playCoinflip(choice, roll, isDemo);
 
-  const updated = await updateBalance(interaction.user.id, payout, "coinflip", `Coinflip ${won ? "win" : "loss"} (${result})`, isDemo);
-  await incrementCounts(interaction.user.id, isDemo);
-  if (won && !isDemo) await applyAffiliateBonus(interaction.user.id, winnings);
+    const winnings = won ? Math.floor(bet * HOUSE_EDGE) : 0;
+    const payout = won ? winnings : -bet;
+    const coinEmoji = result === "heads" ? "🪙" : "🌕";
+    const sideText = result === "heads" ? "**Heads**" : "**Tails**";
 
-  const newBal = isDemo ? updated.demoBalance : updated.balance;
-  const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "coinflip", fair, bet, payout, resultData: { choice, result, won }, isDemo });
-  const demoTag = isDemo ? " 🎮 Demo" : "";
-  const verifyLine = `\n\`Game ID: ${gameId}\` • \`/verify ${gameId}\``;
+    const updated = await updateBalance(interaction.user.id, payout, "coinflip", `Coinflip ${won ? "win" : "loss"} (${result})`, isDemo);
+    await incrementCounts(interaction.user.id, isDemo);
+    if (won && !isDemo) await applyAffiliateBonus(interaction.user.id, winnings);
 
-  if (won) {
-    await interaction.reply({ embeds: [winEmbed(`Coinflip Win!${demoTag}`, `${coinEmoji} ${sideText}! Won ${formatRobux(winnings)} ${label}!\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
-  } else {
-    await interaction.reply({ embeds: [loseEmbed(`Coinflip Loss!${demoTag}`, `${coinEmoji} ${sideText}! Lost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    const newBal = isDemo ? updated.demoBalance : updated.balance;
+    const gameId = await saveGameRecord({ userId: interaction.user.id, gameType: "coinflip", fair, bet, payout, resultData: { choice, result, won }, isDemo });
+    const demoTag = isDemo ? " 🎮 Demo" : "";
+    const verifyLine = `\n\`Game ID: ${gameId}\` • \`/verify ${gameId}\``;
+
+    if (won) {
+      await interaction.editReply({ embeds: [winEmbed(`Coinflip Win!${demoTag}`, `${coinEmoji} ${sideText}! Won ${formatRobux(winnings)} ${label}!\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    } else {
+      await interaction.editReply({ embeds: [loseEmbed(`Coinflip Loss!${demoTag}`, `${coinEmoji} ${sideText}! Lost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}${verifyLine}`)] });
+    }
+  } catch (err: any) {
+    console.error("[Coinflip Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed("Something went wrong. Please try again.")] });
+      else await interaction.reply({ embeds: [errorEmbed("Something went wrong. Please try again.")], flags: 64 });
+    } catch {}
   }
 }

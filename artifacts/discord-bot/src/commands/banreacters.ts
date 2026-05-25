@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const channelId = interaction.options.getString("channel_id")?.trim() ?? interaction.channelId;
   const dryRun = interaction.options.getBoolean("dry_run") ?? false;
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply({ flags: 64 });
 
   const channel = await interaction.guild.channels.fetch(channelId).catch(() => null);
   if (!channel || !channel.isTextBased()) {

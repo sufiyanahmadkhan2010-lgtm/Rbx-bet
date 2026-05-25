@@ -23,77 +23,86 @@ function gameEmbed(playerHand: string, playerTotal: number, dealerVisible: strin
 }
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const bet = interaction.options.getInteger("bet", true);
-  const isDemo = interaction.options.getBoolean("demo") ?? false;
-  const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
+  try {
+    await interaction.deferReply();
 
-  if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
+    const bet = interaction.options.getInteger("bet", true);
+    const isDemo = interaction.options.getBoolean("demo") ?? false;
+    const user = await getOrCreateUser(interaction.user.id, interaction.user.username);
 
-  const balance = isDemo ? user.demoBalance : user.balance;
-  const label = isDemo ? "Demo Robux" : "Robux";
-  if (balance < bet) {
-    await interaction.reply({ embeds: [errorEmbed(`Not enough ${label}!`)], ephemeral: true });
-    return;
-  }
-  if (activeGames.has(interaction.user.id)) {
-    await interaction.reply({ embeds: [errorEmbed("You already have an active blackjack game!")], ephemeral: true });
-    return;
-  }
+    if (isDemo) { if (await checkDemoExpiry(user, interaction)) return; }
 
-  const fair = await getFairContext(interaction.user.id);
-  const honeypot = !isDemo && isHoneypotActive(user.gameCount);
-  const rolls = honeypot ? honeypotRolls(fair.rolls, user.gameCount) : fair.rolls;
-  const game = dealGame(interaction.user.id, bet, rolls, isDemo, honeypot);
-  const playerTotal = handValue(game.playerHand);
-  const dealerFirst = game.dealerHand[0];
+    const balance = isDemo ? user.demoBalance : user.balance;
+    const label = isDemo ? "Demo Robux" : "Robux";
+    if (balance < bet) {
+      await interaction.editReply({ embeds: [errorEmbed(`Not enough ${label}!`)] });
+      return;
+    }
+    if (activeGames.has(interaction.user.id)) {
+      await interaction.editReply({ embeds: [errorEmbed("You already have an active blackjack game!")] });
+      return;
+    }
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setCustomId("bj_hit").setLabel("Hit").setStyle(ButtonStyle.Primary),
-    new ButtonBuilder().setCustomId("bj_stand").setLabel("Stand").setStyle(ButtonStyle.Secondary),
-  );
+    const fair = await getFairContext(interaction.user.id);
+    const honeypot = !isDemo && isHoneypotActive(user.gameCount);
+    const rolls = honeypot ? honeypotRolls(fair.rolls, user.gameCount) : fair.rolls;
+    const game = dealGame(interaction.user.id, bet, rolls, isDemo, honeypot);
+    const playerTotal = handValue(game.playerHand);
+    const dealerFirst = game.dealerHand[0];
 
-  const embed = gameEmbed(formatHand(game.playerHand), playerTotal, `${dealerFirst.value}${dealerFirst.suit}`, false, undefined, isDemo);
-  const reply = await interaction.reply({ embeds: [embed], components: [row], withResponse: true });
-  const message = reply.resource?.message;
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder().setCustomId("bj_hit").setLabel("Hit").setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId("bj_stand").setLabel("Stand").setStyle(ButtonStyle.Secondary),
+    );
 
-  if (playerTotal === 21) {
-    await finishGame(interaction, game, "blackjack", bet, isDemo, label, fair);
-    return;
-  }
+    const embed = gameEmbed(formatHand(game.playerHand), playerTotal, `${dealerFirst.value}${dealerFirst.suit}`, false, undefined, isDemo);
+    const message = await interaction.editReply({ embeds: [embed], components: [row] });
 
-  if (!message) return;
-  const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000, filter: i => i.user.id === interaction.user.id });
+    if (playerTotal === 21) {
+      await finishGame(interaction, game, "blackjack", bet, isDemo, label, fair);
+      return;
+    }
 
-  collector.on("collect", async (btn: ButtonInteraction) => {
-    await btn.deferUpdate();
-    if (btn.customId === "bj_hit") {
-      playerHit(game);
-      const newTotal = handValue(game.playerHand);
-      if (newTotal > 21) {
-        collector.stop("bust");
-        await finishGame(interaction, game, "player_bust", bet, isDemo, label, fair);
-      } else if (newTotal === 21) {
-        collector.stop("21");
-        const outcome = dealerPlay(game);
-        await finishGame(interaction, game, outcome, bet, isDemo, label, fair);
+    if (!message) { activeGames.delete(interaction.user.id); return; }
+    const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000, filter: i => i.user.id === interaction.user.id });
+
+    collector.on("collect", async (btn: ButtonInteraction) => {
+      await btn.deferUpdate();
+      if (btn.customId === "bj_hit") {
+        playerHit(game);
+        const newTotal = handValue(game.playerHand);
+        if (newTotal > 21) {
+          collector.stop("bust");
+          await finishGame(interaction, game, "player_bust", bet, isDemo, label, fair);
+        } else if (newTotal === 21) {
+          collector.stop("21");
+          const outcome = dealerPlay(game);
+          await finishGame(interaction, game, outcome, bet, isDemo, label, fair);
+        } else {
+          await interaction.editReply({ embeds: [gameEmbed(formatHand(game.playerHand), newTotal, `${dealerFirst.value}${dealerFirst.suit}`, false, undefined, isDemo)], components: [row] });
+        }
       } else {
-        await interaction.editReply({ embeds: [gameEmbed(formatHand(game.playerHand), newTotal, `${dealerFirst.value}${dealerFirst.suit}`, false, undefined, isDemo)], components: [row] });
+        collector.stop("stand");
+        await finishGame(interaction, game, dealerPlay(game), bet, isDemo, label, fair);
       }
-    } else {
-      collector.stop("stand");
-      await finishGame(interaction, game, dealerPlay(game), bet, isDemo, label, fair);
-    }
-  });
+    });
 
-  collector.on("end", async (_, reason) => {
-    if (reason === "time") {
-      activeGames.delete(interaction.user.id);
-      const updated = await updateBalance(interaction.user.id, -bet, "blackjack_timeout", "Blackjack timeout", isDemo);
-      await incrementCounts(interaction.user.id, isDemo);
-      const newBal = isDemo ? updated.demoBalance : updated.balance;
-      await interaction.editReply({ embeds: [loseEmbed("Time's up!", `Lost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}`)], components: [] });
-    }
-  });
+    collector.on("end", async (_, reason) => {
+      if (reason === "time" && activeGames.has(interaction.user.id)) {
+        activeGames.delete(interaction.user.id);
+        const updated = await updateBalance(interaction.user.id, -bet, "blackjack_timeout", "Blackjack timeout", isDemo);
+        await incrementCounts(interaction.user.id, isDemo);
+        const newBal = isDemo ? updated.demoBalance : updated.balance;
+        await interaction.editReply({ embeds: [loseEmbed("Time's up!", `Lost ${formatRobux(bet)} ${label}.\nBalance: ${formatRobux(newBal)} ${label}`)], components: [] });
+      }
+    });
+  } catch (err: any) {
+    console.error("[Blackjack Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed("Something went wrong. Please try again.")] });
+      else await interaction.reply({ embeds: [errorEmbed("Something went wrong. Please try again.")], flags: 64 });
+    } catch {}
+  }
 }
 
 async function finishGame(interaction: ChatInputCommandInteraction, game: ReturnType<typeof dealGame>, outcome: BlackjackOutcome, bet: number, isDemo: boolean, label: string, fair: FairContext) {
