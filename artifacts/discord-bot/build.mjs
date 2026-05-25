@@ -10,17 +10,14 @@ async function buildAll() {
   const distDir = path.resolve(artifactDir, "dist");
   await rm(distDir, { recursive: true, force: true });
 
-  await esbuild({
+  const sharedConfig = {
     entryPoints: [path.resolve(artifactDir, "src/index.ts")],
     platform: "node",
     bundle: true,
     format: "cjs",
-    outdir: distDir,
     logLevel: "info",
     sourcemap: "linked",
-    // Resolve packages from the pnpm workspace root (monorepo setup)
     nodePaths: [path.resolve(workspaceRoot, "node_modules")],
-    // Packages with native bindings — must stay as runtime requires
     external: [
       "*.node",
       "bufferutil",
@@ -28,9 +25,20 @@ async function buildAll() {
       "zlib-sync",
       "pg-native",
     ],
+  };
+
+  // Primary output — used by the Replit workflow (pnpm start)
+  await esbuild({ ...sharedConfig, outdir: distDir });
+
+  // Root-level output — single file for external hosts (NexusHost, Render, etc.)
+  // This file is git-tracked so it travels with the repo without needing a build step.
+  await esbuild({
+    ...sharedConfig,
+    outfile: path.resolve(workspaceRoot, "bot.js"),
+    sourcemap: false,
   });
 
-  console.log("✅ Discord bot built to dist/index.js");
+  console.log("✅ Discord bot built to dist/index.js and bot.js");
 }
 
 buildAll().catch((err) => {
