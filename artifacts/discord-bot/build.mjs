@@ -30,15 +30,16 @@ async function buildAll() {
   // Primary output — used by the Replit workflow (pnpm start)
   await esbuild({ ...sharedConfig, outdir: distDir });
 
-  // Root-level output — single file for external hosts (NexusHost, Render, etc.)
-  // This file is git-tracked so it travels with the repo without needing a build step.
+  // Root-level index.js — the file NexusHost/Render runs with "node index.js".
+  // Outputting directly here means no separate loader or bot.js is needed —
+  // the file is always present and always up-to-date after every build.
   await esbuild({
     ...sharedConfig,
-    outfile: path.resolve(workspaceRoot, "bot.js"),
+    outfile: path.resolve(workspaceRoot, "index.js"),
     sourcemap: false,
   });
 
-  console.log("✅ Discord bot built to dist/index.js and bot.js");
+  console.log("✅ Discord bot built to dist/index.js and index.js");
 }
 
 buildAll().catch((err) => {
