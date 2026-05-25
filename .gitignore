@@ -1,5 +1,11 @@
 node_modules/
+
+# Ignore all dist folders EXCEPT the compiled Discord bot
+# (the bot's dist is a single bundled file needed by hosting platforms)
 dist/
+!artifacts/discord-bot/dist/
+!artifacts/discord-bot/dist/**
+
 .env
 *.log
 .DS_Store

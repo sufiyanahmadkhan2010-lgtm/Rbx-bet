@@ -1,46 +1,41 @@
-/**
- * Backup startup file — same as main.js.
- * Render can start the bot with either `node index.js` or `node main.js`.
- */
-
-const http = require("http");
+const { execSync } = require("child_process");
+const path = require("path");
+const fs = require("fs");
 
 const required = ["DISCORD_TOKEN"];
-const missing = required.filter((key) => !process.env[key]);
-
+const missing = required.filter((k) => !process.env[k] && !process.env["TOKEN"]);
 if (missing.length > 0) {
-  console.error("[FATAL] Missing required environment variables:");
-  for (const key of missing) {
-    console.error(`  - ${key}`);
-  }
-  console.error("Set them in Render Dashboard → Environment Variables.");
+  console.error("[FATAL] Missing environment variable: DISCORD_TOKEN (or TOKEN)");
+  console.error("Set it in your host's environment/dashboard.");
   process.exit(1);
 }
 
 if (!process.env.DATABASE_URL) {
-  console.warn("[WARN] DATABASE_URL is not set. Economy / balance commands may fail.");
+  console.warn("[WARN] DATABASE_URL is not set — economy commands may fail.");
 }
 
-console.log("[BOOT] Starting Discord bot...");
+const distEntry = path.join(__dirname, "artifacts/discord-bot/dist/index.js");
+const buildScript = path.join(__dirname, "artifacts/discord-bot/build.mjs");
+
+if (!fs.existsSync(distEntry)) {
+  console.log("[Startup] dist/index.js not found — building now (this takes ~5 seconds)...");
+  try {
+    execSync(`node "${buildScript}"`, {
+      stdio: "inherit",
+      cwd: path.join(__dirname, "artifacts/discord-bot"),
+    });
+    console.log("[Startup] Build complete.");
+  } catch (err) {
+    console.error("[FATAL] Build failed:", err.message);
+    process.exit(1);
+  }
+}
+
+console.log("[Boot] Starting Discord bot...");
 
 try {
-  require("./artifacts/discord-bot/dist/index.js");
+  require(distEntry);
 } catch (err) {
   console.error("[FATAL] Failed to start bot:", err.message);
   process.exit(1);
 }
-
-const PORT = process.env.PORT || 8080;
-const server = http.createServer((req, res) => {
-  if (req.url === "/health") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok", bot: "online" }));
-    return;
-  }
-  res.writeHead(404);
-  res.end("Not Found");
-});
-
-server.listen(PORT, () => {
-  console.log(`[HTTP] Health server listening on port ${PORT}`);
-});
