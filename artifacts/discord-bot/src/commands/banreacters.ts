@@ -3,10 +3,15 @@ import { errorEmbed, winEmbed, baseEmbed, BOT_COLOR } from "../utils/embed";
 
 const OWNER_IDS = (process.env.BOT_OWNER_IDS ?? "").split(",").map(s => s.trim()).filter(Boolean);
 
-function isOwner(userId: string) {
-  if (OWNER_IDS.length > 0) return OWNER_IDS.includes(userId);
-  // Fallback: require Administrator if no owner IDs set
-  return false;
+async function isOwner(interaction: ChatInputCommandInteraction): Promise<boolean> {
+  if (OWNER_IDS.includes(interaction.user.id)) return true;
+  // Fallback 1: check permissions from interaction member object (no fetch needed)
+  const perms = interaction.member?.permissions;
+  if (perms && (perms as any).has?.(PermissionFlagsBits.Administrator)) return true;
+  // Fallback 2: fetch member from guild
+  const member = interaction.guild?.members.cache.get(interaction.user.id)
+    ?? await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
+  return member?.permissions.has(PermissionFlagsBits.Administrator) ?? false;
 }
 
 export const data = new SlashCommandBuilder()
@@ -23,7 +28,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  if (!isOwner(interaction.user.id)) {
+  if (!(await isOwner(interaction))) {
     await interaction.reply({ content: "❌ You don't have permission to use this command.", flags: 64 });
     return;
   }
