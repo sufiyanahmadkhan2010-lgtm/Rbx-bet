@@ -23,22 +23,30 @@ export async function checkDemoExpiry(user: User, interaction: ChatInputCommandI
     if (user.demoBalance > 0) {
       await db.update(usersTable).set({ demoBalance: 0 }).where(eq(usersTable.id, user.id));
     }
-    await interaction.reply({
+    const msg = {
       embeds: [errorEmbed(
         `Your **demo period has ended** (${DEMO_GAME_LIMIT} free games used).\n\n` +
         `Demo Robux has been removed. Ask an admin for real Robux to keep playing!\n` +
         `Use \`/balance\` to check your real balance.`
       )],
-      ephemeral: true,
-    });
+    };
+    if (interaction.deferred || interaction.replied) {
+      await interaction.editReply(msg);
+    } else {
+      await interaction.reply({ ...msg, flags: 64 });
+    }
     return true;
   }
 
   if (user.demoBalance <= 0) {
-    await interaction.reply({
+    const msg = {
       embeds: [errorEmbed(`You have no Demo Robux left! Use \`/demo\` to claim more (if your ${DEMO_GAME_LIMIT}-game limit hasn't been reached).`)],
-      ephemeral: true,
-    });
+    };
+    if (interaction.deferred || interaction.replied) {
+      await interaction.editReply(msg);
+    } else {
+      await interaction.reply({ ...msg, flags: 64 });
+    }
     return true;
   }
 

@@ -24,12 +24,12 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   if (!isOwner(interaction.user.id)) {
-    await interaction.reply({ content: "❌ You don't have permission to use this command.", ephemeral: true });
+    await interaction.reply({ content: "❌ You don't have permission to use this command.", flags: 64 });
     return;
   }
 
   if (!interaction.guild) {
-    await interaction.reply({ content: "Must be used in a server.", ephemeral: true });
+    await interaction.reply({ content: "Must be used in a server.", flags: 64 });
     return;
   }
 

@@ -22,7 +22,7 @@ export async function handleTicketButton(interaction: ButtonInteraction) {
     || member?.permissions.has(PermissionFlagsBits.ManageGuild);
 
   if (!isAdmin) {
-    await interaction.reply({ embeds: [errorEmbed("Only admins can approve or deny tickets.")], ephemeral: true });
+    await interaction.reply({ embeds: [errorEmbed("Only admins can approve or deny tickets.")], flags: 64 });
     return;
   }
 
@@ -31,11 +31,11 @@ export async function handleTicketButton(interaction: ButtonInteraction) {
   const ticket = rows[0];
 
   if (!ticket) {
-    await interaction.reply({ embeds: [errorEmbed("Ticket not found.")], ephemeral: true });
+    await interaction.reply({ embeds: [errorEmbed("Ticket not found.")], flags: 64 });
     return;
   }
   if (ticket.status !== "pending") {
-    await interaction.reply({ embeds: [errorEmbed(`This ticket was already **${ticket.status}**.`)], ephemeral: true });
+    await interaction.reply({ embeds: [errorEmbed(`This ticket was already **${ticket.status}**.`)], flags: 64 });
     return;
   }
 
