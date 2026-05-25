@@ -111,6 +111,7 @@ export async function handlePrefixMessage(message: Message) {
               "`.admin txhistory @user [limit]`",
               "`.promo create <code> <amount> <uses>`",
               "`.promo delete <code>` / `.promo list`",
+              "`.bc #channel Message` / `.bc #channel Title | Message`",
               "`.ar add <trigger> | <response> [| exact|contains|startswith]`",
               "`.ar remove <trigger>` / `.ar list` / `.ar clear`",
               "`.rolestrike watch <msg_id> <role_id> [chan_id] [label]`",
@@ -844,6 +845,42 @@ export async function handlePrefixMessage(message: Message) {
       } else {
         await replyEmbed(message, baseEmbed("🤖 Autoresponder").setDescription(AR_USAGE));
       }
+
+    // ── BROADCAST (owner only) ────────────────────────────────────────────────
+    } else if (cmd === "broadcast" || cmd === "bc") {
+      if (!(await checkOwnerMessage(message))) {
+        await replyEmbed(message, errorEmbed("This command is restricted to the bot owner."));
+        return;
+      }
+      if (!message.guild) return;
+
+      // Format: .broadcast #channel Title | Body text
+      const channelMentionOrId = args[0];
+      const rest = args.slice(1).join(" ");
+      const parts = rest.split("|").map(s => s.trim());
+      const hasPipe = parts.length >= 2;
+      const title = hasPipe ? parts[0] || undefined : undefined;
+      const body = hasPipe ? parts[1] : parts[0];
+
+      if (!channelMentionOrId || !body) {
+        await replyEmbed(message, errorEmbed(
+          "Usage:\n`.broadcast #channel Message body`\n`.broadcast #channel Title | Message body`\n\n**Example:**\n`.bc #general Server is back online!`\n`.bc #announcements 🎉 Giveaway! | React below to enter.`"
+        ));
+        return;
+      }
+
+      const channelId = channelMentionOrId.replace(/^<#(\d+)>$/, "$1");
+      const targetChannel = message.guild.channels.cache.get(channelId);
+      if (!targetChannel || !targetChannel.isTextBased()) {
+        await replyEmbed(message, errorEmbed(`Channel not found or not a text channel: \`${channelMentionOrId}\``));
+        return;
+      }
+
+      const embed = new EmbedBuilder().setColor(BOT_COLOR).setDescription(body).setTimestamp();
+      if (title) embed.setTitle(title);
+
+      await (targetChannel as any).send({ embeds: [embed] });
+      await replyEmbed(message, winEmbed("📣 Broadcast Sent", `Message delivered to <#${channelId}>.`));
 
     // ── BANREACTERS (owner only) ───────────────────────────────────────────────
     } else if (cmd === "banreacters") {

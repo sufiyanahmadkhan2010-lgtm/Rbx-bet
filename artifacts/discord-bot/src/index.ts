@@ -28,6 +28,7 @@ import * as ping from "./commands/ping";
 import * as admin from "./commands/admin";
 import * as rolestrike from "./commands/rolestrike";
 import * as autoresponder from "./commands/autoresponder";
+import * as broadcast from "./commands/broadcast";
 import { watchedMessages } from "./commands/autoban";
 import { roleStrikeWatches } from "./commands/rolestrike";
 import { autoResponders } from "./commands/autoresponder";
@@ -37,7 +38,7 @@ type Command = { data: { name: string; toJSON: () => unknown }; execute: (i: any
 const commands = new Collection<string, Command>();
 const allCommands: Command[] = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike, autoresponder,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike, autoresponder, broadcast,
 ];
 for (const cmd of allCommands) {
   commands.set(cmd.data.name, cmd);
