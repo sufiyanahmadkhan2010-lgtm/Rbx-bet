@@ -28,3 +28,11 @@ args = "pnpm --filter @workspace/discord-bot run build && pnpm --filter @workspa
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[[ports]]
+localPort = 8081
+externalPort = 80
