@@ -27,6 +27,7 @@ import * as crash from "./commands/crash";
 import * as mines from "./commands/mines";
 import * as autoban from "./commands/autoban";
 import * as ping from "./commands/ping";
+import * as admin from "./commands/admin";
 import { watchedMessages } from "./commands/autoban";
 
 type Command = { data: { name: string; toJSON: () => unknown }; execute: (i: any) => Promise<void> };
@@ -34,7 +35,7 @@ type Command = { data: { name: string; toJSON: () => unknown }; execute: (i: any
 const commands = new Collection<string, Command>();
 const allCommands: Command[] = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin,
 ];
 for (const cmd of allCommands) {
   commands.set(cmd.data.name, cmd);

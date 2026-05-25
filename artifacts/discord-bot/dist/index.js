@@ -148,9 +148,9 @@ var require_dist = __commonJS({
     }
     __name(isEquatable, "isEquatable");
     var GatewayRateLimitError = class _GatewayRateLimitError extends Error {
-      constructor(data23, payload) {
-        super(`Request with opcode ${data23.opcode} was rate limited. Retry after ${data23.retry_after} seconds.`);
-        this.data = data23;
+      constructor(data24, payload) {
+        super(`Request with opcode ${data24.opcode} was rate limited. Retry after ${data24.retry_after} seconds.`);
+        this.data = data24;
         this.payload = payload;
       }
       static {
@@ -1004,11 +1004,11 @@ var require_errors = __commonJS({
     };
     var kHTTPParserError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_HTTP_PARSER");
     var HTTPParserError = class extends Error {
-      constructor(message, code, data23) {
+      constructor(message, code, data24) {
         super(message);
         this.name = "HTTPParserError";
         this.code = code ? `HPE_${code}` : void 0;
-        this.data = data23 ? data23.toString() : void 0;
+        this.data = data24 ? data24.toString() : void 0;
       }
       static [Symbol.hasInstance](instance) {
         return instance && instance[kHTTPParserError] === true;
@@ -1030,13 +1030,13 @@ var require_errors = __commonJS({
     };
     var kRequestRetryError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_REQ_RETRY");
     var RequestRetryError = class extends UndiciError {
-      constructor(message, code, { headers, data: data23 }) {
+      constructor(message, code, { headers, data: data24 }) {
         super(message);
         this.name = "RequestRetryError";
         this.message = message || "Request retry error";
         this.code = "UND_ERR_REQ_RETRY";
         this.statusCode = code;
-        this.data = data23;
+        this.data = data24;
         this.headers = headers;
       }
       static [Symbol.hasInstance](instance) {
@@ -1046,13 +1046,13 @@ var require_errors = __commonJS({
     };
     var kResponseError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_RESPONSE");
     var ResponseError = class extends UndiciError {
-      constructor(message, code, { headers, data: data23 }) {
+      constructor(message, code, { headers, data: data24 }) {
         super(message);
         this.name = "ResponseError";
         this.message = message || "Response error";
         this.code = "UND_ERR_RESPONSE";
         this.statusCode = code;
-        this.data = data23;
+        this.data = data24;
         this.headers = headers;
       }
       static [Symbol.hasInstance](instance) {
@@ -2497,8 +2497,8 @@ var require_dispatcher_base = __commonJS({
       close(callback) {
         if (callback === void 0) {
           return new Promise((resolve, reject) => {
-            this.close((err, data23) => {
-              return err ? reject(err) : resolve(data23);
+            this.close((err, data24) => {
+              return err ? reject(err) : resolve(data24);
             });
           });
         }
@@ -2537,11 +2537,11 @@ var require_dispatcher_base = __commonJS({
         }
         if (callback === void 0) {
           return new Promise((resolve, reject) => {
-            this.destroy(err, (err2, data23) => {
+            this.destroy(err, (err2, data24) => {
               return err2 ? (
                 /* istanbul ignore next: should never error */
                 reject(err2)
-              ) : resolve(data23);
+              ) : resolve(data24);
             });
           });
         }
@@ -3826,13 +3826,13 @@ var require_data_url = __commonJS({
       }
       return mimeType;
     }
-    function forgivingBase64(data23) {
-      data23 = data23.replace(ASCII_WHITESPACE_REPLACE_REGEX, "");
-      let dataLength = data23.length;
+    function forgivingBase64(data24) {
+      data24 = data24.replace(ASCII_WHITESPACE_REPLACE_REGEX, "");
+      let dataLength = data24.length;
       if (dataLength % 4 === 0) {
-        if (data23.charCodeAt(dataLength - 1) === 61) {
+        if (data24.charCodeAt(dataLength - 1) === 61) {
           --dataLength;
-          if (data23.charCodeAt(dataLength - 1) === 61) {
+          if (data24.charCodeAt(dataLength - 1) === 61) {
             --dataLength;
           }
         }
@@ -3840,10 +3840,10 @@ var require_data_url = __commonJS({
       if (dataLength % 4 === 1) {
         return "failure";
       }
-      if (/[^+/0-9A-Za-z]/.test(data23.length === dataLength ? data23 : data23.substring(0, dataLength))) {
+      if (/[^+/0-9A-Za-z]/.test(data24.length === dataLength ? data24 : data24.substring(0, dataLength))) {
         return "failure";
       }
-      const buffer = Buffer.from(data23, "base64");
+      const buffer = Buffer.from(data24, "base64");
       return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
     }
     function collectAnHTTPQuotedString(input, position, extractValue) {
@@ -5021,26 +5021,26 @@ var require_util2 = __commonJS({
       return protocol === "http:" || protocol === "https:";
     }
     function simpleRangeHeaderValue(value, allowWhitespace) {
-      const data23 = value;
-      if (!data23.startsWith("bytes")) {
+      const data24 = value;
+      if (!data24.startsWith("bytes")) {
         return "failure";
       }
       const position = { position: 5 };
       if (allowWhitespace) {
         collectASequenceOfCodePoints(
           (char2) => char2 === "	" || char2 === " ",
-          data23,
+          data24,
           position
         );
       }
-      if (data23.charCodeAt(position.position) !== 61) {
+      if (data24.charCodeAt(position.position) !== 61) {
         return "failure";
       }
       position.position++;
       if (allowWhitespace) {
         collectASequenceOfCodePoints(
           (char2) => char2 === "	" || char2 === " ",
-          data23,
+          data24,
           position
         );
       }
@@ -5049,25 +5049,25 @@ var require_util2 = __commonJS({
           const code = char2.charCodeAt(0);
           return code >= 48 && code <= 57;
         },
-        data23,
+        data24,
         position
       );
       const rangeStartValue = rangeStart.length ? Number(rangeStart) : null;
       if (allowWhitespace) {
         collectASequenceOfCodePoints(
           (char2) => char2 === "	" || char2 === " ",
-          data23,
+          data24,
           position
         );
       }
-      if (data23.charCodeAt(position.position) !== 45) {
+      if (data24.charCodeAt(position.position) !== 45) {
         return "failure";
       }
       position.position++;
       if (allowWhitespace) {
         collectASequenceOfCodePoints(
           (char2) => char2 === "	" || char2 === " ",
-          data23,
+          data24,
           position
         );
       }
@@ -5076,11 +5076,11 @@ var require_util2 = __commonJS({
           const code = char2.charCodeAt(0);
           return code >= 48 && code <= 57;
         },
-        data23,
+        data24,
         position
       );
       const rangeEndValue = rangeEnd.length ? Number(rangeEnd) : null;
-      if (position.position < data23.length) {
+      if (position.position < data24.length) {
         return "failure";
       }
       if (rangeEndValue === null && rangeStartValue === null) {
@@ -6026,9 +6026,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
       throwIfAborted(object2[kState]);
       const promise2 = createDeferredPromise();
       const errorSteps = (error40) => promise2.reject(error40);
-      const successSteps = (data23) => {
+      const successSteps = (data24) => {
         try {
-          promise2.resolve(convertBytesToJSValue(data23));
+          promise2.resolve(convertBytesToJSValue(data24));
         } catch (e) {
           errorSteps(e);
         }
@@ -6261,25 +6261,25 @@ var require_client_h1 = __commonJS({
           this.execute(chunk);
         }
       }
-      execute(data23) {
+      execute(data24) {
         assert2(this.ptr != null);
         assert2(currentParser == null);
         assert2(!this.paused);
         const { socket, llhttp } = this;
-        if (data23.length > currentBufferSize) {
+        if (data24.length > currentBufferSize) {
           if (currentBufferPtr) {
             llhttp.free(currentBufferPtr);
           }
-          currentBufferSize = Math.ceil(data23.length / 4096) * 4096;
+          currentBufferSize = Math.ceil(data24.length / 4096) * 4096;
           currentBufferPtr = llhttp.malloc(currentBufferSize);
         }
-        new Uint8Array(llhttp.memory.buffer, currentBufferPtr, currentBufferSize).set(data23);
+        new Uint8Array(llhttp.memory.buffer, currentBufferPtr, currentBufferSize).set(data24);
         try {
           let ret;
           try {
-            currentBufferRef = data23;
+            currentBufferRef = data24;
             currentParser = this;
-            ret = llhttp.llhttp_execute(this.ptr, currentBufferPtr, data23.length);
+            ret = llhttp.llhttp_execute(this.ptr, currentBufferPtr, data24.length);
           } catch (err) {
             throw err;
           } finally {
@@ -6288,10 +6288,10 @@ var require_client_h1 = __commonJS({
           }
           const offset = llhttp.llhttp_get_error_pos(this.ptr) - currentBufferPtr;
           if (ret === constants.ERROR.PAUSED_UPGRADE) {
-            this.onUpgrade(data23.slice(offset));
+            this.onUpgrade(data24.slice(offset));
           } else if (ret === constants.ERROR.PAUSED) {
             this.paused = true;
-            socket.unshift(data23.slice(offset));
+            socket.unshift(data24.slice(offset));
           } else if (ret !== constants.ERROR.OK) {
             const ptr = llhttp.llhttp_get_error_reason(this.ptr);
             let message = "";
@@ -6299,7 +6299,7 @@ var require_client_h1 = __commonJS({
               const len = new Uint8Array(llhttp.memory.buffer, ptr).indexOf(0);
               message = "Response does not match the HTTP/1.1 protocol (" + Buffer.from(llhttp.memory.buffer, ptr, len).toString() + ")";
             }
-            throw new HTTPParserError(message, constants.ERROR[ret], data23.slice(offset));
+            throw new HTTPParserError(message, constants.ERROR[ret], data24.slice(offset));
           }
         } catch (err) {
           util.destroy(socket, err);
@@ -8328,8 +8328,8 @@ var require_fixed_queue = __commonJS({
       isFull() {
         return (this.top + 1 & kMask) === this.bottom;
       }
-      push(data23) {
-        this.list[this.top] = data23;
+      push(data24) {
+        this.list[this.top] = data24;
         this.top = this.top + 1 & kMask;
       }
       shift() {
@@ -8348,11 +8348,11 @@ var require_fixed_queue = __commonJS({
       isEmpty() {
         return this.head.isEmpty();
       }
-      push(data23) {
+      push(data24) {
         if (this.head.isFull()) {
           this.head = this.head.next = new FixedCircularBuffer();
         }
-        this.head.push(data23);
+        this.head.push(data24);
       }
       shift() {
         const tail = this.tail;
@@ -8934,14 +8934,14 @@ var require_proxy_agent = __commonJS({
       }
       [kDispatch](opts, handler) {
         const onHeaders = handler.onHeaders;
-        handler.onHeaders = function(statusCode, data23, resume) {
+        handler.onHeaders = function(statusCode, data24, resume) {
           if (statusCode === 407) {
             if (typeof handler.onError === "function") {
               handler.onError(new InvalidArgumentError("Proxy Authentication Required (407)"));
             }
             return;
           }
-          if (onHeaders) onHeaders.call(this, statusCode, data23, resume);
+          if (onHeaders) onHeaders.call(this, statusCode, data24, resume);
         };
         const {
           origin,
@@ -10097,8 +10097,8 @@ var require_api_request = __commonJS({
     function request(opts, callback) {
       if (callback === void 0) {
         return new Promise((resolve, reject) => {
-          request.call(this, opts, (err, data23) => {
-            return err ? reject(err) : resolve(data23);
+          request.call(this, opts, (err, data24) => {
+            return err ? reject(err) : resolve(data24);
           });
         });
       }
@@ -10322,8 +10322,8 @@ var require_api_stream = __commonJS({
     function stream(opts, factory, callback) {
       if (callback === void 0) {
         return new Promise((resolve, reject) => {
-          stream.call(this, opts, factory, (err, data23) => {
-            return err ? reject(err) : resolve(data23);
+          stream.call(this, opts, factory, (err, data24) => {
+            return err ? reject(err) : resolve(data24);
           });
         });
       }
@@ -10609,8 +10609,8 @@ var require_api_upgrade = __commonJS({
     function upgrade(opts, callback) {
       if (callback === void 0) {
         return new Promise((resolve, reject) => {
-          upgrade.call(this, opts, (err, data23) => {
-            return err ? reject(err) : resolve(data23);
+          upgrade.call(this, opts, (err, data24) => {
+            return err ? reject(err) : resolve(data24);
           });
         });
       }
@@ -10703,8 +10703,8 @@ var require_api_connect = __commonJS({
     function connect(opts, callback) {
       if (callback === void 0) {
         return new Promise((resolve, reject) => {
-          connect.call(this, opts, (err, data23) => {
-            return err ? reject(err) : resolve(data23);
+          connect.call(this, opts, (err, data24) => {
+            return err ? reject(err) : resolve(data24);
           });
         });
       }
@@ -10888,17 +10888,17 @@ var require_mock_utils = __commonJS({
       const headersMatch = matchHeaders(mockDispatch2, headers);
       return pathMatch && methodMatch && bodyMatch && headersMatch;
     }
-    function getResponseData(data23) {
-      if (Buffer.isBuffer(data23)) {
-        return data23;
-      } else if (data23 instanceof Uint8Array) {
-        return data23;
-      } else if (data23 instanceof ArrayBuffer) {
-        return data23;
-      } else if (typeof data23 === "object") {
-        return JSON.stringify(data23);
+    function getResponseData(data24) {
+      if (Buffer.isBuffer(data24)) {
+        return data24;
+      } else if (data24 instanceof Uint8Array) {
+        return data24;
+      } else if (data24 instanceof ArrayBuffer) {
+        return data24;
+      } else if (typeof data24 === "object") {
+        return JSON.stringify(data24);
       } else {
-        return data23.toString();
+        return data24.toString();
       }
     }
     function getMockDispatch(mockDispatches, key) {
@@ -10923,9 +10923,9 @@ var require_mock_utils = __commonJS({
       }
       return matchedMockDispatches[0];
     }
-    function addMockDispatch(mockDispatches, key, data23) {
+    function addMockDispatch(mockDispatches, key, data24) {
       const baseData = { timesInvoked: 0, times: 1, persist: false, consumed: false };
-      const replyData = typeof data23 === "function" ? { callback: data23 } : { ...data23 };
+      const replyData = typeof data24 === "function" ? { callback: data24 } : { ...data24 };
       const newMockDispatch = { ...baseData, ...key, pending: true, data: { error: null, ...replyData } };
       mockDispatches.push(newMockDispatch);
       return newMockDispatch;
@@ -10951,12 +10951,12 @@ var require_mock_utils = __commonJS({
         query
       };
     }
-    function generateKeyValues(data23) {
-      const keys = Object.keys(data23);
+    function generateKeyValues(data24) {
+      const keys = Object.keys(data24);
       const result = [];
       for (let i = 0; i < keys.length; ++i) {
         const key = keys[i];
-        const value = data23[key];
+        const value = data24[key];
         const name = Buffer.from(`${key}`);
         if (Array.isArray(value)) {
           for (let j = 0; j < value.length; ++j) {
@@ -10973,8 +10973,8 @@ var require_mock_utils = __commonJS({
     }
     async function getResponse(body) {
       const buffers = [];
-      for await (const data23 of body) {
-        buffers.push(data23);
+      for await (const data24 of body) {
+        buffers.push(data24);
       }
       return Buffer.concat(buffers).toString("utf8");
     }
@@ -10985,7 +10985,7 @@ var require_mock_utils = __commonJS({
       if (mockDispatch2.data.callback) {
         mockDispatch2.data = { ...mockDispatch2.data, ...mockDispatch2.data.callback(opts) };
       }
-      const { data: { statusCode, data: data23, headers, trailers, error: error40 }, delay, persist } = mockDispatch2;
+      const { data: { statusCode, data: data24, headers, trailers, error: error40 }, delay, persist } = mockDispatch2;
       const { timesInvoked, times } = mockDispatch2;
       mockDispatch2.consumed = !persist && timesInvoked >= times;
       mockDispatch2.pending = timesInvoked < times;
@@ -11001,7 +11001,7 @@ var require_mock_utils = __commonJS({
       } else {
         handleReply(this[kDispatches]);
       }
-      function handleReply(mockDispatches, _data = data23) {
+      function handleReply(mockDispatches, _data = data24) {
         const optsHeaders = Array.isArray(opts.headers) ? buildHeadersFromArray(opts.headers) : opts.headers;
         const body = typeof _data === "function" ? _data({ ...opts, headers: optsHeaders }) : _data;
         if (isPromise(body)) {
@@ -11159,12 +11159,12 @@ var require_mock_interceptor = __commonJS({
         this[kDefaultTrailers] = {};
         this[kContentLength] = false;
       }
-      createMockScopeDispatchData({ statusCode, data: data23, responseOptions }) {
-        const responseData = getResponseData(data23);
+      createMockScopeDispatchData({ statusCode, data: data24, responseOptions }) {
+        const responseData = getResponseData(data24);
         const contentLength = this[kContentLength] ? { "content-length": responseData.length } : {};
         const headers = { ...this[kDefaultHeaders], ...contentLength, ...responseOptions.headers };
         const trailers = { ...this[kDefaultTrailers], ...responseOptions.trailers };
-        return { statusCode, data: data23, headers, trailers };
+        return { statusCode, data: data24, headers, trailers };
       }
       validateReplyParameters(replyParameters) {
         if (typeof replyParameters.statusCode === "undefined") {
@@ -12544,13 +12544,13 @@ var require_response = __commonJS({
         return responseObject;
       }
       // https://fetch.spec.whatwg.org/#dom-response-json
-      static json(data23, init = {}) {
+      static json(data24, init = {}) {
         webidl.argumentLengthCheck(arguments, 1, "Response.json");
         if (init !== null) {
           init = webidl.converters.ResponseInit(init);
         }
         const bytes = textEncoder.encode(
-          serializeJavascriptValueToJSONString(data23)
+          serializeJavascriptValueToJSONString(data24)
         );
         const body = extractBody(bytes);
         const responseObject = fromInnerResponse(makeResponse({}), "response");
@@ -16716,13 +16716,13 @@ var require_events = __commonJS({
         }
         return this.#eventInit.ports;
       }
-      initMessageEvent(type, bubbles = false, cancelable = false, data23 = null, origin = "", lastEventId = "", source = null, ports = []) {
+      initMessageEvent(type, bubbles = false, cancelable = false, data24 = null, origin = "", lastEventId = "", source = null, ports = []) {
         webidl.brandCheck(this, _MessageEvent);
         webidl.argumentLengthCheck(arguments, 1, "MessageEvent.initMessageEvent");
         return new _MessageEvent(type, {
           bubbles,
           cancelable,
-          data: data23,
+          data: data24,
           origin,
           lastEventId,
           source,
@@ -17034,23 +17034,23 @@ var require_util7 = __commonJS({
       const event = eventFactory(e, eventInitDict);
       target.dispatchEvent(event);
     }
-    function websocketMessageReceived(ws, type, data23) {
+    function websocketMessageReceived(ws, type, data24) {
       if (ws[kReadyState] !== states.OPEN) {
         return;
       }
       let dataForEvent;
       if (type === opcodes.TEXT) {
         try {
-          dataForEvent = utf8Decode(data23);
+          dataForEvent = utf8Decode(data24);
         } catch {
           failWebsocketConnection(ws, "Received invalid UTF-8 in text frame.");
           return;
         }
       } else if (type === opcodes.BINARY) {
         if (ws[kBinaryType] === "blob") {
-          dataForEvent = new Blob([data23]);
+          dataForEvent = new Blob([data24]);
         } else {
-          dataForEvent = toArrayBuffer(data23);
+          dataForEvent = toArrayBuffer(data24);
         }
       }
       fireEvent("message", ws, createFastMessageEvent, {
@@ -17215,8 +17215,8 @@ var require_frame = __commonJS({
       /**
        * @param {Buffer|undefined} data
        */
-      constructor(data23) {
-        this.frameData = data23;
+      constructor(data24) {
+        this.frameData = data24;
       }
       createFrame(opcode) {
         const frameData = this.frameData;
@@ -17492,11 +17492,11 @@ var require_permessage_deflate = __commonJS({
           }
           this.#inflate[kBuffer] = [];
           this.#inflate[kLength] = 0;
-          this.#inflate.on("data", (data23) => {
+          this.#inflate.on("data", (data24) => {
             if (this.#aborted) {
               return;
             }
-            this.#inflate[kLength] += data23.length;
+            this.#inflate[kLength] += data24.length;
             if (this.#inflate[kLength] > kDefaultMaxDecompressedSize) {
               this.#aborted = true;
               this.#inflate.removeAllListeners();
@@ -17509,7 +17509,7 @@ var require_permessage_deflate = __commonJS({
               }
               return;
             }
-            this.#inflate[kBuffer].push(data23);
+            this.#inflate[kBuffer].push(data24);
           });
           this.#inflate.on("error", (err) => {
             this.#inflate = null;
@@ -17700,12 +17700,12 @@ var require_receiver = __commonJS({
                 }
                 this.#state = parserStates.INFO;
               } else {
-                this.#extensions.get("permessage-deflate").decompress(body, this.#info.fin, (error40, data23) => {
+                this.#extensions.get("permessage-deflate").decompress(body, this.#info.fin, (error40, data24) => {
                   if (error40) {
                     failWebsocketConnection(this.ws, error40.message);
                     return;
                   }
-                  this.#fragments.push(data23);
+                  this.#fragments.push(data24);
                   if (!this.#info.fin) {
                     this.#state = parserStates.INFO;
                     this.#loop = true;
@@ -17760,16 +17760,16 @@ var require_receiver = __commonJS({
         this.#byteOffset -= n;
         return buffer;
       }
-      parseCloseBody(data23) {
-        assert2(data23.length !== 1);
+      parseCloseBody(data24) {
+        assert2(data24.length !== 1);
         let code;
-        if (data23.length >= 2) {
-          code = data23.readUInt16BE(0);
+        if (data24.length >= 2) {
+          code = data24.readUInt16BE(0);
         }
         if (code !== void 0 && !isValidStatusCode(code)) {
           return { code: 1002, reason: "Invalid status code", error: true };
         }
-        let reason = data23.subarray(2);
+        let reason = data24.subarray(2);
         if (reason[0] === 239 && reason[1] === 187 && reason[2] === 191) {
           reason = reason.subarray(3);
         }
@@ -17910,18 +17910,18 @@ var require_sender = __commonJS({
         this.#running = false;
       }
     };
-    function createFrame(data23, hint) {
-      return new WebsocketFrameSend(toBuffer(data23, hint)).createFrame(hint === sendHints.string ? opcodes.TEXT : opcodes.BINARY);
+    function createFrame(data24, hint) {
+      return new WebsocketFrameSend(toBuffer(data24, hint)).createFrame(hint === sendHints.string ? opcodes.TEXT : opcodes.BINARY);
     }
-    function toBuffer(data23, hint) {
+    function toBuffer(data24, hint) {
       switch (hint) {
         case sendHints.string:
-          return Buffer.from(data23);
+          return Buffer.from(data24);
         case sendHints.arrayBuffer:
         case sendHints.blob:
-          return new FastBuffer(data23);
+          return new FastBuffer(data24);
         case sendHints.typedArray:
-          return new FastBuffer(data23.buffer, data23.byteOffset, data23.byteLength);
+          return new FastBuffer(data24.buffer, data24.byteOffset, data24.byteLength);
       }
     }
     module2.exports = { SendQueue };
@@ -18062,37 +18062,37 @@ var require_websocket = __commonJS({
        * @see https://websockets.spec.whatwg.org/#dom-websocket-send
        * @param {NodeJS.TypedArray|ArrayBuffer|Blob|string} data
        */
-      send(data23) {
+      send(data24) {
         webidl.brandCheck(this, _WebSocket);
         const prefix = "WebSocket.send";
         webidl.argumentLengthCheck(arguments, 1, prefix);
-        data23 = webidl.converters.WebSocketSendData(data23, prefix, "data");
+        data24 = webidl.converters.WebSocketSendData(data24, prefix, "data");
         if (isConnecting(this)) {
           throw new DOMException("Sent before connected.", "InvalidStateError");
         }
         if (!isEstablished(this) || isClosing(this)) {
           return;
         }
-        if (typeof data23 === "string") {
-          const length = Buffer.byteLength(data23);
+        if (typeof data24 === "string") {
+          const length = Buffer.byteLength(data24);
           this.#bufferedAmount += length;
-          this.#sendQueue.add(data23, () => {
+          this.#sendQueue.add(data24, () => {
             this.#bufferedAmount -= length;
           }, sendHints.string);
-        } else if (types3.isArrayBuffer(data23)) {
-          this.#bufferedAmount += data23.byteLength;
-          this.#sendQueue.add(data23, () => {
-            this.#bufferedAmount -= data23.byteLength;
+        } else if (types3.isArrayBuffer(data24)) {
+          this.#bufferedAmount += data24.byteLength;
+          this.#sendQueue.add(data24, () => {
+            this.#bufferedAmount -= data24.byteLength;
           }, sendHints.arrayBuffer);
-        } else if (ArrayBuffer.isView(data23)) {
-          this.#bufferedAmount += data23.byteLength;
-          this.#sendQueue.add(data23, () => {
-            this.#bufferedAmount -= data23.byteLength;
+        } else if (ArrayBuffer.isView(data24)) {
+          this.#bufferedAmount += data24.byteLength;
+          this.#sendQueue.add(data24, () => {
+            this.#bufferedAmount -= data24.byteLength;
           }, sendHints.typedArray);
-        } else if (isBlobLike(data23)) {
-          this.#bufferedAmount += data23.size;
-          this.#sendQueue.add(data23, () => {
-            this.#bufferedAmount -= data23.size;
+        } else if (isBlobLike(data24)) {
+          this.#bufferedAmount += data24.size;
+          this.#sendQueue.add(data24, () => {
+            this.#bufferedAmount -= data24.size;
           }, sendHints.blob);
         }
       }
@@ -28496,8 +28496,8 @@ ${flattened}` : error40.message || flattened || "Unknown Error";
           if (status === 401 && requestData.auth) {
             manager.setToken(null);
           }
-          const data23 = await parseResponse(res);
-          throw new DiscordAPIError(data23, "code" in data23 ? data23.code : data23.error, status, method, url2, requestData);
+          const data24 = await parseResponse(res);
+          throw new DiscordAPIError(data24, "code" in data24 ? data24.code : data24.error, status, method, url2, requestData);
         }
         return res;
       }
@@ -29386,7 +29386,7 @@ var require_Messages = __commonJS({
       [DjsErrorCodes.ApplicationCommandPermissionsTokenMissing]: "Editing application command permissions requires an OAuth2 bearer token, but none was provided.",
       [DjsErrorCodes.WSCloseRequested]: "WebSocket closed due to user request.",
       [DjsErrorCodes.WSConnectionExists]: "There is already an existing WebSocket connection.",
-      [DjsErrorCodes.WSNotOpen]: (data23 = "data") => `WebSocket not open to send ${data23}`,
+      [DjsErrorCodes.WSNotOpen]: (data24 = "data") => `WebSocket not open to send ${data24}`,
       [DjsErrorCodes.ManagerDestroyed]: "Manager was destroyed.",
       [DjsErrorCodes.BitFieldInvalid]: (bit2) => `Invalid bitfield flag or number: ${bit2}.`,
       [DjsErrorCodes.ShardingInvalid]: "Invalid shard settings were provided.",
@@ -30631,60 +30631,60 @@ var require_Attachment = __commonJS({
     var AttachmentFlagsBitField = require_AttachmentFlagsBitField();
     var { basename, flatten } = require_Util();
     var Attachment = class {
-      constructor(data23) {
-        this.attachment = data23.url;
-        this.name = data23.filename;
-        this._patch(data23);
+      constructor(data24) {
+        this.attachment = data24.url;
+        this.name = data24.filename;
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("size" in data23) {
-          this.size = data23.size;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("size" in data24) {
+          this.size = data24.size;
         }
-        if ("url" in data23) {
-          this.url = data23.url;
+        if ("url" in data24) {
+          this.url = data24.url;
         }
-        if ("proxy_url" in data23) {
-          this.proxyURL = data23.proxy_url;
+        if ("proxy_url" in data24) {
+          this.proxyURL = data24.proxy_url;
         }
-        if ("height" in data23) {
-          this.height = data23.height;
+        if ("height" in data24) {
+          this.height = data24.height;
         } else {
           this.height ??= null;
         }
-        if ("width" in data23) {
-          this.width = data23.width;
+        if ("width" in data24) {
+          this.width = data24.width;
         } else {
           this.width ??= null;
         }
-        if ("content_type" in data23) {
-          this.contentType = data23.content_type;
+        if ("content_type" in data24) {
+          this.contentType = data24.content_type;
         } else {
           this.contentType ??= null;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         } else {
           this.description ??= null;
         }
-        this.ephemeral = data23.ephemeral ?? false;
-        if ("duration_secs" in data23) {
-          this.duration = data23.duration_secs;
+        this.ephemeral = data24.ephemeral ?? false;
+        if ("duration_secs" in data24) {
+          this.duration = data24.duration_secs;
         } else {
           this.duration ??= null;
         }
-        if ("waveform" in data23) {
-          this.waveform = data23.waveform;
+        if ("waveform" in data24) {
+          this.waveform = data24.waveform;
         } else {
           this.waveform ??= null;
         }
-        if ("flags" in data23) {
-          this.flags = new AttachmentFlagsBitField(data23.flags).freeze();
+        if ("flags" in data24) {
+          this.flags = new AttachmentFlagsBitField(data24.flags).freeze();
         } else {
           this.flags ??= new AttachmentFlagsBitField().freeze();
         }
-        if ("title" in data23) {
-          this.title = data23.title;
+        if ("title" in data24) {
+          this.title = data24.title;
         } else {
           this.title ??= null;
         }
@@ -31357,12 +31357,12 @@ var require_Base = __commonJS({
       _clone() {
         return Object.assign(Object.create(this), this);
       }
-      _patch(data23) {
-        return data23;
+      _patch(data24) {
+        return data24;
       }
-      _update(data23) {
+      _update(data24) {
         const clone2 = this._clone();
-        this._patch(data23);
+        this._patch(data24);
         return clone2;
       }
       toJSON(...props) {
@@ -31500,18 +31500,18 @@ var require_BaseChannel = __commonJS({
     var ChannelFlagsBitField = require_ChannelFlagsBitField();
     var { ThreadChannelTypes } = require_Constants();
     var BaseChannel = class extends Base {
-      constructor(client2, data23, immediatePatch = true) {
+      constructor(client2, data24, immediatePatch = true) {
         super(client2);
-        this.type = data23.type;
-        if (data23 && immediatePatch) this._patch(data23);
+        this.type = data24.type;
+        if (data24 && immediatePatch) this._patch(data24);
       }
-      _patch(data23) {
-        if ("flags" in data23) {
-          this.flags = new ChannelFlagsBitField(data23.flags).freeze();
+      _patch(data24) {
+        if ("flags" in data24) {
+          this.flags = new ChannelFlagsBitField(data24.flags).freeze();
         } else {
           this.flags ??= new ChannelFlagsBitField().freeze();
         }
-        this.id = data23.id;
+        this.id = data24.id;
       }
       /**
        * The timestamp the channel was created at
@@ -31725,18 +31725,18 @@ var require_CachedManager = __commonJS({
       get cache() {
         return this._cache;
       }
-      _add(data23, cache = true, { id, extras = [] } = {}) {
-        const existing = this.cache.get(id ?? data23.id);
+      _add(data24, cache = true, { id, extras = [] } = {}) {
+        const existing = this.cache.get(id ?? data24.id);
         if (existing) {
           if (cache) {
-            existing._patch(data23);
+            existing._patch(data24);
             return existing;
           }
           const clone2 = existing._clone();
-          clone2._patch(data23);
+          clone2._patch(data24);
           return clone2;
         }
-        const entry = this.holds ? new this.holds(this.client, data23, ...extras) : data23;
+        const entry = this.holds ? new this.holds(this.client, data24, ...extras) : data24;
         if (cache) this.cache.set(id ?? entry.id, entry);
         return entry;
       }
@@ -31865,68 +31865,68 @@ var require_Role = __commonJS({
     var PermissionsBitField2 = require_PermissionsBitField();
     var RoleFlagsBitField = require_RoleFlagsBitField();
     var Role = class extends Base {
-      constructor(client2, data23, guild) {
+      constructor(client2, data24, guild) {
         super(client2);
         this.guild = guild;
         this.icon = null;
         this.unicodeEmoji = null;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("color" in data23) {
-          this.color = data23.color;
+        if ("color" in data24) {
+          this.color = data24.color;
         }
-        if ("colors" in data23) {
+        if ("colors" in data24) {
           this.colors = {
-            primaryColor: data23.colors.primary_color,
-            secondaryColor: data23.colors.secondary_color,
-            tertiaryColor: data23.colors.tertiary_color
+            primaryColor: data24.colors.primary_color,
+            secondaryColor: data24.colors.secondary_color,
+            tertiaryColor: data24.colors.tertiary_color
           };
         }
-        if ("hoist" in data23) {
-          this.hoist = data23.hoist;
+        if ("hoist" in data24) {
+          this.hoist = data24.hoist;
         }
-        if ("position" in data23) {
-          this.rawPosition = data23.position;
+        if ("position" in data24) {
+          this.rawPosition = data24.position;
         }
-        if ("permissions" in data23) {
-          this.permissions = new PermissionsBitField2(BigInt(data23.permissions)).freeze();
+        if ("permissions" in data24) {
+          this.permissions = new PermissionsBitField2(BigInt(data24.permissions)).freeze();
         }
-        if ("managed" in data23) {
-          this.managed = data23.managed;
+        if ("managed" in data24) {
+          this.managed = data24.managed;
         }
-        if ("mentionable" in data23) {
-          this.mentionable = data23.mentionable;
+        if ("mentionable" in data24) {
+          this.mentionable = data24.mentionable;
         }
-        if ("icon" in data23) this.icon = data23.icon;
-        if ("unicode_emoji" in data23) this.unicodeEmoji = data23.unicode_emoji;
-        if ("flags" in data23) {
-          this.flags = new RoleFlagsBitField(data23.flags).freeze();
+        if ("icon" in data24) this.icon = data24.icon;
+        if ("unicode_emoji" in data24) this.unicodeEmoji = data24.unicode_emoji;
+        if ("flags" in data24) {
+          this.flags = new RoleFlagsBitField(data24.flags).freeze();
         } else {
           this.flags ??= new RoleFlagsBitField().freeze();
         }
-        this.tags = data23.tags ? {} : null;
-        if (data23.tags) {
-          if ("bot_id" in data23.tags) {
-            this.tags.botId = data23.tags.bot_id;
+        this.tags = data24.tags ? {} : null;
+        if (data24.tags) {
+          if ("bot_id" in data24.tags) {
+            this.tags.botId = data24.tags.bot_id;
           }
-          if ("integration_id" in data23.tags) {
-            this.tags.integrationId = data23.tags.integration_id;
+          if ("integration_id" in data24.tags) {
+            this.tags.integrationId = data24.tags.integration_id;
           }
-          if ("premium_subscriber" in data23.tags) {
+          if ("premium_subscriber" in data24.tags) {
             this.tags.premiumSubscriberRole = true;
           }
-          if ("subscription_listing_id" in data23.tags) {
-            this.tags.subscriptionListingId = data23.tags.subscription_listing_id;
+          if ("subscription_listing_id" in data24.tags) {
+            this.tags.subscriptionListingId = data24.tags.subscription_listing_id;
           }
-          if ("available_for_purchase" in data23.tags) {
+          if ("available_for_purchase" in data24.tags) {
             this.tags.availableForPurchase = true;
           }
-          if ("guild_connections" in data23.tags) {
+          if ("guild_connections" in data24.tags) {
             this.tags.guildConnections = true;
           }
         }
@@ -32245,21 +32245,21 @@ var require_PermissionOverwrites = __commonJS({
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var PermissionsBitField2 = require_PermissionsBitField();
     var PermissionOverwrites = class extends Base {
-      constructor(client2, data23, channel) {
+      constructor(client2, data24, channel) {
         super(client2);
         Object.defineProperty(this, "channel", { value: channel });
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("type" in data23) {
-          this.type = data23.type;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("type" in data24) {
+          this.type = data24.type;
         }
-        if ("deny" in data23) {
-          this.deny = new PermissionsBitField2(BigInt(data23.deny)).freeze();
+        if ("deny" in data24) {
+          this.deny = new PermissionsBitField2(BigInt(data24.deny)).freeze();
         }
-        if ("allow" in data23) {
-          this.allow = new PermissionsBitField2(BigInt(data23.allow)).freeze();
+        if ("allow" in data24) {
+          this.allow = new PermissionsBitField2(BigInt(data24.allow)).freeze();
         }
       }
       /**
@@ -32424,8 +32424,8 @@ var require_PermissionOverwriteManager = __commonJS({
        * @type {Collection<Snowflake, PermissionOverwrites>}
        * @name PermissionOverwriteManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.channel] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.channel] });
       }
       /**
        * Replaces the permission overwrites in this channel.
@@ -32550,32 +32550,32 @@ var require_GuildChannel = __commonJS({
     var PermissionsBitField2 = require_PermissionsBitField();
     var { getSortableGroupTypes } = require_Util();
     var GuildChannel = class extends BaseChannel {
-      constructor(guild, data23, client2, immediatePatch = true) {
-        super(client2, data23, false);
+      constructor(guild, data24, client2, immediatePatch = true) {
+        super(client2, data24, false);
         this.guild = guild;
-        this.guildId = guild?.id ?? data23.guild_id;
+        this.guildId = guild?.id ?? data24.guild_id;
         this.permissionOverwrites = new PermissionOverwriteManager(this);
-        if (data23 && immediatePatch) this._patch(data23);
+        if (data24 && immediatePatch) this._patch(data24);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        super._patch(data24);
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("position" in data23) {
-          this.rawPosition = data23.position;
+        if ("position" in data24) {
+          this.rawPosition = data24.position;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         }
-        if ("parent_id" in data23) {
-          this.parentId = data23.parent_id;
+        if ("parent_id" in data24) {
+          this.parentId = data24.parent_id;
         } else {
           this.parentId ??= null;
         }
-        if ("permission_overwrites" in data23) {
+        if ("permission_overwrites" in data24) {
           this.permissionOverwrites.cache.clear();
-          for (const overwrite of data23.permission_overwrites) {
+          for (const overwrite of data24.permission_overwrites) {
             this.permissionOverwrites._add(overwrite);
           }
         }
@@ -32917,14 +32917,14 @@ var require_SKU = __commonJS({
     var Base = require_Base();
     var { SKUFlagsBitField } = require_SKUFlagsBitField();
     var SKU = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this.type = data23.type;
-        this.applicationId = data23.application_id;
-        this.name = data23.name;
-        this.slug = data23.slug;
-        this.flags = new SKUFlagsBitField(data23.flags).freeze();
+        this.id = data24.id;
+        this.type = data24.type;
+        this.applicationId = data24.application_id;
+        this.name = data24.name;
+        this.slug = data24.slug;
+        this.flags = new SKUFlagsBitField(data24.flags).freeze();
       }
     };
     exports2.SKU = SKU;
@@ -33039,10 +33039,10 @@ var require_Util = __commonJS({
       }
       return array2.indexOf(element);
     }
-    function verifyString(data23, error40 = Error, errorMessage = `Expected a string, got ${data23} instead.`, allowEmpty = true) {
-      if (typeof data23 !== "string") throw new error40(errorMessage);
-      if (!allowEmpty && data23.length === 0) throw new error40(errorMessage);
-      return data23;
+    function verifyString(data24, error40 = Error, errorMessage = `Expected a string, got ${data24} instead.`, allowEmpty = true) {
+      if (typeof data24 !== "string") throw new error40(errorMessage);
+      if (!allowEmpty && data24.length === 0) throw new error40(errorMessage);
+      return data24;
     }
     function resolveColor(color) {
       let resolvedColor;
@@ -33268,12 +33268,12 @@ var require_Transformers = __commonJS({
         by_month_day: recurrenceRule.byMonthDay
       };
     }
-    function _transformAPIIncidentsData(data23) {
+    function _transformAPIIncidentsData(data24) {
       return {
-        invitesDisabledUntil: data23.invites_disabled_until ? new Date(data23.invites_disabled_until) : null,
-        dmsDisabledUntil: data23.dms_disabled_until ? new Date(data23.dms_disabled_until) : null,
-        dmSpamDetectedAt: data23.dm_spam_detected_at ? new Date(data23.dm_spam_detected_at) : null,
-        raidDetectedAt: data23.raid_detected_at ? new Date(data23.raid_detected_at) : null
+        invitesDisabledUntil: data24.invites_disabled_until ? new Date(data24.invites_disabled_until) : null,
+        dmsDisabledUntil: data24.dms_disabled_until ? new Date(data24.dms_disabled_until) : null,
+        dmSpamDetectedAt: data24.dm_spam_detected_at ? new Date(data24.dm_spam_detected_at) : null,
+        raidDetectedAt: data24.raid_detected_at ? new Date(data24.raid_detected_at) : null
       };
     }
     function _transformCollectibles(collectibles) {
@@ -34350,77 +34350,77 @@ var require_GuildScheduledEvent = __commonJS({
     var Base = require_Base();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var GuildScheduledEvent = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this.guildId = data23.guild_id;
-        this._patch(data23);
+        this.id = data24.id;
+        this.guildId = data24.guild_id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("channel_id" in data23) {
-          this.channelId = data23.channel_id;
+      _patch(data24) {
+        if ("channel_id" in data24) {
+          this.channelId = data24.channel_id;
         } else {
           this.channelId ??= null;
         }
-        if ("creator_id" in data23) {
-          this.creatorId = data23.creator_id;
+        if ("creator_id" in data24) {
+          this.creatorId = data24.creator_id;
         } else {
           this.creatorId ??= null;
         }
-        if ("name" in data23) {
-          this.name = data23.name;
+        if ("name" in data24) {
+          this.name = data24.name;
         } else {
           this.name ??= null;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         } else {
           this.description ??= null;
         }
-        if ("scheduled_start_time" in data23) {
-          this.scheduledStartTimestamp = Date.parse(data23.scheduled_start_time);
+        if ("scheduled_start_time" in data24) {
+          this.scheduledStartTimestamp = Date.parse(data24.scheduled_start_time);
         } else {
           this.scheduledStartTimestamp ??= null;
         }
-        if ("scheduled_end_time" in data23) {
-          this.scheduledEndTimestamp = data23.scheduled_end_time ? Date.parse(data23.scheduled_end_time) : null;
+        if ("scheduled_end_time" in data24) {
+          this.scheduledEndTimestamp = data24.scheduled_end_time ? Date.parse(data24.scheduled_end_time) : null;
         } else {
           this.scheduledEndTimestamp ??= null;
         }
-        if ("privacy_level" in data23) {
-          this.privacyLevel = data23.privacy_level;
+        if ("privacy_level" in data24) {
+          this.privacyLevel = data24.privacy_level;
         } else {
           this.privacyLevel ??= null;
         }
-        if ("status" in data23) {
-          this.status = data23.status;
+        if ("status" in data24) {
+          this.status = data24.status;
         } else {
           this.status ??= null;
         }
-        if ("entity_type" in data23) {
-          this.entityType = data23.entity_type;
+        if ("entity_type" in data24) {
+          this.entityType = data24.entity_type;
         } else {
           this.entityType ??= null;
         }
-        if ("entity_id" in data23) {
-          this.entityId = data23.entity_id;
+        if ("entity_id" in data24) {
+          this.entityId = data24.entity_id;
         } else {
           this.entityId ??= null;
         }
-        if ("user_count" in data23) {
-          this.userCount = data23.user_count;
+        if ("user_count" in data24) {
+          this.userCount = data24.user_count;
         } else {
           this.userCount ??= null;
         }
-        if ("creator" in data23) {
-          this.creator = this.client.users._add(data23.creator);
+        if ("creator" in data24) {
+          this.creator = this.client.users._add(data24.creator);
         } else {
           this.creator ??= this.client.users.resolve(this.creatorId);
         }
-        if ("entity_metadata" in data23) {
-          if (data23.entity_metadata) {
+        if ("entity_metadata" in data24) {
+          if (data24.entity_metadata) {
             this.entityMetadata = {
-              location: data23.entity_metadata.location ?? this.entityMetadata?.location ?? null
+              location: data24.entity_metadata.location ?? this.entityMetadata?.location ?? null
             };
           } else {
             this.entityMetadata = null;
@@ -34428,29 +34428,29 @@ var require_GuildScheduledEvent = __commonJS({
         } else {
           this.entityMetadata ??= null;
         }
-        if ("image" in data23) {
-          this.image = data23.image;
+        if ("image" in data24) {
+          this.image = data24.image;
         } else {
           this.image ??= null;
         }
-        if ("recurrence_rule" in data23) {
-          this.recurrenceRule = data23.recurrence_rule && {
-            startTimestamp: Date.parse(data23.recurrence_rule.start),
+        if ("recurrence_rule" in data24) {
+          this.recurrenceRule = data24.recurrence_rule && {
+            startTimestamp: Date.parse(data24.recurrence_rule.start),
             get startAt() {
               return new Date(this.startTimestamp);
             },
-            endTimestamp: data23.recurrence_rule.end && Date.parse(data23.recurrence_rule.end),
+            endTimestamp: data24.recurrence_rule.end && Date.parse(data24.recurrence_rule.end),
             get endAt() {
               return this.endTimestamp && new Date(this.endTimestamp);
             },
-            frequency: data23.recurrence_rule.frequency,
-            interval: data23.recurrence_rule.interval,
-            byWeekday: data23.recurrence_rule.by_weekday,
-            byNWeekday: data23.recurrence_rule.by_n_weekday,
-            byMonth: data23.recurrence_rule.by_month,
-            byMonthDay: data23.recurrence_rule.by_month_day,
-            byYearDay: data23.recurrence_rule.by_year_day,
-            count: data23.recurrence_rule.count
+            frequency: data24.recurrence_rule.frequency,
+            interval: data24.recurrence_rule.interval,
+            byWeekday: data24.recurrence_rule.by_weekday,
+            byNWeekday: data24.recurrence_rule.by_n_weekday,
+            byMonth: data24.recurrence_rule.by_month,
+            byMonthDay: data24.recurrence_rule.by_month_day,
+            byYearDay: data24.recurrence_rule.by_year_day,
+            count: data24.recurrence_rule.count
           };
         } else {
           this.recurrenceRule ??= null;
@@ -34731,49 +34731,49 @@ var require_Application = __commonJS({
     var { DiscordSnowflake } = require_cjs3();
     var Base = require_Base();
     var Application = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("name" in data24) {
+          this.name = data24.name;
         } else {
           this.name ??= null;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         } else {
           this.description ??= null;
         }
-        if ("icon" in data23) {
-          this.icon = data23.icon;
+        if ("icon" in data24) {
+          this.icon = data24.icon;
         } else {
           this.icon ??= null;
         }
-        if ("terms_of_service_url" in data23) {
-          this.termsOfServiceURL = data23.terms_of_service_url;
+        if ("terms_of_service_url" in data24) {
+          this.termsOfServiceURL = data24.terms_of_service_url;
         } else {
           this.termsOfServiceURL ??= null;
         }
-        if ("privacy_policy_url" in data23) {
-          this.privacyPolicyURL = data23.privacy_policy_url;
+        if ("privacy_policy_url" in data24) {
+          this.privacyPolicyURL = data24.privacy_policy_url;
         } else {
           this.privacyPolicyURL ??= null;
         }
-        if ("rpc_origins" in data23) {
-          this.rpcOrigins = data23.rpc_origins;
+        if ("rpc_origins" in data24) {
+          this.rpcOrigins = data24.rpc_origins;
         } else {
           this.rpcOrigins ??= [];
         }
-        if ("cover_image" in data23) {
-          this.cover = data23.cover_image;
+        if ("cover_image" in data24) {
+          this.cover = data24.cover_image;
         } else {
           this.cover ??= null;
         }
-        if ("verify_key" in data23) {
-          this.verifyKey = data23.verify_key;
+        if ("verify_key" in data24) {
+          this.verifyKey = data24.verify_key;
         } else {
           this.verifyKey ??= null;
         }
@@ -34835,40 +34835,40 @@ var require_IntegrationApplication = __commonJS({
     "use strict";
     var Application = require_Application();
     var IntegrationApplication = class extends Application {
-      _patch(data23) {
-        super._patch(data23);
-        if ("bot" in data23) {
-          this.bot = this.client.users._add(data23.bot);
+      _patch(data24) {
+        super._patch(data24);
+        if ("bot" in data24) {
+          this.bot = this.client.users._add(data24.bot);
         } else {
           this.bot ??= null;
         }
-        if ("terms_of_service_url" in data23) {
-          this.termsOfServiceURL = data23.terms_of_service_url;
+        if ("terms_of_service_url" in data24) {
+          this.termsOfServiceURL = data24.terms_of_service_url;
         } else {
           this.termsOfServiceURL ??= null;
         }
-        if ("privacy_policy_url" in data23) {
-          this.privacyPolicyURL = data23.privacy_policy_url;
+        if ("privacy_policy_url" in data24) {
+          this.privacyPolicyURL = data24.privacy_policy_url;
         } else {
           this.privacyPolicyURL ??= null;
         }
-        if ("rpc_origins" in data23) {
-          this.rpcOrigins = data23.rpc_origins;
+        if ("rpc_origins" in data24) {
+          this.rpcOrigins = data24.rpc_origins;
         } else {
           this.rpcOrigins ??= [];
         }
-        if ("hook" in data23) {
-          this.hook = data23.hook;
+        if ("hook" in data24) {
+          this.hook = data24.hook;
         } else {
           this.hook ??= null;
         }
-        if ("cover_image" in data23) {
-          this.cover = data23.cover_image;
+        if ("cover_image" in data24) {
+          this.cover = data24.cover_image;
         } else {
           this.cover ??= null;
         }
-        if ("verify_key" in data23) {
-          this.verifyKey = data23.verify_key;
+        if ("verify_key" in data24) {
+          this.verifyKey = data24.verify_key;
         } else {
           this.verifyKey ??= null;
         }
@@ -34885,25 +34885,25 @@ var require_InviteStageInstance = __commonJS({
     var { Collection: Collection3 } = require_dist6();
     var Base = require_Base();
     var InviteStageInstance = class extends Base {
-      constructor(client2, data23, channelId, guildId) {
+      constructor(client2, data24, channelId, guildId) {
         super(client2);
         this.channelId = channelId;
         this.guildId = guildId;
         this.members = new Collection3();
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("topic" in data23) {
-          this.topic = data23.topic;
+      _patch(data24) {
+        if ("topic" in data24) {
+          this.topic = data24.topic;
         }
-        if ("participant_count" in data23) {
-          this.participantCount = data23.participant_count;
+        if ("participant_count" in data24) {
+          this.participantCount = data24.participant_count;
         }
-        if ("speaker_count" in data23) {
-          this.speakerCount = data23.speaker_count;
+        if ("speaker_count" in data24) {
+          this.speakerCount = data24.speaker_count;
         }
         this.members.clear();
-        for (const rawMember of data23.members) {
+        for (const rawMember of data24.members) {
           const member = this.guild.members._add(rawMember);
           this.members.set(member.id, member);
         }
@@ -34957,12 +34957,12 @@ var require_BaseGuild = __commonJS({
     var { Routes: Routes2, GuildFeature } = require_v106();
     var Base = require_Base();
     var BaseGuild = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this.name = data23.name;
-        this.icon = data23.icon;
-        this.features = data23.features;
+        this.id = data24.id;
+        this.name = data24.name;
+        this.icon = data24.icon;
+        this.features = data24.features;
       }
       /**
        * The timestamp this guild was created at
@@ -35017,10 +35017,10 @@ var require_BaseGuild = __commonJS({
        * @returns {Promise<Guild>}
        */
       async fetch() {
-        const data23 = await this.client.rest.get(Routes2.guild(this.id), {
+        const data24 = await this.client.rest.get(Routes2.guild(this.id), {
           query: makeURLSearchParams2({ with_counts: true })
         });
-        return this.client.guilds._add(data23);
+        return this.client.guilds._add(data24);
       }
       /**
        * When concatenated with a string, this automatically returns the guild's name instead of the Guild object.
@@ -35040,32 +35040,32 @@ var require_AnonymousGuild = __commonJS({
     "use strict";
     var BaseGuild = require_BaseGuild();
     var AnonymousGuild = class extends BaseGuild {
-      constructor(client2, data23, immediatePatch = true) {
-        super(client2, data23);
-        if (immediatePatch) this._patch(data23);
+      constructor(client2, data24, immediatePatch = true) {
+        super(client2, data24);
+        if (immediatePatch) this._patch(data24);
       }
-      _patch(data23) {
-        if ("features" in data23) this.features = data23.features;
-        if ("splash" in data23) {
-          this.splash = data23.splash;
+      _patch(data24) {
+        if ("features" in data24) this.features = data24.features;
+        if ("splash" in data24) {
+          this.splash = data24.splash;
         }
-        if ("banner" in data23) {
-          this.banner = data23.banner;
+        if ("banner" in data24) {
+          this.banner = data24.banner;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         }
-        if ("verification_level" in data23) {
-          this.verificationLevel = data23.verification_level;
+        if ("verification_level" in data24) {
+          this.verificationLevel = data24.verification_level;
         }
-        if ("vanity_url_code" in data23) {
-          this.vanityURLCode = data23.vanity_url_code;
+        if ("vanity_url_code" in data24) {
+          this.vanityURLCode = data24.vanity_url_code;
         }
-        if ("nsfw_level" in data23) {
-          this.nsfwLevel = data23.nsfw_level;
+        if ("nsfw_level" in data24) {
+          this.nsfwLevel = data24.nsfw_level;
         }
-        if ("premium_subscription_count" in data23) {
-          this.premiumSubscriptionCount = data23.premium_subscription_count;
+        if ("premium_subscription_count" in data24) {
+          this.premiumSubscriptionCount = data24.premium_subscription_count;
         } else {
           this.premiumSubscriptionCount ??= null;
         }
@@ -35098,15 +35098,15 @@ var require_WelcomeChannel = __commonJS({
     var Base = require_Base();
     var { Emoji } = require_Emoji();
     var WelcomeChannel = class extends Base {
-      constructor(guild, data23) {
+      constructor(guild, data24) {
         super(guild.client);
         this.guild = guild;
-        this.description = data23.description;
+        this.description = data24.description;
         this._emoji = {
-          name: data23.emoji_name,
-          id: data23.emoji_id
+          name: data24.emoji_name,
+          id: data24.emoji_id
         };
-        this.channelId = data23.channel_id;
+        this.channelId = data24.channel_id;
       }
       /**
        * The channel of this welcome channel
@@ -35136,12 +35136,12 @@ var require_WelcomeScreen = __commonJS({
     var Base = require_Base();
     var WelcomeChannel = require_WelcomeChannel();
     var WelcomeScreen = class extends Base {
-      constructor(guild, data23) {
+      constructor(guild, data24) {
         super(guild.client);
         this.guild = guild;
-        this.description = data23.description ?? null;
+        this.description = data24.description ?? null;
         this.welcomeChannels = new Collection3();
-        for (const channel of data23.welcome_channels) {
+        for (const channel of data24.welcome_channels) {
           const welcomeChannel = new WelcomeChannel(this.guild, channel);
           this.welcomeChannels.set(welcomeChannel.channelId, welcomeChannel);
         }
@@ -35165,9 +35165,9 @@ var require_InviteGuild = __commonJS({
     var AnonymousGuild = require_AnonymousGuild();
     var WelcomeScreen = require_WelcomeScreen();
     var InviteGuild = class extends AnonymousGuild {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.welcomeScreen = data23.welcome_screen !== void 0 ? new WelcomeScreen(this, data23.welcome_screen) : null;
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.welcomeScreen = data24.welcome_screen !== void 0 ? new WelcomeScreen(this, data24.welcome_screen) : null;
       }
     };
     module2.exports = InviteGuild;
@@ -35193,103 +35193,103 @@ var require_Invite = __commonJS({
        * @memberof Invite
        */
       static InvitesPattern = /discord(?:(?:app)?\.com\/invite|\.gg(?:\/invite)?)\/(?<code>[\w-]{2,255})/i;
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.type = data23.type;
-        this._patch(data23);
+        this.type = data24.type;
+        this._patch(data24);
       }
-      _patch(data23) {
+      _patch(data24) {
         const InviteGuild = require_InviteGuild();
         this.guild ??= null;
-        if (data23.guild) {
-          this.guild = this.client.guilds.cache.get(data23.guild.id) ?? new InviteGuild(this.client, data23.guild);
+        if (data24.guild) {
+          this.guild = this.client.guilds.cache.get(data24.guild.id) ?? new InviteGuild(this.client, data24.guild);
         }
-        if ("code" in data23) {
-          this.code = data23.code;
+        if ("code" in data24) {
+          this.code = data24.code;
         }
-        if ("approximate_presence_count" in data23) {
-          this.presenceCount = data23.approximate_presence_count;
+        if ("approximate_presence_count" in data24) {
+          this.presenceCount = data24.approximate_presence_count;
         } else {
           this.presenceCount ??= null;
         }
-        if ("approximate_member_count" in data23) {
-          this.memberCount = data23.approximate_member_count;
+        if ("approximate_member_count" in data24) {
+          this.memberCount = data24.approximate_member_count;
         } else {
           this.memberCount ??= null;
         }
-        if ("temporary" in data23) {
-          this.temporary = data23.temporary ?? null;
+        if ("temporary" in data24) {
+          this.temporary = data24.temporary ?? null;
         } else {
           this.temporary ??= null;
         }
-        if ("max_age" in data23) {
-          this.maxAge = data23.max_age;
+        if ("max_age" in data24) {
+          this.maxAge = data24.max_age;
         } else {
           this.maxAge ??= null;
         }
-        if ("uses" in data23) {
-          this.uses = data23.uses;
+        if ("uses" in data24) {
+          this.uses = data24.uses;
         } else {
           this.uses ??= null;
         }
-        if ("max_uses" in data23) {
-          this.maxUses = data23.max_uses;
+        if ("max_uses" in data24) {
+          this.maxUses = data24.max_uses;
         } else {
           this.maxUses ??= null;
         }
-        if ("inviter_id" in data23) {
-          this.inviterId = data23.inviter_id;
+        if ("inviter_id" in data24) {
+          this.inviterId = data24.inviter_id;
         } else {
           this.inviterId ??= null;
         }
-        if ("inviter" in data23) {
-          this.client.users._add(data23.inviter);
-          this.inviterId = data23.inviter.id;
+        if ("inviter" in data24) {
+          this.client.users._add(data24.inviter);
+          this.inviterId = data24.inviter.id;
         }
-        if ("target_user" in data23) {
-          this.targetUser = this.client.users._add(data23.target_user);
+        if ("target_user" in data24) {
+          this.targetUser = this.client.users._add(data24.target_user);
         } else {
           this.targetUser ??= null;
         }
-        if ("target_application" in data23) {
-          this.targetApplication = new IntegrationApplication(this.client, data23.target_application);
+        if ("target_application" in data24) {
+          this.targetApplication = new IntegrationApplication(this.client, data24.target_application);
         } else {
           this.targetApplication ??= null;
         }
-        if ("target_type" in data23) {
-          this.targetType = data23.target_type;
+        if ("target_type" in data24) {
+          this.targetType = data24.target_type;
         } else {
           this.targetType ??= null;
         }
-        if ("channel_id" in data23) {
-          this.channelId = data23.channel_id;
+        if ("channel_id" in data24) {
+          this.channelId = data24.channel_id;
         }
-        if ("channel" in data23) {
-          this.channel = this.client.channels._add(data23.channel, this.guild, { cache: false }) ?? this.client.channels.resolve(this.channelId);
-          this.channelId ??= data23.channel.id;
+        if ("channel" in data24) {
+          this.channel = this.client.channels._add(data24.channel, this.guild, { cache: false }) ?? this.client.channels.resolve(this.channelId);
+          this.channelId ??= data24.channel.id;
         }
-        if ("created_at" in data23) {
-          this.createdTimestamp = Date.parse(data23.created_at);
+        if ("created_at" in data24) {
+          this.createdTimestamp = Date.parse(data24.created_at);
         } else {
           this.createdTimestamp ??= null;
         }
-        if ("expires_at" in data23) {
-          this._expiresTimestamp = data23.expires_at && Date.parse(data23.expires_at);
+        if ("expires_at" in data24) {
+          this._expiresTimestamp = data24.expires_at && Date.parse(data24.expires_at);
         } else {
           this._expiresTimestamp ??= null;
         }
-        if ("stage_instance" in data23) {
-          this.stageInstance = new InviteStageInstance(this.client, data23.stage_instance, this.channel.id, this.guild.id);
+        if ("stage_instance" in data24) {
+          this.stageInstance = new InviteStageInstance(this.client, data24.stage_instance, this.channel.id, this.guild.id);
         } else {
           this.stageInstance ??= null;
         }
-        if ("guild_scheduled_event" in data23) {
-          this.guildScheduledEvent = new GuildScheduledEvent(this.client, data23.guild_scheduled_event);
+        if ("guild_scheduled_event" in data24) {
+          this.guildScheduledEvent = new GuildScheduledEvent(this.client, data24.guild_scheduled_event);
         } else {
           this.guildScheduledEvent ??= null;
         }
-        if ("flags" in data23) {
-          this.flags = new InviteFlagsBitField(data23.flags).freeze();
+        if ("flags" in data24) {
+          this.flags = new InviteFlagsBitField(data24.flags).freeze();
         } else {
           this.flags ??= new InviteFlagsBitField().freeze();
         }
@@ -35403,42 +35403,42 @@ var require_GuildTemplate = __commonJS({
        * @memberof GuildTemplate
        */
       static GuildTemplatesPattern = /discord(?:app)?\.(?:com\/template|new)\/(?<code>[\w-]{2,255})/i;
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("code" in data23) {
-          this.code = data23.code;
+      _patch(data24) {
+        if ("code" in data24) {
+          this.code = data24.code;
         }
-        if ("name" in data23) {
-          this.name = data23.name;
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         }
-        if ("usage_count" in data23) {
-          this.usageCount = data23.usage_count;
+        if ("usage_count" in data24) {
+          this.usageCount = data24.usage_count;
         }
-        if ("creator_id" in data23) {
-          this.creatorId = data23.creator_id;
+        if ("creator_id" in data24) {
+          this.creatorId = data24.creator_id;
         }
-        if ("creator" in data23) {
-          this.creator = this.client.users._add(data23.creator);
+        if ("creator" in data24) {
+          this.creator = this.client.users._add(data24.creator);
         }
-        if ("created_at" in data23) {
-          this.createdTimestamp = Date.parse(data23.created_at);
+        if ("created_at" in data24) {
+          this.createdTimestamp = Date.parse(data24.created_at);
         }
-        if ("updated_at" in data23) {
-          this.updatedTimestamp = Date.parse(data23.updated_at);
+        if ("updated_at" in data24) {
+          this.updatedTimestamp = Date.parse(data24.updated_at);
         }
-        if ("source_guild_id" in data23) {
-          this.guildId = data23.source_guild_id;
+        if ("source_guild_id" in data24) {
+          this.guildId = data24.source_guild_id;
         }
-        if ("serialized_source_guild" in data23) {
-          this.serializedGuild = data23.serialized_source_guild;
+        if ("serialized_source_guild" in data24) {
+          this.serializedGuild = data24.serialized_source_guild;
         }
-        this.unSynced = "is_dirty" in data23 ? Boolean(data23.is_dirty) : null;
+        this.unSynced = "is_dirty" in data24 ? Boolean(data24.is_dirty) : null;
         return this;
       }
       /**
@@ -35451,13 +35451,13 @@ var require_GuildTemplate = __commonJS({
        */
       async createGuild(name, icon) {
         const { client: client2 } = this;
-        const data23 = await client2.rest.post(Routes2.template(this.code), {
+        const data24 = await client2.rest.post(Routes2.template(this.code), {
           body: {
             name,
             icon: await resolveImage(icon)
           }
         });
-        if (client2.guilds.cache.has(data23.id)) return client2.guilds.cache.get(data23.id);
+        if (client2.guilds.cache.has(data24.id)) return client2.guilds.cache.get(data24.id);
         return new Promise((resolve) => {
           const resolveGuild = (guild) => {
             client2.off(Events3.GuildCreate, handleGuild);
@@ -35465,14 +35465,14 @@ var require_GuildTemplate = __commonJS({
             resolve(guild);
           };
           const handleGuild = (guild) => {
-            if (guild.id === data23.id) {
+            if (guild.id === data24.id) {
               clearTimeout2(timeout);
               resolveGuild(guild);
             }
           };
           client2.incrementMaxListeners();
           client2.on(Events3.GuildCreate, handleGuild);
-          const timeout = setTimeout2(() => resolveGuild(client2.guilds._add(data23)), 1e4).unref();
+          const timeout = setTimeout2(() => resolveGuild(client2.guilds._add(data24)), 1e4).unref();
         });
       }
       /**
@@ -35487,10 +35487,10 @@ var require_GuildTemplate = __commonJS({
        * @returns {Promise<GuildTemplate>}
        */
       async edit({ name, description } = {}) {
-        const data23 = await this.client.rest.patch(Routes2.guildTemplate(this.guildId, this.code), {
+        const data24 = await this.client.rest.patch(Routes2.guildTemplate(this.guildId, this.code), {
           body: { name, description }
         });
-        return this._patch(data23);
+        return this._patch(data24);
       }
       /**
        * Deletes this template.
@@ -35505,8 +35505,8 @@ var require_GuildTemplate = __commonJS({
        * @returns {Promise<GuildTemplate>}
        */
       async sync() {
-        const data23 = await this.client.rest.put(Routes2.guildTemplate(this.guildId, this.code));
-        return this._patch(data23);
+        const data24 = await this.client.rest.put(Routes2.guildTemplate(this.guildId, this.code));
+        return this._patch(data24);
       }
       /**
        * The time when this template was created at
@@ -35565,21 +35565,21 @@ var require_DataResolver = __commonJS({
     var { fetch: fetch2 } = require_undici();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var Invite2 = require_Invite();
-    function resolveCode(data23, regex) {
-      return regex.exec(data23)?.[1] ?? data23;
+    function resolveCode(data24, regex) {
+      return regex.exec(data24)?.[1] ?? data24;
     }
-    function resolveInviteCode2(data23) {
-      return resolveCode(data23, Invite2.InvitesPattern);
+    function resolveInviteCode2(data24) {
+      return resolveCode(data24, Invite2.InvitesPattern);
     }
-    function resolveGuildTemplateCode2(data23) {
+    function resolveGuildTemplateCode2(data24) {
       const GuildTemplate2 = require_GuildTemplate();
-      return resolveCode(data23, GuildTemplate2.GuildTemplatesPattern);
+      return resolveCode(data24, GuildTemplate2.GuildTemplatesPattern);
     }
     async function resolveFile(resource) {
       if (Buffer2.isBuffer(resource)) return { data: resource };
       if (typeof resource[Symbol.asyncIterator] === "function") {
         const buffers = [];
-        for await (const data23 of resource) buffers.push(Buffer2.from(data23));
+        for await (const data24 of resource) buffers.push(Buffer2.from(data24));
         return { data: Buffer2.concat(buffers) };
       }
       if (typeof resource === "string") {
@@ -35594,9 +35594,9 @@ var require_DataResolver = __commonJS({
       }
       throw new DiscordjsTypeError2(ErrorCodes2.ReqResourceType);
     }
-    function resolveBase64(data23, contentType = "image/jpg") {
-      if (Buffer2.isBuffer(data23)) return `data:${contentType};base64,${data23.toString("base64")}`;
-      return data23;
+    function resolveBase64(data24, contentType = "image/jpg") {
+      if (Buffer2.isBuffer(data24)) return `data:${contentType};base64,${data24.toString("base64")}`;
+      return data24;
     }
     async function resolveImage(image) {
       if (!image) return null;
@@ -35640,28 +35640,28 @@ var require_BaseInteraction = __commonJS({
     var { SelectMenuTypes } = require_Constants();
     var PermissionsBitField2 = require_PermissionsBitField();
     var BaseInteraction = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.type = data23.type;
-        this.id = data23.id;
-        Object.defineProperty(this, "token", { value: data23.token });
-        this.applicationId = data23.application_id;
-        this.channelId = data23.channel?.id ?? null;
-        this.guildId = data23.guild_id ?? null;
-        this.user = this.client.users._add(data23.user ?? data23.member.user);
-        this.member = data23.member ? this.guild?.members._add(data23.member) ?? data23.member : null;
-        this.version = data23.version;
-        this.appPermissions = new PermissionsBitField2(data23.app_permissions).freeze();
-        this.memberPermissions = data23.member?.permissions ? new PermissionsBitField2(data23.member.permissions).freeze() : null;
-        this.locale = data23.locale;
-        this.guildLocale = data23.guild_locale ?? null;
-        this.entitlements = data23.entitlements.reduce(
+        this.type = data24.type;
+        this.id = data24.id;
+        Object.defineProperty(this, "token", { value: data24.token });
+        this.applicationId = data24.application_id;
+        this.channelId = data24.channel?.id ?? null;
+        this.guildId = data24.guild_id ?? null;
+        this.user = this.client.users._add(data24.user ?? data24.member.user);
+        this.member = data24.member ? this.guild?.members._add(data24.member) ?? data24.member : null;
+        this.version = data24.version;
+        this.appPermissions = new PermissionsBitField2(data24.app_permissions).freeze();
+        this.memberPermissions = data24.member?.permissions ? new PermissionsBitField2(data24.member.permissions).freeze() : null;
+        this.locale = data24.locale;
+        this.guildLocale = data24.guild_locale ?? null;
+        this.entitlements = data24.entitlements.reduce(
           (coll, entitlement) => coll.set(entitlement.id, this.client.application.entitlements._add(entitlement)),
           new Collection3()
         );
-        this.authorizingIntegrationOwners = data23.authorizing_integration_owners;
-        this.context = data23.context ?? null;
-        this.attachmentSizeLimit = data23.attachment_size_limit;
+        this.authorizingIntegrationOwners = data24.authorizing_integration_owners;
+        this.context = data24.context ?? null;
+        this.attachmentSizeLimit = data24.attachment_size_limit;
       }
       /**
        * The timestamp the interaction was created at
@@ -35857,13 +35857,13 @@ var require_ApplicationRoleConnectionMetadata = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/structures/ApplicationRoleConnectionMetadata.js"(exports2) {
     "use strict";
     var ApplicationRoleConnectionMetadata = class {
-      constructor(data23) {
-        this.name = data23.name;
-        this.nameLocalizations = data23.name_localizations ?? null;
-        this.description = data23.description;
-        this.descriptionLocalizations = data23.description_localizations ?? null;
-        this.key = data23.key;
-        this.type = data23.type;
+      constructor(data24) {
+        this.name = data24.name;
+        this.nameLocalizations = data24.name_localizations ?? null;
+        this.description = data24.description;
+        this.descriptionLocalizations = data24.description_localizations ?? null;
+        this.key = data24.key;
+        this.type = data24.type;
       }
     };
     exports2.ApplicationRoleConnectionMetadata = ApplicationRoleConnectionMetadata;
@@ -35876,25 +35876,25 @@ var require_TeamMember = __commonJS({
     "use strict";
     var Base = require_Base();
     var TeamMember = class extends Base {
-      constructor(team, data23) {
+      constructor(team, data24) {
         super(team.client);
         this.team = team;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("permissions" in data23) {
-          this.permissions = data23.permissions;
+      _patch(data24) {
+        if ("permissions" in data24) {
+          this.permissions = data24.permissions;
         } else {
           this.permissions ??= [];
         }
-        if ("membership_state" in data23) {
-          this.membershipState = data23.membership_state;
+        if ("membership_state" in data24) {
+          this.membershipState = data24.membership_state;
         }
-        if ("user" in data23) {
-          this.user = this.client.users._add(data23.user);
+        if ("user" in data24) {
+          this.user = this.client.users._add(data24.user);
         }
-        if ("role" in data23) {
-          this.role = data23.role;
+        if ("role" in data24) {
+          this.role = data24.role;
         }
       }
       /**
@@ -35930,27 +35930,27 @@ var require_Team = __commonJS({
     var Base = require_Base();
     var TeamMember = require_TeamMember();
     var Team = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("icon" in data23) {
-          this.icon = data23.icon;
+        if ("icon" in data24) {
+          this.icon = data24.icon;
         } else {
           this.icon ??= null;
         }
-        if ("owner_user_id" in data23) {
-          this.ownerId = data23.owner_user_id;
+        if ("owner_user_id" in data24) {
+          this.ownerId = data24.owner_user_id;
         } else {
           this.ownerId ??= null;
         }
         this.members = new Collection3();
-        for (const memberData of data23.members) {
+        for (const memberData of data24.members) {
           const member = new TeamMember(this, memberData);
           this.members.set(member.id, member);
         }
@@ -36079,11 +36079,11 @@ var require_ApplicationCommandPermissionsManager = __commonJS({
       async fetch({ guild, command } = {}) {
         const { guildId, commandId } = this._validateOptions(guild, command);
         if (commandId) {
-          const data24 = await this.client.rest.get(this.permissionsPath(guildId, commandId));
-          return data24.permissions;
+          const data25 = await this.client.rest.get(this.permissionsPath(guildId, commandId));
+          return data25.permissions;
         }
-        const data23 = await this.client.rest.get(this.permissionsPath(guildId));
-        return data23.reduce((coll, perm) => coll.set(perm.id, perm.permissions), new Collection3());
+        const data24 = await this.client.rest.get(this.permissionsPath(guildId));
+        return data24.reduce((coll, perm) => coll.set(perm.id, perm.permissions), new Collection3());
       }
       /**
        * Options used to set permissions for one or more Application Commands in a guild
@@ -36143,12 +36143,12 @@ var require_ApplicationCommandPermissionsManager = __commonJS({
         if (!commandId) {
           commandId = this.client.user.id;
         }
-        const data23 = await this.client.rest.put(this.permissionsPath(guildId, commandId), {
+        const data24 = await this.client.rest.put(this.permissionsPath(guildId, commandId), {
           body: { permissions },
           auth: false,
           headers: { Authorization: `Bearer ${token}` }
         });
-        return data23.permissions;
+        return data24.permissions;
       }
       /**
        * Add permissions to a command.
@@ -36420,76 +36420,76 @@ var require_ApplicationCommand = __commonJS({
     var ApplicationCommandPermissionsManager = require_ApplicationCommandPermissionsManager();
     var PermissionsBitField2 = require_PermissionsBitField();
     var ApplicationCommand = class extends Base {
-      constructor(client2, data23, guild, guildId) {
+      constructor(client2, data24, guild, guildId) {
         super(client2);
-        this.id = data23.id;
-        this.applicationId = data23.application_id;
+        this.id = data24.id;
+        this.applicationId = data24.application_id;
         this.guild = guild ?? null;
         this.guildId = guild?.id ?? guildId ?? null;
         this.permissions = new ApplicationCommandPermissionsManager(this);
-        this.type = data23.type;
-        this.nsfw = data23.nsfw ?? false;
-        this._patch(data23);
+        this.type = data24.type;
+        this.nsfw = data24.nsfw ?? false;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("name_localizations" in data23) {
-          this.nameLocalizations = data23.name_localizations;
+        if ("name_localizations" in data24) {
+          this.nameLocalizations = data24.name_localizations;
         } else {
           this.nameLocalizations ??= null;
         }
-        if ("name_localized" in data23) {
-          this.nameLocalized = data23.name_localized;
+        if ("name_localized" in data24) {
+          this.nameLocalized = data24.name_localized;
         } else {
           this.nameLocalized ??= null;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         }
-        if ("description_localizations" in data23) {
-          this.descriptionLocalizations = data23.description_localizations;
+        if ("description_localizations" in data24) {
+          this.descriptionLocalizations = data24.description_localizations;
         } else {
           this.descriptionLocalizations ??= null;
         }
-        if ("description_localized" in data23) {
-          this.descriptionLocalized = data23.description_localized;
+        if ("description_localized" in data24) {
+          this.descriptionLocalized = data24.description_localized;
         } else {
           this.descriptionLocalized ??= null;
         }
-        if ("options" in data23) {
-          this.options = data23.options.map((option) => this.constructor.transformOption(option, true));
+        if ("options" in data24) {
+          this.options = data24.options.map((option) => this.constructor.transformOption(option, true));
         } else {
           this.options ??= [];
         }
-        if ("default_member_permissions" in data23) {
-          this.defaultMemberPermissions = data23.default_member_permissions ? new PermissionsBitField2(BigInt(data23.default_member_permissions)).freeze() : null;
+        if ("default_member_permissions" in data24) {
+          this.defaultMemberPermissions = data24.default_member_permissions ? new PermissionsBitField2(BigInt(data24.default_member_permissions)).freeze() : null;
         } else {
           this.defaultMemberPermissions ??= null;
         }
-        if ("dm_permission" in data23) {
-          this.dmPermission = data23.dm_permission;
+        if ("dm_permission" in data24) {
+          this.dmPermission = data24.dm_permission;
         } else {
           this.dmPermission ??= null;
         }
-        if ("integration_types" in data23) {
-          this.integrationTypes = data23.integration_types;
+        if ("integration_types" in data24) {
+          this.integrationTypes = data24.integration_types;
         } else {
           this.integrationTypes ??= null;
         }
-        if ("contexts" in data23) {
-          this.contexts = data23.contexts;
+        if ("contexts" in data24) {
+          this.contexts = data24.contexts;
         } else {
           this.contexts ??= null;
         }
-        if ("handler" in data23) {
-          this.handler = data23.handler;
+        if ("handler" in data24) {
+          this.handler = data24.handler;
         } else {
           this.handler ??= null;
         }
-        if ("version" in data23) {
-          this.version = data23.version;
+        if ("version" in data24) {
+          this.version = data24.version;
         }
       }
       /**
@@ -36584,8 +36584,8 @@ var require_ApplicationCommand = __commonJS({
        *   .then(console.log)
        *   .catch(console.error);
        */
-      edit(data23) {
-        return this.manager.edit(this, data23, this.guildId);
+      edit(data24) {
+        return this.manager.edit(this, data24, this.guildId);
       }
       /**
        * Edits the name of this ApplicationCommand
@@ -36875,8 +36875,8 @@ var require_ApplicationCommandManager = __commonJS({
        * @type {Collection<Snowflake, ApplicationCommand>}
        * @name ApplicationCommandManager#cache
        */
-      _add(data23, cache, guildId) {
-        return super._add(data23, cache, { extras: [this.guild, guildId] });
+      _add(data24, cache, guildId) {
+        return super._add(data24, cache, { extras: [this.guild, guildId] });
       }
       /**
        * The APIRouter path to the commands
@@ -36948,13 +36948,13 @@ var require_ApplicationCommandManager = __commonJS({
           const command = await this.client.rest.get(this.commandPath({ id, guildId }));
           return this._add(command, cache);
         }
-        const data23 = await this.client.rest.get(this.commandPath({ guildId }), {
+        const data24 = await this.client.rest.get(this.commandPath({ guildId }), {
           headers: {
             "X-Discord-Locale": locale
           },
           query: makeURLSearchParams2({ with_localizations: withLocalizations })
         });
-        return data23.reduce((coll, command) => coll.set(command.id, this._add(command, cache, guildId)), new Collection3());
+        return data24.reduce((coll, command) => coll.set(command.id, this._add(command, cache, guildId)), new Collection3());
       }
       /**
        * Creates an application command.
@@ -36972,10 +36972,10 @@ var require_ApplicationCommandManager = __commonJS({
        *   .catch(console.error);
        */
       async create(command, guildId) {
-        const data23 = await this.client.rest.post(this.commandPath({ guildId }), {
+        const data24 = await this.client.rest.post(this.commandPath({ guildId }), {
           body: this.constructor.transformCommand(command)
         });
-        return this._add(data23, true, guildId);
+        return this._add(data24, true, guildId);
       }
       /**
        * Sets all the commands for this application or guild.
@@ -37000,10 +37000,10 @@ var require_ApplicationCommandManager = __commonJS({
        *   .catch(console.error);
        */
       async set(commands2, guildId) {
-        const data23 = await this.client.rest.put(this.commandPath({ guildId }), {
+        const data24 = await this.client.rest.put(this.commandPath({ guildId }), {
           body: commands2.map((command) => this.constructor.transformCommand(command))
         });
-        return data23.reduce(
+        return data24.reduce(
           (collection, command) => collection.set(command.id, this._add(command, true, guildId)),
           new Collection3()
         );
@@ -37023,11 +37023,11 @@ var require_ApplicationCommandManager = __commonJS({
        *   .then(console.log)
        *   .catch(console.error);
        */
-      async edit(command, data23, guildId) {
+      async edit(command, data24, guildId) {
         const id = this.resolveId(command);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "command", "ApplicationCommandResolvable");
         const patched = await this.client.rest.patch(this.commandPath({ id, guildId }), {
-          body: this.constructor.transformCommand(data23)
+          body: this.constructor.transformCommand(data24)
         });
         return this._add(patched, true, guildId);
       }
@@ -37092,24 +37092,24 @@ var require_ApplicationEmoji = __commonJS({
     "use strict";
     var { Emoji } = require_Emoji();
     var ApplicationEmoji = class _ApplicationEmoji extends Emoji {
-      constructor(client2, data23, application) {
-        super(client2, data23);
+      constructor(client2, data24, application) {
+        super(client2, data24);
         this.application = application;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("name" in data23) this.name = data23.name;
-        if (data23.user) {
-          this.author = this.client.users._add(data23.user);
+      _patch(data24) {
+        if ("name" in data24) this.name = data24.name;
+        if (data24.user) {
+          this.author = this.client.users._add(data24.user);
         }
-        if ("managed" in data23) {
-          this.managed = data23.managed;
+        if ("managed" in data24) {
+          this.managed = data24.managed;
         }
-        if ("require_colons" in data23) {
-          this.requiresColons = data23.require_colons;
+        if ("require_colons" in data24) {
+          this.requiresColons = data24.require_colons;
         }
-        if ("available" in data23) {
-          this.available = data23.available;
+        if ("available" in data24) {
+          this.available = data24.available;
         }
       }
       /**
@@ -37184,8 +37184,8 @@ var require_ApplicationEmojiManager = __commonJS({
         super(application.client, ApplicationEmoji, iterable);
         this.application = application;
       }
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.application] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.application] });
       }
       /**
        * Options used for creating an emoji of the application
@@ -37240,9 +37240,9 @@ var require_ApplicationEmojiManager = __commonJS({
           const emoji3 = await this.client.rest.get(Routes2.applicationEmoji(this.application.id, id));
           return this._add(emoji3, cache);
         }
-        const { items: data23 } = await this.client.rest.get(Routes2.applicationEmojis(this.application.id));
+        const { items: data24 } = await this.client.rest.get(Routes2.applicationEmojis(this.application.id));
         const emojis = new Collection3();
-        for (const emoji3 of data23) emojis.set(emoji3.id, this._add(emoji3, cache));
+        for (const emoji3 of data24) emojis.set(emoji3.id, this._add(emoji3, cache));
         return emojis;
       }
       /**
@@ -37284,8 +37284,8 @@ var require_ApplicationEmojiManager = __commonJS({
       async fetchAuthor(emoji3) {
         const id = this.resolveId(emoji3);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "emoji", "EmojiResolvable", true);
-        const data23 = await this.client.rest.get(Routes2.applicationEmoji(this.application.id, id));
-        return this._add(data23).author;
+        const data24 = await this.client.rest.get(Routes2.applicationEmoji(this.application.id, id));
+        return this._add(data24).author;
       }
     };
     module2.exports = ApplicationEmojiManager;
@@ -37298,44 +37298,44 @@ var require_Entitlement = __commonJS({
     "use strict";
     var Base = require_Base();
     var Entitlement = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this._patch(data23);
+        this.id = data24.id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("sku_id" in data23) {
-          this.skuId = data23.sku_id;
+      _patch(data24) {
+        if ("sku_id" in data24) {
+          this.skuId = data24.sku_id;
         }
-        if ("user_id" in data23) {
-          this.userId = data23.user_id;
+        if ("user_id" in data24) {
+          this.userId = data24.user_id;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         } else {
           this.guildId ??= null;
         }
-        if ("application_id" in data23) {
-          this.applicationId = data23.application_id;
+        if ("application_id" in data24) {
+          this.applicationId = data24.application_id;
         }
-        if ("type" in data23) {
-          this.type = data23.type;
+        if ("type" in data24) {
+          this.type = data24.type;
         }
-        if ("deleted" in data23) {
-          this.deleted = data23.deleted;
+        if ("deleted" in data24) {
+          this.deleted = data24.deleted;
         }
-        if ("starts_at" in data23) {
-          this.startsTimestamp = data23.starts_at ? Date.parse(data23.starts_at) : null;
+        if ("starts_at" in data24) {
+          this.startsTimestamp = data24.starts_at ? Date.parse(data24.starts_at) : null;
         } else {
           this.startsTimestamp ??= null;
         }
-        if ("ends_at" in data23) {
-          this.endsTimestamp = data23.ends_at ? Date.parse(data23.ends_at) : null;
+        if ("ends_at" in data24) {
+          this.endsTimestamp = data24.ends_at ? Date.parse(data24.ends_at) : null;
         } else {
           this.endsTimestamp ??= null;
         }
-        if ("consumed" in data23) {
-          this.consumed = data23.consumed;
+        if ("consumed" in data24) {
+          this.consumed = data24.consumed;
         } else {
           this.consumed ??= false;
         }
@@ -37483,8 +37483,8 @@ var require_EntitlementManager = __commonJS({
             return existing;
           }
         }
-        const data23 = await this.client.rest.get(Routes2.entitlement(this.client.application.id, entitlement));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.entitlement(this.client.application.id, entitlement));
+        return this._add(data24, cache);
       }
       async _fetchMany({ limit, guild, user, skus, excludeEnded, excludeDeleted, cache, before, after } = {}) {
         const query = makeURLSearchParams2({
@@ -37567,28 +37567,28 @@ var require_Subscription = __commonJS({
     "use strict";
     var Base = require_Base();
     var Subscription = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this.userId = data23.user_id;
-        this._patch(data23);
+        this.id = data24.id;
+        this.userId = data24.user_id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.skuIds = data23.sku_ids;
-        this.entitlementIds = data23.entitlement_ids;
-        this.currentPeriodStartTimestamp = Date.parse(data23.current_period_start);
-        this.currentPeriodEndTimestamp = Date.parse(data23.current_period_end);
-        this.status = data23.status;
-        if ("renewal_sku_ids" in data23) {
-          this.renewalSkuIds = data23.renewal_sku_ids;
+      _patch(data24) {
+        this.skuIds = data24.sku_ids;
+        this.entitlementIds = data24.entitlement_ids;
+        this.currentPeriodStartTimestamp = Date.parse(data24.current_period_start);
+        this.currentPeriodEndTimestamp = Date.parse(data24.current_period_end);
+        this.status = data24.status;
+        if ("renewal_sku_ids" in data24) {
+          this.renewalSkuIds = data24.renewal_sku_ids;
         }
-        if ("canceled_at" in data23) {
-          this.canceledTimestamp = data23.canceled_at ? Date.parse(data23.canceled_at) : null;
+        if ("canceled_at" in data24) {
+          this.canceledTimestamp = data24.canceled_at ? Date.parse(data24.canceled_at) : null;
         } else {
           this.canceledTimestamp ??= null;
         }
-        if ("country" in data23) {
-          this.country = data23.country;
+        if ("country" in data24) {
+          this.country = data24.country;
         } else {
           this.country ??= null;
         }
@@ -37726,27 +37726,27 @@ var require_ClientApplication = __commonJS({
     var { resolveImage } = require_DataResolver();
     var PermissionsBitField2 = require_PermissionsBitField();
     var ClientApplication = class extends Application {
-      constructor(client2, data23) {
-        super(client2, data23);
+      constructor(client2, data24) {
+        super(client2, data24);
         this.commands = new ApplicationCommandManager(this.client);
         this.emojis = new ApplicationEmojiManager(this);
         this.entitlements = new EntitlementManager(this.client);
         this.subscriptions = new SubscriptionManager(this.client);
       }
-      _patch(data23) {
-        super._patch(data23);
-        this.tags = data23.tags ?? [];
-        if ("install_params" in data23) {
+      _patch(data24) {
+        super._patch(data24);
+        this.tags = data24.tags ?? [];
+        if ("install_params" in data24) {
           this.installParams = {
-            scopes: data23.install_params.scopes,
-            permissions: new PermissionsBitField2(data23.install_params.permissions).freeze()
+            scopes: data24.install_params.scopes,
+            permissions: new PermissionsBitField2(data24.install_params.permissions).freeze()
           };
         } else {
           this.installParams ??= null;
         }
-        if ("integration_types_config" in data23) {
+        if ("integration_types_config" in data24) {
           this.integrationTypesConfig = Object.fromEntries(
-            Object.entries(data23.integration_types_config).map(([key, config2]) => {
+            Object.entries(data24.integration_types_config).map(([key, config2]) => {
               let oauth2InstallParams = null;
               if (config2.oauth2_install_params) {
                 oauth2InstallParams = {
@@ -37763,75 +37763,75 @@ var require_ClientApplication = __commonJS({
         } else {
           this.integrationTypesConfig ??= null;
         }
-        if ("custom_install_url" in data23) {
-          this.customInstallURL = data23.custom_install_url;
+        if ("custom_install_url" in data24) {
+          this.customInstallURL = data24.custom_install_url;
         } else {
           this.customInstallURL = null;
         }
-        if ("flags" in data23) {
-          this.flags = new ApplicationFlagsBitField(data23.flags).freeze();
+        if ("flags" in data24) {
+          this.flags = new ApplicationFlagsBitField(data24.flags).freeze();
         }
-        if ("approximate_guild_count" in data23) {
-          this.approximateGuildCount = data23.approximate_guild_count;
+        if ("approximate_guild_count" in data24) {
+          this.approximateGuildCount = data24.approximate_guild_count;
         } else {
           this.approximateGuildCount ??= null;
         }
-        if ("approximate_user_install_count" in data23) {
-          this.approximateUserInstallCount = data23.approximate_user_install_count;
+        if ("approximate_user_install_count" in data24) {
+          this.approximateUserInstallCount = data24.approximate_user_install_count;
         } else {
           this.approximateUserInstallCount ??= null;
         }
-        if ("approximate_user_authorization_count" in data23) {
-          this.approximateUserAuthorizationCount = data23.approximate_user_authorization_count;
+        if ("approximate_user_authorization_count" in data24) {
+          this.approximateUserAuthorizationCount = data24.approximate_user_authorization_count;
         } else {
           this.approximateUserAuthorizationCount ??= null;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         } else {
           this.guildId ??= null;
         }
-        if ("bot_require_code_grant" in data23) {
-          this.botRequireCodeGrant = data23.bot_require_code_grant;
+        if ("bot_require_code_grant" in data24) {
+          this.botRequireCodeGrant = data24.bot_require_code_grant;
         } else {
           this.botRequireCodeGrant ??= null;
         }
-        if ("bot" in data23) {
-          this.bot = this.client.users._add(data23.bot);
+        if ("bot" in data24) {
+          this.bot = this.client.users._add(data24.bot);
         } else {
           this.bot ??= null;
         }
-        if ("bot_public" in data23) {
-          this.botPublic = data23.bot_public;
+        if ("bot_public" in data24) {
+          this.botPublic = data24.bot_public;
         } else {
           this.botPublic ??= null;
         }
-        if ("interactions_endpoint_url" in data23) {
-          this.interactionsEndpointURL = data23.interactions_endpoint_url;
+        if ("interactions_endpoint_url" in data24) {
+          this.interactionsEndpointURL = data24.interactions_endpoint_url;
         } else {
           this.interactionsEndpointURL ??= null;
         }
-        if ("role_connections_verification_url" in data23) {
-          this.roleConnectionsVerificationURL = data23.role_connections_verification_url;
+        if ("role_connections_verification_url" in data24) {
+          this.roleConnectionsVerificationURL = data24.role_connections_verification_url;
         } else {
           this.roleConnectionsVerificationURL ??= null;
         }
-        if ("event_webhooks_url" in data23) {
-          this.eventWebhooksURL = data23.event_webhooks_url;
+        if ("event_webhooks_url" in data24) {
+          this.eventWebhooksURL = data24.event_webhooks_url;
         } else {
           this.eventWebhooksURL ??= null;
         }
-        if ("event_webhooks_status" in data23) {
-          this.eventWebhooksStatus = data23.event_webhooks_status;
+        if ("event_webhooks_status" in data24) {
+          this.eventWebhooksStatus = data24.event_webhooks_status;
         } else {
           this.eventWebhooksStatus ??= null;
         }
-        if ("event_webhooks_types" in data23) {
-          this.eventWebhooksTypes = data23.event_webhooks_types;
+        if ("event_webhooks_types" in data24) {
+          this.eventWebhooksTypes = data24.event_webhooks_types;
         } else {
           this.eventWebhooksTypes ??= null;
         }
-        this.owner = data23.team ? new Team(this.client, data23.team) : data23.owner ? this.client.users._add(data23.owner) : this.owner ?? null;
+        this.owner = data24.team ? new Team(this.client, data24.team) : data24.owner ? this.client.users._add(data24.owner) : this.owner ?? null;
       }
       /**
        * The guild associated with this application.
@@ -37886,7 +37886,7 @@ var require_ClientApplication = __commonJS({
         eventWebhooksTypes,
         tags
       } = {}) {
-        const data23 = await this.client.rest.patch(Routes2.currentApplication(), {
+        const data24 = await this.client.rest.patch(Routes2.currentApplication(), {
           body: {
             custom_install_url: customInstallURL,
             description,
@@ -37902,7 +37902,7 @@ var require_ClientApplication = __commonJS({
             tags
           }
         });
-        this._patch(data23);
+        this._patch(data24);
         return this;
       }
       /**
@@ -37910,8 +37910,8 @@ var require_ClientApplication = __commonJS({
        * @returns {Promise<ClientApplication>}
        */
       async fetch() {
-        const data23 = await this.client.rest.get(Routes2.currentApplication());
-        this._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.currentApplication());
+        this._patch(data24);
         return this;
       }
       /**
@@ -37920,7 +37920,7 @@ var require_ClientApplication = __commonJS({
        */
       async fetchRoleConnectionMetadataRecords() {
         const metadata = await this.client.rest.get(Routes2.applicationRoleConnectionMetadata(this.client.user.id));
-        return metadata.map((data23) => new ApplicationRoleConnectionMetadata(data23));
+        return metadata.map((data24) => new ApplicationRoleConnectionMetadata(data24));
       }
       /**
        * Data for creating or editing an application role connection metadata.
@@ -37948,7 +37948,7 @@ var require_ClientApplication = __commonJS({
             description_localizations: record2.descriptionLocalizations
           }))
         });
-        return newRecords.map((data23) => new ApplicationRoleConnectionMetadata(data23));
+        return newRecords.map((data24) => new ApplicationRoleConnectionMetadata(data24));
       }
       /**
        * Gets this application's SKUs
@@ -38270,12 +38270,12 @@ var require_hashGet = __commonJS({
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
     function hashGet(key) {
-      var data23 = this.__data__;
+      var data24 = this.__data__;
       if (nativeCreate) {
-        var result = data23[key];
+        var result = data24[key];
         return result === HASH_UNDEFINED ? void 0 : result;
       }
-      return hasOwnProperty.call(data23, key) ? data23[key] : void 0;
+      return hasOwnProperty.call(data24, key) ? data24[key] : void 0;
     }
     module2.exports = hashGet;
   }
@@ -38288,8 +38288,8 @@ var require_hashHas = __commonJS({
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
     function hashHas(key) {
-      var data23 = this.__data__;
-      return nativeCreate ? data23[key] !== void 0 : hasOwnProperty.call(data23, key);
+      var data24 = this.__data__;
+      return nativeCreate ? data24[key] !== void 0 : hasOwnProperty.call(data24, key);
     }
     module2.exports = hashHas;
   }
@@ -38301,9 +38301,9 @@ var require_hashSet = __commonJS({
     var nativeCreate = require_nativeCreate();
     var HASH_UNDEFINED = "__lodash_hash_undefined__";
     function hashSet(key, value) {
-      var data23 = this.__data__;
+      var data24 = this.__data__;
       this.size += this.has(key) ? 0 : 1;
-      data23[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      data24[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
       return this;
     }
     module2.exports = hashSet;
@@ -38380,15 +38380,15 @@ var require_listCacheDelete = __commonJS({
     var arrayProto = Array.prototype;
     var splice = arrayProto.splice;
     function listCacheDelete(key) {
-      var data23 = this.__data__, index = assocIndexOf(data23, key);
+      var data24 = this.__data__, index = assocIndexOf(data24, key);
       if (index < 0) {
         return false;
       }
-      var lastIndex = data23.length - 1;
+      var lastIndex = data24.length - 1;
       if (index == lastIndex) {
-        data23.pop();
+        data24.pop();
       } else {
-        splice.call(data23, index, 1);
+        splice.call(data24, index, 1);
       }
       --this.size;
       return true;
@@ -38402,8 +38402,8 @@ var require_listCacheGet = __commonJS({
   "../../node_modules/.pnpm/lodash@4.18.1/node_modules/lodash/_listCacheGet.js"(exports2, module2) {
     var assocIndexOf = require_assocIndexOf();
     function listCacheGet(key) {
-      var data23 = this.__data__, index = assocIndexOf(data23, key);
-      return index < 0 ? void 0 : data23[index][1];
+      var data24 = this.__data__, index = assocIndexOf(data24, key);
+      return index < 0 ? void 0 : data24[index][1];
     }
     module2.exports = listCacheGet;
   }
@@ -38425,12 +38425,12 @@ var require_listCacheSet = __commonJS({
   "../../node_modules/.pnpm/lodash@4.18.1/node_modules/lodash/_listCacheSet.js"(exports2, module2) {
     var assocIndexOf = require_assocIndexOf();
     function listCacheSet(key, value) {
-      var data23 = this.__data__, index = assocIndexOf(data23, key);
+      var data24 = this.__data__, index = assocIndexOf(data24, key);
       if (index < 0) {
         ++this.size;
-        data23.push([key, value]);
+        data24.push([key, value]);
       } else {
-        data23[index][1] = value;
+        data24[index][1] = value;
       }
       return this;
     }
@@ -38507,8 +38507,8 @@ var require_getMapData = __commonJS({
   "../../node_modules/.pnpm/lodash@4.18.1/node_modules/lodash/_getMapData.js"(exports2, module2) {
     var isKeyable = require_isKeyable();
     function getMapData(map2, key) {
-      var data23 = map2.__data__;
-      return isKeyable(key) ? data23[typeof key == "string" ? "string" : "hash"] : data23.map;
+      var data24 = map2.__data__;
+      return isKeyable(key) ? data24[typeof key == "string" ? "string" : "hash"] : data24.map;
     }
     module2.exports = getMapData;
   }
@@ -38554,9 +38554,9 @@ var require_mapCacheSet = __commonJS({
   "../../node_modules/.pnpm/lodash@4.18.1/node_modules/lodash/_mapCacheSet.js"(exports2, module2) {
     var getMapData = require_getMapData();
     function mapCacheSet(key, value) {
-      var data23 = getMapData(this, key), size = data23.size;
-      data23.set(key, value);
-      this.size += data23.size == size ? 0 : 1;
+      var data24 = getMapData(this, key), size = data24.size;
+      data24.set(key, value);
+      this.size += data24.size == size ? 0 : 1;
       return this;
     }
     module2.exports = mapCacheSet;
@@ -42622,7 +42622,7 @@ var require_dist8 = __commonJS({
       ContextMenuCommandAssertions: () => Assertions_exports11,
       ContextMenuCommandBuilder: () => ContextMenuCommandBuilder,
       EmbedAssertions: () => Assertions_exports,
-      EmbedBuilder: () => EmbedBuilder10,
+      EmbedBuilder: () => EmbedBuilder11,
       FileBuilder: () => FileBuilder,
       FileUploadAssertions: () => Assertions_exports4,
       FileUploadBuilder: () => FileUploadBuilder,
@@ -42648,7 +42648,7 @@ var require_dist8 = __commonJS({
       SlashCommandAssertions: () => Assertions_exports10,
       SlashCommandAttachmentOption: () => SlashCommandAttachmentOption,
       SlashCommandBooleanOption: () => SlashCommandBooleanOption,
-      SlashCommandBuilder: () => SlashCommandBuilder23,
+      SlashCommandBuilder: () => SlashCommandBuilder24,
       SlashCommandChannelOption: () => SlashCommandChannelOption,
       SlashCommandIntegerOption: () => SlashCommandIntegerOption,
       SlashCommandMentionableOption: () => SlashCommandMentionableOption,
@@ -42751,7 +42751,7 @@ var require_dist8 = __commonJS({
       return arr;
     }
     __name(normalizeArray, "normalizeArray");
-    var EmbedBuilder10 = class {
+    var EmbedBuilder11 = class {
       static {
         __name(this, "EmbedBuilder");
       }
@@ -42764,9 +42764,9 @@ var require_dist8 = __commonJS({
        *
        * @param data - The API data to create this embed with
        */
-      constructor(data23 = {}) {
-        this.data = { ...data23 };
-        if (data23.timestamp) this.data.timestamp = new Date(data23.timestamp).toISOString();
+      constructor(data24 = {}) {
+        this.data = { ...data24 };
+        if (data24.timestamp) this.data.timestamp = new Date(data24.timestamp).toISOString();
       }
       /**
        * Appends fields to the embed.
@@ -43012,8 +43012,8 @@ var require_dist8 = __commonJS({
        * 	.setLabel('woah');
        * ```
        */
-      constructor(data23 = {}) {
-        this.data = data23;
+      constructor(data24 = {}) {
+        this.data = data24;
       }
       static {
         __name(this, "StringSelectMenuOptionBuilder");
@@ -43153,8 +43153,8 @@ var require_dist8 = __commonJS({
        *
        * @param data - The data to construct a component out of
        */
-      constructor(data23) {
-        this.data = data23;
+      constructor(data24) {
+        this.data = data24;
       }
       /**
        * Sets the id (not the custom id) for this component.
@@ -43207,8 +43207,8 @@ var require_dist8 = __commonJS({
        * 	.setCustomId('another cool button');
        * ```
        */
-      constructor(data23) {
-        super({ type: import_v102.ComponentType.Button, ...data23 });
+      constructor(data24) {
+        super({ type: import_v102.ComponentType.Button, ...data24 });
       }
       /**
        * Sets the style of this button.
@@ -43327,29 +43327,29 @@ var require_dist8 = __commonJS({
       min_values: import_shapeshift3.s.number().int().greaterThanOrEqual(0).lessThanOrEqual(10).optional(),
       max_values: import_shapeshift3.s.number().int().greaterThanOrEqual(1).lessThanOrEqual(10).optional(),
       required: import_shapeshift3.s.boolean().optional()
-    }).reshape((data23) => {
-      if (data23.min_values !== void 0 && data23.max_values !== void 0 && data23.min_values > data23.max_values) {
+    }).reshape((data24) => {
+      if (data24.min_values !== void 0 && data24.max_values !== void 0 && data24.min_values > data24.max_values) {
         return import_shapeshift3.Result.err(new RangeError("min_values cannot be greater than max_values"));
       }
-      if (data23.max_values !== void 0 && data23.max_values > data23.options.length) {
+      if (data24.max_values !== void 0 && data24.max_values > data24.options.length) {
         return import_shapeshift3.Result.err(new RangeError("max_values cannot be greater than the number of options"));
       }
-      if (data23.min_values !== void 0 && data23.min_values > data23.options.length) {
+      if (data24.min_values !== void 0 && data24.min_values > data24.options.length) {
         return import_shapeshift3.Result.err(new RangeError("min_values cannot be greater than the number of options"));
       }
-      if (data23.required === true && data23.min_values === 0) {
+      if (data24.required === true && data24.min_values === 0) {
         return import_shapeshift3.Result.err(new RangeError("If required is true, min_values must be at least 1"));
       }
-      const defaultCount = data23.options.filter((option) => option.default === true).length;
-      if (data23.max_values !== void 0 && defaultCount > data23.max_values) {
+      const defaultCount = data24.options.filter((option) => option.default === true).length;
+      if (data24.max_values !== void 0 && defaultCount > data24.max_values) {
         return import_shapeshift3.Result.err(new RangeError("The number of default options cannot be greater than max_values"));
       }
-      const values = data23.options.map((option) => option.value);
+      const values = data24.options.map((option) => option.value);
       const uniqueValues = new Set(values);
       if (uniqueValues.size !== values.length) {
         return import_shapeshift3.Result.err(new RangeError("Each option in a checkbox group must have a unique value"));
       }
-      return import_shapeshift3.Result.ok(data23);
+      return import_shapeshift3.Result.ok(data24);
     }).setValidationEnabled(isValidationEnabled);
     var radioGroupOptionPredicate = checkboxGroupOptionPredicate;
     var radioGroupPredicate = import_shapeshift3.s.object({
@@ -43358,17 +43358,17 @@ var require_dist8 = __commonJS({
       id: idValidator.optional(),
       options: import_shapeshift3.s.array(radioGroupOptionPredicate).lengthGreaterThanOrEqual(2).lengthLessThanOrEqual(10),
       required: import_shapeshift3.s.boolean().optional()
-    }).reshape((data23) => {
-      const defaultCount = data23.options.filter((option) => option.default === true).length;
+    }).reshape((data24) => {
+      const defaultCount = data24.options.filter((option) => option.default === true).length;
       if (defaultCount > 1) {
         return import_shapeshift3.Result.err(new RangeError("There can be at most one default option in a radio group"));
       }
-      const values = data23.options.map((option) => option.value);
+      const values = data24.options.map((option) => option.value);
       const uniqueValues = new Set(values);
       if (uniqueValues.size !== values.length) {
         return import_shapeshift3.Result.err(new RangeError("Each option in a radio group must have a unique value"));
       }
-      return import_shapeshift3.Result.ok(data23);
+      return import_shapeshift3.Result.ok(data24);
     }).setValidationEnabled(isValidationEnabled);
     var CheckboxBuilder = class extends ComponentBuilder {
       static {
@@ -43394,8 +43394,8 @@ var require_dist8 = __commonJS({
        * 	.setDefault(true);
        * ```
        */
-      constructor(data23) {
-        super({ type: import_v104.ComponentType.Checkbox, ...data23 });
+      constructor(data24) {
+        super({ type: import_v104.ComponentType.Checkbox, ...data24 });
       }
       /**
        * Sets the custom id of this checkbox.
@@ -43447,8 +43447,8 @@ var require_dist8 = __commonJS({
        * 	.setValue('option_2');
        * ```
        */
-      constructor(data23 = {}) {
-        this.data = data23;
+      constructor(data24 = {}) {
+        this.data = data24;
       }
       static {
         __name(this, "CheckboxGroupOptionBuilder");
@@ -43535,8 +43535,8 @@ var require_dist8 = __commonJS({
        * 	.setMaxValues(2);
        * ```
        */
-      constructor(data23) {
-        const { options, ...initData } = data23 ?? {};
+      constructor(data24) {
+        const { options, ...initData } = data24 ?? {};
         super({ ...initData, type: import_v105.ComponentType.CheckboxGroup });
         this.options = options?.map((option) => new CheckboxGroupOptionBuilder(option)) ?? [];
       }
@@ -43632,12 +43632,12 @@ var require_dist8 = __commonJS({
        * {@inheritDoc ComponentBuilder.toJSON}
        */
       toJSON() {
-        const data23 = {
+        const data24 = {
           ...this.data,
           options: this.options.map((option) => option.toJSON())
         };
-        checkboxGroupPredicate.parse(data23);
-        return data23;
+        checkboxGroupPredicate.parse(data24);
+        return data24;
       }
     };
     var import_v106 = require_v106();
@@ -43662,8 +43662,8 @@ var require_dist8 = __commonJS({
        * 	.setValue('option_2');
        * ```
        */
-      constructor(data23 = {}) {
-        this.data = data23;
+      constructor(data24 = {}) {
+        this.data = data24;
       }
       static {
         __name(this, "RadioGroupOptionBuilder");
@@ -43748,8 +43748,8 @@ var require_dist8 = __commonJS({
        * 	])
        * ```
        */
-      constructor(data23) {
-        const { options, ...initData } = data23 ?? {};
+      constructor(data24) {
+        const { options, ...initData } = data24 ?? {};
         super({ ...initData, type: import_v106.ComponentType.RadioGroup });
         this.options = options?.map((option) => new RadioGroupOptionBuilder(option)) ?? [];
       }
@@ -43827,12 +43827,12 @@ var require_dist8 = __commonJS({
        * {@inheritDoc ComponentBuilder.toJSON}
        */
       toJSON() {
-        const data23 = {
+        const data24 = {
           ...this.data,
           options: this.options.map((option) => option.toJSON())
         };
-        radioGroupPredicate.parse(data23);
-        return data23;
+        radioGroupPredicate.parse(data24);
+        return data24;
       }
     };
     var import_v108 = require_v106();
@@ -43877,8 +43877,8 @@ var require_dist8 = __commonJS({
        * }).setRequired();
        * ```
        */
-      constructor(data23 = {}) {
-        super({ type: import_v108.ComponentType.FileUpload, ...data23 });
+      constructor(data24 = {}) {
+        super({ type: import_v108.ComponentType.FileUpload, ...data24 });
       }
       /**
        * Sets the custom id for this file upload.
@@ -44073,8 +44073,8 @@ var require_dist8 = __commonJS({
        * 	.setMinValues(2);
        * ```
        */
-      constructor(data23) {
-        super({ ...data23, type: import_v1010.ComponentType.ChannelSelect });
+      constructor(data24) {
+        super({ ...data24, type: import_v1010.ComponentType.ChannelSelect });
       }
       /**
        * Adds channel types to this select menu.
@@ -44166,8 +44166,8 @@ var require_dist8 = __commonJS({
        * 	.setMinValues(1);
        * ```
        */
-      constructor(data23) {
-        super({ ...data23, type: import_v1011.ComponentType.MentionableSelect });
+      constructor(data24) {
+        super({ ...data24, type: import_v1011.ComponentType.MentionableSelect });
       }
       /**
        * Adds default roles to this auto populated select menu.
@@ -44254,8 +44254,8 @@ var require_dist8 = __commonJS({
        * 	.setMinValues(1);
        * ```
        */
-      constructor(data23) {
-        super({ ...data23, type: import_v1012.ComponentType.RoleSelect });
+      constructor(data24) {
+        super({ ...data24, type: import_v1012.ComponentType.RoleSelect });
       }
       /**
        * Adds default roles to this auto populated select menu.
@@ -44389,8 +44389,8 @@ var require_dist8 = __commonJS({
        * 	});
        * ```
        */
-      constructor(data23) {
-        const { options, ...initData } = data23 ?? {};
+      constructor(data24) {
+        const { options, ...initData } = data24 ?? {};
         super({ ...initData, type: import_v1014.ComponentType.StringSelect });
         this.options = options?.map((option) => new StringSelectMenuOptionBuilder(option)) ?? [];
       }
@@ -44496,8 +44496,8 @@ var require_dist8 = __commonJS({
        * 	.setMinValues(1);
        * ```
        */
-      constructor(data23) {
-        super({ ...data23, type: import_v1015.ComponentType.UserSelect });
+      constructor(data24) {
+        super({ ...data24, type: import_v1015.ComponentType.UserSelect });
       }
       /**
        * Adds default users to this auto populated select menu.
@@ -44561,8 +44561,8 @@ var require_dist8 = __commonJS({
        * 	.setStyle(TextInputStyle.Paragraph);
        * ```
        */
-      constructor(data23) {
-        super({ type: import_v1016.ComponentType.TextInput, ...data23 });
+      constructor(data24) {
+        super({ type: import_v1016.ComponentType.TextInput, ...data24 });
       }
       /**
        * Sets the custom id for this text input.
@@ -44709,9 +44709,9 @@ var require_dist8 = __commonJS({
        * }).setLabel('new text');
        * ```
        */
-      constructor(data23 = {}) {
+      constructor(data24 = {}) {
         super({ type: import_v1018.ComponentType.Label });
-        const { component, ...rest } = data23;
+        const { component, ...rest } = data24;
         this.data = {
           ...rest,
           component: component ? createComponentBuilder(component) : void 0,
@@ -44838,13 +44838,13 @@ var require_dist8 = __commonJS({
        */
       toJSON() {
         const { component, ...rest } = this.data;
-        const data23 = {
+        const data24 = {
           ...rest,
           // The label predicate validates the component.
           component: component?.toJSON()
         };
-        labelPredicate.parse(data23);
-        return data23;
+        labelPredicate.parse(data24);
+        return data24;
       }
     };
     var import_v1024 = require_v106();
@@ -44894,11 +44894,11 @@ var require_dist8 = __commonJS({
        * 	.setDescription('alt text');
        * ```
        */
-      constructor(data23 = {}) {
+      constructor(data24 = {}) {
         super({
           type: import_v1019.ComponentType.Thumbnail,
-          ...data23,
-          media: data23.media ? { url: data23.media.url } : void 0
+          ...data24,
+          media: data24.media ? { url: data24.media.url } : void 0
         });
       }
       /**
@@ -44997,8 +44997,8 @@ var require_dist8 = __commonJS({
        * 	.setSpoiler(false);
        * ```
        */
-      constructor(data23 = {}) {
-        super({ type: import_v1021.ComponentType.File, ...data23, file: data23.file ? { url: data23.file.url } : void 0 });
+      constructor(data24 = {}) {
+        super({ type: import_v1021.ComponentType.File, ...data24, file: data24.file ? { url: data24.file.url } : void 0 });
       }
       /**
        * Sets the spoiler status of this file.
@@ -45052,10 +45052,10 @@ var require_dist8 = __commonJS({
        * 	.setDivider(false);
        * ```
        */
-      constructor(data23 = {}) {
+      constructor(data24 = {}) {
         super({
           type: import_v1022.ComponentType.Separator,
-          ...data23
+          ...data24
         });
       }
       /**
@@ -45115,10 +45115,10 @@ var require_dist8 = __commonJS({
        * 	.setContent('new text');
        * ```
        */
-      constructor(data23 = {}) {
+      constructor(data24 = {}) {
         super({
           type: import_v1023.ComponentType.TextDisplay,
-          ...data23
+          ...data24
         });
       }
       /**
@@ -45177,8 +45177,8 @@ var require_dist8 = __commonJS({
        *  .addSectionComponents(section);
        * ```
        */
-      constructor({ components, ...data23 } = {}) {
-        super({ type: import_v1024.ComponentType.Container, ...data23 });
+      constructor({ components, ...data24 } = {}) {
+        super({ type: import_v1024.ComponentType.Container, ...data24 });
         this.components = components?.map((component) => createComponentBuilder(component)) ?? [];
       }
       /**
@@ -45333,8 +45333,8 @@ var require_dist8 = __commonJS({
        * 	.setDescription("alt text");
        * ```
        */
-      constructor(data23 = {}) {
-        this.data = data23;
+      constructor(data24 = {}) {
+        this.data = data24;
       }
       /**
        * Sets the description of this media gallery item.
@@ -45424,8 +45424,8 @@ var require_dist8 = __commonJS({
        * 	.addItems(item2, item3);
        * ```
        */
-      constructor({ items, ...data23 } = {}) {
-        super({ type: import_v1025.ComponentType.MediaGallery, ...data23 });
+      constructor({ items, ...data24 } = {}) {
+        super({ type: import_v1025.ComponentType.MediaGallery, ...data24 });
         this.items = items?.map((item) => new MediaGalleryItemBuilder(item)) ?? [];
       }
       /**
@@ -45521,8 +45521,8 @@ var require_dist8 = __commonJS({
        * 	.setPrimaryButtonAccessory(button);
        * ```
        */
-      constructor({ components, accessory, ...data23 } = {}) {
-        super({ type: import_v1026.ComponentType.Section, ...data23 });
+      constructor({ components, accessory, ...data24 } = {}) {
+        super({ type: import_v1026.ComponentType.Section, ...data24 });
         this.components = components?.map((component) => createComponentBuilder(component)) ?? [];
         this.accessory = accessory ? createComponentBuilder(accessory) : void 0;
       }
@@ -45590,53 +45590,53 @@ var require_dist8 = __commonJS({
         };
       }
     };
-    function createComponentBuilder(data23) {
-      if (data23 instanceof ComponentBuilder) {
-        return data23;
+    function createComponentBuilder(data24) {
+      if (data24 instanceof ComponentBuilder) {
+        return data24;
       }
-      switch (data23.type) {
+      switch (data24.type) {
         case import_v1027.ComponentType.ActionRow:
-          return new ActionRowBuilder7(data23);
+          return new ActionRowBuilder7(data24);
         case import_v1027.ComponentType.Button:
-          return new ButtonBuilder7(data23);
+          return new ButtonBuilder7(data24);
         case import_v1027.ComponentType.StringSelect:
-          return new StringSelectMenuBuilder(data23);
+          return new StringSelectMenuBuilder(data24);
         case import_v1027.ComponentType.TextInput:
-          return new TextInputBuilder(data23);
+          return new TextInputBuilder(data24);
         case import_v1027.ComponentType.UserSelect:
-          return new UserSelectMenuBuilder(data23);
+          return new UserSelectMenuBuilder(data24);
         case import_v1027.ComponentType.RoleSelect:
-          return new RoleSelectMenuBuilder(data23);
+          return new RoleSelectMenuBuilder(data24);
         case import_v1027.ComponentType.MentionableSelect:
-          return new MentionableSelectMenuBuilder(data23);
+          return new MentionableSelectMenuBuilder(data24);
         case import_v1027.ComponentType.ChannelSelect:
-          return new ChannelSelectMenuBuilder(data23);
+          return new ChannelSelectMenuBuilder(data24);
         case import_v1027.ComponentType.File:
-          return new FileBuilder(data23);
+          return new FileBuilder(data24);
         case import_v1027.ComponentType.Container:
-          return new ContainerBuilder(data23);
+          return new ContainerBuilder(data24);
         case import_v1027.ComponentType.Section:
-          return new SectionBuilder(data23);
+          return new SectionBuilder(data24);
         case import_v1027.ComponentType.Separator:
-          return new SeparatorBuilder(data23);
+          return new SeparatorBuilder(data24);
         case import_v1027.ComponentType.TextDisplay:
-          return new TextDisplayBuilder(data23);
+          return new TextDisplayBuilder(data24);
         case import_v1027.ComponentType.Thumbnail:
-          return new ThumbnailBuilder(data23);
+          return new ThumbnailBuilder(data24);
         case import_v1027.ComponentType.MediaGallery:
-          return new MediaGalleryBuilder(data23);
+          return new MediaGalleryBuilder(data24);
         case import_v1027.ComponentType.Label:
-          return new LabelBuilder(data23);
+          return new LabelBuilder(data24);
         case import_v1027.ComponentType.FileUpload:
-          return new FileUploadBuilder(data23);
+          return new FileUploadBuilder(data24);
         case import_v1027.ComponentType.Checkbox:
-          return new CheckboxBuilder(data23);
+          return new CheckboxBuilder(data24);
         case import_v1027.ComponentType.CheckboxGroup:
-          return new CheckboxGroupBuilder(data23);
+          return new CheckboxGroupBuilder(data24);
         case import_v1027.ComponentType.RadioGroup:
-          return new RadioGroupBuilder(data23);
+          return new RadioGroupBuilder(data24);
         default:
-          throw new Error(`Cannot properly serialize component type: ${data23.type}`);
+          throw new Error(`Cannot properly serialize component type: ${data24.type}`);
       }
     }
     __name(createComponentBuilder, "createComponentBuilder");
@@ -45696,8 +45696,8 @@ var require_dist8 = __commonJS({
        * 	.addComponents(button2, button3);
        * ```
        */
-      constructor({ components, ...data23 } = {}) {
-        super({ type: import_v1028.ComponentType.ActionRow, ...data23 });
+      constructor({ components, ...data24 } = {}) {
+        super({ type: import_v1028.ComponentType.ActionRow, ...data24 });
         this.components = components?.map((component) => createComponentBuilder(component)) ?? [];
       }
       /**
@@ -45761,8 +45761,8 @@ var require_dist8 = __commonJS({
        *
        * @param data - The API data to create this modal with
        */
-      constructor({ components, ...data23 } = {}) {
-        this.data = { ...data23 };
+      constructor({ components, ...data24 } = {}) {
+        this.data = { ...data24 };
         this.components = components?.map((component) => createComponentBuilder(component)) ?? [];
       }
       /**
@@ -46864,7 +46864,7 @@ var require_dist8 = __commonJS({
         return this;
       }
     };
-    var SlashCommandBuilder23 = class {
+    var SlashCommandBuilder24 = class {
       /**
        * The name of this command.
        */
@@ -46917,10 +46917,10 @@ var require_dist8 = __commonJS({
        */
       nsfw = void 0;
     };
-    __name(SlashCommandBuilder23, "SlashCommandBuilder");
-    SlashCommandBuilder23 = __decorateClass([
+    __name(SlashCommandBuilder24, "SlashCommandBuilder");
+    SlashCommandBuilder24 = __decorateClass([
       (0, import_ts_mixer6.mix)(SharedSlashCommandOptions, SharedNameAndDescription, SharedSlashCommandSubcommands, SharedSlashCommand)
-    ], SlashCommandBuilder23);
+    ], SlashCommandBuilder24);
     var Assertions_exports11 = {};
     __export2(Assertions_exports11, {
       contextsPredicate: () => contextsPredicate2,
@@ -47143,8 +47143,8 @@ var require_dist8 = __commonJS({
         return { ...this };
       }
     };
-    function embedLength(data23) {
-      return (data23.title?.length ?? 0) + (data23.description?.length ?? 0) + (data23.fields?.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0) ?? 0) + (data23.footer?.text.length ?? 0) + (data23.author?.name.length ?? 0);
+    function embedLength(data24) {
+      return (data24.title?.length ?? 0) + (data24.description?.length ?? 0) + (data24.fields?.reduce((prev, curr) => prev + curr.name.length + curr.value.length, 0) ?? 0) + (data24.footer?.text.length ?? 0) + (data24.author?.name.length ?? 0);
     }
     __name(embedLength, "embedLength");
     var version3 = "1.14.1";
@@ -47158,8 +47158,8 @@ var require_Embed = __commonJS({
     var { embedLength } = require_dist8();
     var isEqual = require_fast_deep_equal();
     var Embed = class _Embed {
-      constructor(data23) {
-        this.data = { ...data23 };
+      constructor(data24) {
+        this.data = { ...data24 };
       }
       /**
        * An array of fields of this embed.
@@ -47516,20 +47516,20 @@ var require_MessageMentions = __commonJS({
        * @param {MessageMentionsHasOptions} [options] The options for the check
        * @returns {boolean}
        */
-      has(data23, { ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {}) {
-        const user = this.client.users.resolve(data23);
+      has(data24, { ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {}) {
+        const user = this.client.users.resolve(data24);
         if (!ignoreEveryone && user && this.everyone) return true;
         const userWasRepliedTo = user && this.repliedUser?.id === user.id;
         if (!ignoreRepliedUser && userWasRepliedTo && this.users.has(user.id)) return true;
         if (!ignoreDirect) {
           if (user && (!ignoreRepliedUser || this.parsedUsers.has(user.id)) && this.users.has(user.id)) return true;
-          const role = this.guild?.roles.resolve(data23);
+          const role = this.guild?.roles.resolve(data24);
           if (role && this.roles.has(role.id)) return true;
-          const channel = this.client.channels.resolve(data23);
+          const channel = this.client.channels.resolve(data24);
           if (channel && this.channels.has(channel.id)) return true;
         }
         if (!ignoreRoles) {
-          const member = this.guild?.members.resolve(data23);
+          const member = this.guild?.members.resolve(data24);
           if (member) {
             for (const mentionedRole of this.roles.values()) if (member.roles.cache.has(mentionedRole.id)) return true;
           }
@@ -47815,8 +47815,8 @@ var require_Sticker = __commonJS({
        * @returns {Promise<Sticker>}
        */
       async fetch() {
-        const data23 = await this.client.rest.get(Routes2.sticker(this.id));
-        this._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.sticker(this.id));
+        this._patch(data24);
         return this;
       }
       /**
@@ -47894,24 +47894,24 @@ var require_BaseGuildEmoji = __commonJS({
     "use strict";
     var { Emoji } = require_Emoji();
     var BaseGuildEmoji = class extends Emoji {
-      constructor(client2, data23, guild) {
-        super(client2, data23);
+      constructor(client2, data24, guild) {
+        super(client2, data24);
         this.guild = guild;
         this.requiresColons = null;
         this.managed = null;
         this.available = null;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("name" in data23) this.name = data23.name;
-        if ("require_colons" in data23) {
-          this.requiresColons = data23.require_colons;
+      _patch(data24) {
+        if ("name" in data24) this.name = data24.name;
+        if ("require_colons" in data24) {
+          this.requiresColons = data24.require_colons;
         }
-        if ("managed" in data23) {
-          this.managed = data23.managed;
+        if ("managed" in data24) {
+          this.managed = data24.managed;
         }
-        if ("available" in data23) {
-          this.available = data23.available;
+        if ("available" in data24) {
+          this.available = data24.available;
         }
       }
     };
@@ -48032,11 +48032,11 @@ var require_GuildEmoji = __commonJS({
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var GuildEmojiRoleManager = require_GuildEmojiRoleManager();
     var GuildEmoji = class _GuildEmoji extends BaseGuildEmoji {
-      constructor(client2, data23, guild) {
-        super(client2, data23, guild);
+      constructor(client2, data24, guild) {
+        super(client2, data24, guild);
         this.author = null;
         Object.defineProperty(this, "_roles", { value: [], writable: true });
-        this._patch(data23);
+        this._patch(data24);
       }
       /**
        * The guild this emoji is part of
@@ -48048,10 +48048,10 @@ var require_GuildEmoji = __commonJS({
         clone2._roles = this._roles.slice();
         return clone2;
       }
-      _patch(data23) {
-        super._patch(data23);
-        if (data23.user) this.author = this.client.users._add(data23.user);
-        if (data23.roles) this._roles = data23.roles;
+      _patch(data24) {
+        super._patch(data24);
+        if (data24.user) this.author = this.client.users._add(data24.user);
+        if (data24.roles) this._roles = data24.roles;
       }
       /**
        * Whether the emoji is deletable by the client user
@@ -48189,12 +48189,12 @@ var require_ReactionUserManager = __commonJS({
       async fetch({ type = ReactionType.Normal, limit = 100, after } = {}) {
         const message = this.reaction.message;
         const query = makeURLSearchParams2({ limit, after, type });
-        const data23 = await this.client.rest.get(
+        const data24 = await this.client.rest.get(
           Routes2.channelMessageReaction(message.channelId, message.id, this.reaction.emoji.identifier),
           { query }
         );
         const users = new Collection3();
-        for (const rawUser of data23) {
+        for (const rawUser of data24) {
           const user = this.client.users._add(rawUser);
           this.cache.set(user.id, user);
           users.set(user.id, user);
@@ -48230,27 +48230,27 @@ var require_MessageReaction = __commonJS({
     var ReactionUserManager = require_ReactionUserManager();
     var { flatten } = require_Util();
     var MessageReaction = class {
-      constructor(client2, data23, message) {
+      constructor(client2, data24, message) {
         Object.defineProperty(this, "client", { value: client2 });
         this.message = message;
-        this.me = data23.me;
-        this.meBurst = Boolean(data23.me_burst);
+        this.me = data24.me;
+        this.meBurst = Boolean(data24.me_burst);
         this.users = new ReactionUserManager(this, this.me ? [client2.user] : []);
-        this._emoji = new ReactionEmoji(this, data23.emoji);
+        this._emoji = new ReactionEmoji(this, data24.emoji);
         this.burstColors = null;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if (data23.burst_colors) {
-          this.burstColors = data23.burst_colors;
+      _patch(data24) {
+        if (data24.burst_colors) {
+          this.burstColors = data24.burst_colors;
         }
-        if ("count" in data23) {
-          this.count ??= data23.count;
+        if ("count" in data24) {
+          this.count ??= data24.count;
         }
-        if ("count_details" in data23) {
+        if ("count_details" in data24) {
           this.countDetails = {
-            burst: data23.count_details.burst,
-            normal: data23.count_details.normal
+            burst: data24.count_details.burst,
+            normal: data24.count_details.normal
           };
         } else {
           this.countDetails ??= { burst: 0, normal: 0 };
@@ -48370,8 +48370,8 @@ var require_ReactionManager = __commonJS({
         super(message.client, MessageReaction, iterable);
         this.message = message;
       }
-      _add(data23, cache) {
-        return super._add(data23, cache, { id: data23.emoji.id ?? data23.emoji.name, extras: [this.message] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { id: data24.emoji.id ?? data24.emoji.name, extras: [this.message] });
       }
       /**
        * The reaction cache of this manager
@@ -48420,8 +48420,8 @@ var require_Component = __commonJS({
     "use strict";
     var isEqual = require_fast_deep_equal();
     var Component = class _Component {
-      constructor(data23) {
-        this.data = data23;
+      constructor(data24) {
+        this.data = data24;
       }
       /**
        * The id of this component
@@ -48471,8 +48471,8 @@ var require_ActionRow = __commonJS({
     var Component = require_Component();
     var { createComponent } = require_Components();
     var ActionRow = class extends Component {
-      constructor({ components, ...data23 }) {
-        super(data23);
+      constructor({ components, ...data24 }) {
+        super(data24);
         this.components = components.map((component) => createComponent(component));
       }
       /**
@@ -48508,9 +48508,9 @@ var require_ActionRowBuilder = __commonJS({
     var { createComponentBuilder } = require_Components();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var ActionRowBuilder7 = class extends BuildersActionRow {
-      constructor({ components, ...data23 } = {}) {
+      constructor({ components, ...data24 } = {}) {
         super({
-          ...toSnakeCase2(data23),
+          ...toSnakeCase2(data24),
           components: components?.map((component) => createComponentBuilder(component))
         });
       }
@@ -48536,8 +48536,8 @@ var require_ButtonBuilder = __commonJS({
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var { resolvePartialEmoji } = require_Util();
     var ButtonBuilder7 = class extends BuildersButton {
-      constructor({ emoji: emoji3, ...data23 } = {}) {
-        super(toSnakeCase2({ ...data23, emoji: emoji3 && typeof emoji3 === "string" ? resolvePartialEmoji(emoji3) : emoji3 }));
+      constructor({ emoji: emoji3, ...data24 } = {}) {
+        super(toSnakeCase2({ ...data24, emoji: emoji3 && typeof emoji3 === "string" ? resolvePartialEmoji(emoji3) : emoji3 }));
       }
       /**
        * Sets the emoji to display on this button
@@ -48630,8 +48630,8 @@ var require_ChannelSelectMenuBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var ChannelSelectMenuBuilder = class extends BuildersChannelSelectMenu {
-      constructor(data23 = {}) {
-        super(toSnakeCase2(data23));
+      constructor(data24 = {}) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Creates a new select menu builder from JSON data
@@ -48723,8 +48723,8 @@ var require_ContainerComponent = __commonJS({
     var Component = require_Component();
     var { createComponent } = require_Components();
     var ContainerComponent = class extends Component {
-      constructor({ components, ...data23 }) {
-        super(data23);
+      constructor({ components, ...data24 }) {
+        super(data24);
         this.components = components.map((component) => createComponent(component));
       }
       /**
@@ -48768,8 +48768,8 @@ var require_UnfurledMediaItem = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/structures/UnfurledMediaItem.js"(exports2, module2) {
     "use strict";
     var UnfurledMediaItem = class {
-      constructor(data23) {
-        this.data = data23;
+      constructor(data24) {
+        this.data = data24;
       }
       /**
        * The URL of this media gallery item
@@ -48798,8 +48798,8 @@ var require_FileComponent = __commonJS({
     var Component = require_Component();
     var UnfurledMediaItem = require_UnfurledMediaItem();
     var FileComponent = class extends Component {
-      constructor({ file: file2, ...data23 }) {
-        super(data23);
+      constructor({ file: file2, ...data24 }) {
+        super(data24);
         this.file = new UnfurledMediaItem(file2);
       }
       /**
@@ -48829,8 +48829,8 @@ var require_LabelComponent = __commonJS({
     var Component = require_Component();
     var { createComponent } = require_Components();
     var LabelComponent = class extends Component {
-      constructor({ component, ...data23 }) {
-        super(data23);
+      constructor({ component, ...data24 }) {
+        super(data24);
         this.component = createComponent(component);
       }
       /**
@@ -48870,8 +48870,8 @@ var require_MediaGalleryItem = __commonJS({
     "use strict";
     var UnfurledMediaItem = require_UnfurledMediaItem();
     var MediaGalleryItem = class {
-      constructor({ media, ...data23 }) {
-        this.data = data23;
+      constructor({ media, ...data24 }) {
+        this.data = data24;
         this.media = new UnfurledMediaItem(media);
       }
       /**
@@ -48909,8 +48909,8 @@ var require_MediaGalleryComponent = __commonJS({
     var Component = require_Component();
     var MediaGalleryItem = require_MediaGalleryItem();
     var MediaGalleryComponent = class extends Component {
-      constructor({ items, ...data23 }) {
-        super(data23);
+      constructor({ items, ...data24 }) {
+        super(data24);
         this.items = items.map((item) => new MediaGalleryItem(item));
       }
       /**
@@ -48933,8 +48933,8 @@ var require_MentionableSelectMenuBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var MentionableSelectMenuBuilder = class extends BuildersMentionableSelectMenu {
-      constructor(data23 = {}) {
-        super(toSnakeCase2(data23));
+      constructor(data24 = {}) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Creates a new select menu builder from JSON data
@@ -48969,8 +48969,8 @@ var require_RoleSelectMenuBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var RoleSelectMenuBuilder = class extends BuildersRoleSelectMenu {
-      constructor(data23 = {}) {
-        super(toSnakeCase2(data23));
+      constructor(data24 = {}) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Creates a new select menu builder from JSON data
@@ -49003,8 +49003,8 @@ var require_SectionComponent = __commonJS({
     var Component = require_Component();
     var { createComponent } = require_Components();
     var SectionComponent = class extends Component {
-      constructor({ accessory, components, ...data23 }) {
-        super(data23);
+      constructor({ accessory, components, ...data24 }) {
+        super(data24);
         this.components = components.map((component) => createComponent(component));
         this.accessory = createComponent(accessory);
       }
@@ -49061,10 +49061,10 @@ var require_StringSelectMenuBuilder = __commonJS({
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var { resolvePartialEmoji } = require_Util();
     var StringSelectMenuBuilder = class _StringSelectMenuBuilder extends BuildersSelectMenu {
-      constructor({ options, ...data23 } = {}) {
+      constructor({ options, ...data24 } = {}) {
         super(
           toSnakeCase2({
-            ...data23,
+            ...data24,
             options: options?.map(({ emoji: emoji3, ...option }) => ({
               ...option,
               emoji: emoji3 && typeof emoji3 === "string" ? resolvePartialEmoji(emoji3) : emoji3
@@ -49166,8 +49166,8 @@ var require_TextInputBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var TextInputBuilder = class extends BuildersTextInput {
-      constructor(data23) {
-        super(toSnakeCase2(data23));
+      constructor(data24) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Creates a new text input builder from JSON data
@@ -49216,8 +49216,8 @@ var require_ThumbnailComponent = __commonJS({
     var Component = require_Component();
     var UnfurledMediaItem = require_UnfurledMediaItem();
     var ThumbnailComponent = class extends Component {
-      constructor({ media, ...data23 }) {
-        super(data23);
+      constructor({ media, ...data24 }) {
+        super(data24);
         this.media = new UnfurledMediaItem(media);
       }
       /**
@@ -49256,8 +49256,8 @@ var require_UserSelectMenuBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var UserSelectMenuBuilder = class extends BuildersUserSelectMenu {
-      constructor(data23 = {}) {
-        super(toSnakeCase2(data23));
+      constructor(data24 = {}) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Creates a new select menu builder from JSON data
@@ -49289,11 +49289,11 @@ var require_Components = __commonJS({
     "use strict";
     var { ComponentBuilder } = require_dist8();
     var { ComponentType: ComponentType4 } = require_v106();
-    function createComponent(data23) {
-      return data23 instanceof Component ? data23 : new (ComponentTypeToComponent[data23.type] ?? Component)(data23);
+    function createComponent(data24) {
+      return data24 instanceof Component ? data24 : new (ComponentTypeToComponent[data24.type] ?? Component)(data24);
     }
-    function createComponentBuilder(data23) {
-      return data23 instanceof ComponentBuilder ? data23 : new (ComponentTypeToBuilder[data23.type] ?? ComponentBuilder)(data23);
+    function createComponentBuilder(data24) {
+      return data24 instanceof ComponentBuilder ? data24 : new (ComponentTypeToBuilder[data24.type] ?? ComponentBuilder)(data24);
     }
     function extractInteractiveComponents(component) {
       switch (component.type) {
@@ -49401,106 +49401,106 @@ var require_Message = __commonJS({
     var { _transformAPIMessageInteractionMetadata } = require_Transformers();
     var { cleanContent, resolvePartialEmoji, transformResolved } = require_Util();
     var Message4 = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.channelId = data23.channel_id;
-        this.guildId = data23.guild_id ?? this.channel?.guild?.id ?? null;
-        this._patch(data23);
+        this.channelId = data24.channel_id;
+        this.guildId = data24.guild_id ?? this.channel?.guild?.id ?? null;
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
+      _patch(data24) {
+        this.id = data24.id;
         this.createdTimestamp = DiscordSnowflake.timestampFrom(this.id);
-        if ("type" in data23) {
-          this.type = data23.type;
+        if ("type" in data24) {
+          this.type = data24.type;
           this.system = !NonSystemMessageTypes.includes(this.type);
         } else {
           this.system ??= null;
           this.type ??= null;
         }
-        if ("content" in data23) {
-          this.content = data23.content;
+        if ("content" in data24) {
+          this.content = data24.content;
         } else {
           this.content ??= null;
         }
-        if ("author" in data23) {
-          this.author = this.client.users._add(data23.author, !data23.webhook_id);
+        if ("author" in data24) {
+          this.author = this.client.users._add(data24.author, !data24.webhook_id);
         } else {
           this.author ??= null;
         }
-        if ("pinned" in data23) {
-          this.pinned = Boolean(data23.pinned);
+        if ("pinned" in data24) {
+          this.pinned = Boolean(data24.pinned);
         } else {
           this.pinned ??= null;
         }
-        if ("tts" in data23) {
-          this.tts = data23.tts;
+        if ("tts" in data24) {
+          this.tts = data24.tts;
         } else {
           this.tts ??= null;
         }
-        if ("nonce" in data23) {
-          this.nonce = data23.nonce;
+        if ("nonce" in data24) {
+          this.nonce = data24.nonce;
         } else {
           this.nonce ??= null;
         }
-        if ("embeds" in data23) {
-          this.embeds = data23.embeds.map((embed) => new Embed(embed));
+        if ("embeds" in data24) {
+          this.embeds = data24.embeds.map((embed) => new Embed(embed));
         } else {
           this.embeds = this.embeds?.slice() ?? [];
         }
-        if ("components" in data23) {
-          this.components = data23.components.map((component) => createComponent(component));
+        if ("components" in data24) {
+          this.components = data24.components.map((component) => createComponent(component));
         } else {
           this.components = this.components?.slice() ?? [];
         }
-        if ("attachments" in data23) {
+        if ("attachments" in data24) {
           this.attachments = new Collection3();
-          if (data23.attachments) {
-            for (const attachment of data23.attachments) {
+          if (data24.attachments) {
+            for (const attachment of data24.attachments) {
               this.attachments.set(attachment.id, new Attachment(attachment));
             }
           }
         } else {
           this.attachments = new Collection3(this.attachments);
         }
-        if ("sticker_items" in data23 || "stickers" in data23) {
+        if ("sticker_items" in data24 || "stickers" in data24) {
           this.stickers = new Collection3(
-            (data23.sticker_items ?? data23.stickers)?.map((sticker) => [sticker.id, new Sticker2(this.client, sticker)])
+            (data24.sticker_items ?? data24.stickers)?.map((sticker) => [sticker.id, new Sticker2(this.client, sticker)])
           );
         } else {
           this.stickers = new Collection3(this.stickers);
         }
-        if ("position" in data23) {
-          this.position = data23.position;
+        if ("position" in data24) {
+          this.position = data24.position;
         } else {
           this.position ??= null;
         }
-        if ("role_subscription_data" in data23) {
+        if ("role_subscription_data" in data24) {
           this.roleSubscriptionData = {
-            roleSubscriptionListingId: data23.role_subscription_data.role_subscription_listing_id,
-            tierName: data23.role_subscription_data.tier_name,
-            totalMonthsSubscribed: data23.role_subscription_data.total_months_subscribed,
-            isRenewal: data23.role_subscription_data.is_renewal
+            roleSubscriptionListingId: data24.role_subscription_data.role_subscription_listing_id,
+            tierName: data24.role_subscription_data.tier_name,
+            totalMonthsSubscribed: data24.role_subscription_data.total_months_subscribed,
+            isRenewal: data24.role_subscription_data.is_renewal
           };
         } else {
           this.roleSubscriptionData ??= null;
         }
-        if ("resolved" in data23) {
+        if ("resolved" in data24) {
           this.resolved = transformResolved(
             { client: this.client, guild: this.guild, channel: this.channel },
-            data23.resolved
+            data24.resolved
           );
         } else {
           this.resolved ??= null;
         }
-        if (data23.edited_timestamp) {
-          this.editedTimestamp = Date.parse(data23.edited_timestamp);
+        if (data24.edited_timestamp) {
+          this.editedTimestamp = Date.parse(data24.edited_timestamp);
         } else {
           this.editedTimestamp ??= null;
         }
-        if ("reactions" in data23) {
+        if ("reactions" in data24) {
           this.reactions = new ReactionManager(this);
-          if (data23.reactions?.length > 0) {
-            for (const reaction of data23.reactions) {
+          if (data24.reactions?.length > 0) {
+            for (const reaction of data24.reactions) {
               this.reactions._add(reaction);
             }
           }
@@ -49510,97 +49510,97 @@ var require_Message = __commonJS({
         if (!this.mentions) {
           this.mentions = new Mentions(
             this,
-            data23.mentions,
-            data23.mention_roles,
-            data23.mention_everyone,
-            data23.mention_channels,
-            data23.referenced_message?.author
+            data24.mentions,
+            data24.mention_roles,
+            data24.mention_everyone,
+            data24.mention_channels,
+            data24.referenced_message?.author
           );
         } else {
           this.mentions = new Mentions(
             this,
-            data23.mentions ?? this.mentions.users,
-            data23.mention_roles ?? this.mentions.roles,
-            data23.mention_everyone ?? this.mentions.everyone,
-            data23.mention_channels ?? this.mentions.crosspostedChannels,
-            data23.referenced_message?.author ?? this.mentions.repliedUser
+            data24.mentions ?? this.mentions.users,
+            data24.mention_roles ?? this.mentions.roles,
+            data24.mention_everyone ?? this.mentions.everyone,
+            data24.mention_channels ?? this.mentions.crosspostedChannels,
+            data24.referenced_message?.author ?? this.mentions.repliedUser
           );
         }
-        if ("webhook_id" in data23) {
-          this.webhookId = data23.webhook_id;
+        if ("webhook_id" in data24) {
+          this.webhookId = data24.webhook_id;
         } else {
           this.webhookId ??= null;
         }
-        if ("application" in data23) {
-          this.groupActivityApplication = new ClientApplication(this.client, data23.application);
+        if ("application" in data24) {
+          this.groupActivityApplication = new ClientApplication(this.client, data24.application);
         } else {
           this.groupActivityApplication ??= null;
         }
-        if ("application_id" in data23) {
-          this.applicationId = data23.application_id;
+        if ("application_id" in data24) {
+          this.applicationId = data24.application_id;
         } else {
           this.applicationId ??= null;
         }
-        if ("activity" in data23) {
+        if ("activity" in data24) {
           this.activity = {
-            partyId: data23.activity.party_id,
-            type: data23.activity.type
+            partyId: data24.activity.party_id,
+            type: data24.activity.type
           };
         } else {
           this.activity ??= null;
         }
-        if ("thread" in data23) {
-          this.client.channels._add(data23.thread, this.guild);
+        if ("thread" in data24) {
+          this.client.channels._add(data24.thread, this.guild);
         }
-        if (this.member && data23.member) {
-          this.member._patch(data23.member);
-        } else if (data23.member && this.guild && this.author) {
-          this.guild.members._add(Object.assign(data23.member, { user: this.author }));
+        if (this.member && data24.member) {
+          this.member._patch(data24.member);
+        } else if (data24.member && this.guild && this.author) {
+          this.guild.members._add(Object.assign(data24.member, { user: this.author }));
         }
-        if ("flags" in data23) {
-          this.flags = new MessageFlagsBitField(data23.flags).freeze();
+        if ("flags" in data24) {
+          this.flags = new MessageFlagsBitField(data24.flags).freeze();
         } else {
           this.flags = new MessageFlagsBitField(this.flags).freeze();
         }
-        if ("message_reference" in data23) {
+        if ("message_reference" in data24) {
           this.reference = {
-            channelId: data23.message_reference.channel_id,
-            guildId: data23.message_reference.guild_id,
-            messageId: data23.message_reference.message_id,
-            type: data23.message_reference.type
+            channelId: data24.message_reference.channel_id,
+            guildId: data24.message_reference.guild_id,
+            messageId: data24.message_reference.message_id,
+            type: data24.message_reference.type
           };
         } else {
           this.reference ??= null;
         }
-        if (data23.referenced_message) {
-          this.channel?.messages._add({ guild_id: data23.message_reference?.guild_id, ...data23.referenced_message });
+        if (data24.referenced_message) {
+          this.channel?.messages._add({ guild_id: data24.message_reference?.guild_id, ...data24.referenced_message });
         }
-        if (data23.interaction_metadata) {
-          this.interactionMetadata = _transformAPIMessageInteractionMetadata(this.client, data23.interaction_metadata);
+        if (data24.interaction_metadata) {
+          this.interactionMetadata = _transformAPIMessageInteractionMetadata(this.client, data24.interaction_metadata);
         } else {
           this.interactionMetadata ??= null;
         }
-        if (data23.interaction) {
+        if (data24.interaction) {
           this.interaction = {
-            id: data23.interaction.id,
-            type: data23.interaction.type,
-            commandName: data23.interaction.name,
-            user: this.client.users._add(data23.interaction.user)
+            id: data24.interaction.id,
+            type: data24.interaction.type,
+            commandName: data24.interaction.name,
+            user: this.client.users._add(data24.interaction.user)
           };
         } else {
           this.interaction ??= null;
         }
-        if (data23.poll) {
+        if (data24.poll) {
           if (this.poll) {
-            this.poll._patch(data23.poll);
+            this.poll._patch(data24.poll);
           } else {
-            this.poll = new Poll(this.client, data23.poll, this, this.channel);
+            this.poll = new Poll(this.client, data24.poll, this, this.channel);
           }
         } else {
           this.poll ??= null;
         }
-        if (data23.message_snapshots) {
-          this.messageSnapshots = data23.message_snapshots.reduce((coll, snapshot) => {
+        if (data24.message_snapshots) {
+          this.messageSnapshots = data24.message_snapshots.reduce((coll, snapshot) => {
             const channel = this.client.channels.resolve(this.reference.channelId);
             const snapshotData = {
               ...snapshot.message,
@@ -49616,10 +49616,10 @@ var require_Message = __commonJS({
         } else {
           this.messageSnapshots ??= new Collection3();
         }
-        if (data23.call) {
+        if (data24.call) {
           this.call = {
-            endedTimestamp: data23.call.ended_timestamp ? Date.parse(data23.call.ended_timestamp) : null,
-            participants: data23.call.participants,
+            endedTimestamp: data24.call.ended_timestamp ? Date.parse(data24.call.ended_timestamp) : null,
+            participants: data24.call.participants,
             get endedAt() {
               return this.endedTimestamp && new Date(this.endedTimestamp);
             }
@@ -50015,18 +50015,18 @@ var require_Message = __commonJS({
        */
       async reply(options) {
         if (!this.channel) throw new DiscordjsError2(ErrorCodes2.ChannelNotCached);
-        let data23;
+        let data24;
         if (options instanceof MessagePayload) {
-          data23 = options;
+          data24 = options;
         } else {
-          data23 = MessagePayload.create(this, options, {
+          data24 = MessagePayload.create(this, options, {
             reply: {
               messageReference: this,
               failIfNotExists: options?.failIfNotExists ?? this.client.options.failIfNotExists
             }
           });
         }
-        return this.channel.send(data23);
+        return this.channel.send(data24);
       }
       /**
        * Forwards this message
@@ -50179,49 +50179,49 @@ var require_Webhook = __commonJS({
     var { resolveImage } = require_DataResolver();
     var getMessage = lazy2(() => require_Message().Message);
     var Webhook2 = class _Webhook {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         Object.defineProperty(this, "client", { value: client2 });
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        if ("name" in data24) {
+          this.name = data24.name;
         }
         Object.defineProperty(this, "token", {
-          value: data23.token ?? null,
+          value: data24.token ?? null,
           writable: true,
           configurable: true
         });
-        if ("avatar" in data23) {
-          this.avatar = data23.avatar;
+        if ("avatar" in data24) {
+          this.avatar = data24.avatar;
         }
-        this.id = data23.id;
-        if ("type" in data23) {
-          this.type = data23.type;
+        this.id = data24.id;
+        if ("type" in data24) {
+          this.type = data24.type;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         }
-        if ("channel_id" in data23) {
-          this.channelId = data23.channel_id;
+        if ("channel_id" in data24) {
+          this.channelId = data24.channel_id;
         }
-        if ("user" in data23) {
-          this.owner = this.client.users?._add(data23.user) ?? data23.user;
+        if ("user" in data24) {
+          this.owner = this.client.users?._add(data24.user) ?? data24.user;
         } else {
           this.owner ??= null;
         }
-        if ("application_id" in data23) {
-          this.applicationId = data23.application_id;
+        if ("application_id" in data24) {
+          this.applicationId = data24.application_id;
         } else {
           this.applicationId ??= null;
         }
-        if ("source_guild" in data23) {
-          this.sourceGuild = this.client.guilds?.cache.get(data23.source_guild.id) ?? data23.source_guild;
+        if ("source_guild" in data24) {
+          this.sourceGuild = this.client.guilds?.cache.get(data24.source_guild.id) ?? data24.source_guild;
         } else {
           this.sourceGuild ??= null;
         }
-        if ("source_channel" in data23) {
-          this.sourceChannel = this.client.channels?.cache.get(data23.source_channel?.id) ?? data23.source_channel;
+        if ("source_channel" in data24) {
+          this.sourceChannel = this.client.channels?.cache.get(data24.source_channel?.id) ?? data24.source_channel;
         } else {
           this.sourceChannel ??= null;
         }
@@ -50347,12 +50347,12 @@ var require_Webhook = __commonJS({
        */
       async sendSlackMessage(body) {
         if (!this.token) throw new DiscordjsError2(ErrorCodes2.WebhookTokenUnavailable);
-        const data23 = await this.client.rest.post(Routes2.webhookPlatform(this.id, this.token, "slack"), {
+        const data24 = await this.client.rest.post(Routes2.webhookPlatform(this.id, this.token, "slack"), {
           query: makeURLSearchParams2({ wait: true }),
           auth: false,
           body
         });
-        return data23.toString() === "ok";
+        return data24.toString() === "ok";
       }
       /**
        * Options used to edit a {@link Webhook}.
@@ -50373,14 +50373,14 @@ var require_Webhook = __commonJS({
           avatar = await resolveImage(avatar);
         }
         channel &&= channel.id ?? channel;
-        const data23 = await this.client.rest.patch(Routes2.webhook(this.id, channel ? void 0 : this.token), {
+        const data24 = await this.client.rest.patch(Routes2.webhook(this.id, channel ? void 0 : this.token), {
           body: { name, avatar, channel_id: channel },
           reason,
           auth: !this.token || Boolean(channel)
         });
-        this.name = data23.name;
-        this.avatar = data23.avatar;
-        this.channelId = data23.channel_id;
+        this.name = data24.name;
+        this.avatar = data24.avatar;
+        this.channelId = data24.channel_id;
         return this;
       }
       /**
@@ -50400,12 +50400,12 @@ var require_Webhook = __commonJS({
        */
       async fetchMessage(message, { threadId } = {}) {
         if (!this.token) throw new DiscordjsError2(ErrorCodes2.WebhookTokenUnavailable);
-        const data23 = await this.client.rest.get(Routes2.webhookMessage(this.id, this.token, message), {
+        const data24 = await this.client.rest.get(Routes2.webhookMessage(this.id, this.token, message), {
           query: threadId ? makeURLSearchParams2({ thread_id: threadId }) : void 0,
           auth: false
         });
-        if (!this.client.channels) return data23;
-        return this.client.channels.cache.get(data23.channel_id)?.messages._add(data23, false) ?? new (getMessage())(this.client, data23);
+        if (!this.client.channels) return data24;
+        return this.client.channels.cache.get(data24.channel_id)?.messages._add(data24, false) ?? new (getMessage())(this.client, data24);
       }
       /**
        * Edits a message that was sent by this webhook.
@@ -50582,12 +50582,12 @@ var require_WebhookClient = __commonJS({
        * @param {WebhookClientData} data The data of the webhook
        * @param {WebhookClientOptions} [options] Options for the webhook client
        */
-      constructor(data23, options) {
+      constructor(data24, options) {
         super(options);
         Object.defineProperty(this, "client", { value: this });
-        let { id, token } = data23;
-        if ("url" in data23) {
-          const parsed = parseWebhookURL(data23.url);
+        let { id, token } = data24;
+        if ("url" in data24) {
+          const parsed = parseWebhookURL(data24.url);
           if (!parsed) {
             throw new DiscordjsError2(ErrorCodes2.WebhookURLInvalid);
           }
@@ -50654,60 +50654,60 @@ var require_VoiceState = __commonJS({
     var Base = require_Base();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var VoiceState = class extends Base {
-      constructor(guild, data23) {
+      constructor(guild, data24) {
         super(guild.client);
         this.guild = guild;
-        this.id = data23.user_id;
-        this._patch(data23);
+        this.id = data24.user_id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("deaf" in data23) {
-          this.serverDeaf = data23.deaf;
+      _patch(data24) {
+        if ("deaf" in data24) {
+          this.serverDeaf = data24.deaf;
         } else {
           this.serverDeaf ??= null;
         }
-        if ("mute" in data23) {
-          this.serverMute = data23.mute;
+        if ("mute" in data24) {
+          this.serverMute = data24.mute;
         } else {
           this.serverMute ??= null;
         }
-        if ("self_deaf" in data23) {
-          this.selfDeaf = data23.self_deaf;
+        if ("self_deaf" in data24) {
+          this.selfDeaf = data24.self_deaf;
         } else {
           this.selfDeaf ??= null;
         }
-        if ("self_mute" in data23) {
-          this.selfMute = data23.self_mute;
+        if ("self_mute" in data24) {
+          this.selfMute = data24.self_mute;
         } else {
           this.selfMute ??= null;
         }
-        if ("self_video" in data23) {
-          this.selfVideo = data23.self_video;
+        if ("self_video" in data24) {
+          this.selfVideo = data24.self_video;
         } else {
           this.selfVideo ??= null;
         }
-        if ("session_id" in data23) {
-          this.sessionId = data23.session_id;
+        if ("session_id" in data24) {
+          this.sessionId = data24.session_id;
         } else {
           this.sessionId ??= null;
         }
-        if ("self_video" in data23) {
-          this.streaming = data23.self_stream ?? false;
+        if ("self_video" in data24) {
+          this.streaming = data24.self_stream ?? false;
         } else {
           this.streaming ??= null;
         }
-        if ("channel_id" in data23) {
-          this.channelId = data23.channel_id;
+        if ("channel_id" in data24) {
+          this.channelId = data24.channel_id;
         } else {
           this.channelId ??= null;
         }
-        if ("suppress" in data23) {
-          this.suppress = data23.suppress;
+        if ("suppress" in data24) {
+          this.suppress = data24.suppress;
         } else {
           this.suppress ??= null;
         }
-        if ("request_to_speak_timestamp" in data23) {
-          this.requestToSpeakTimestamp = data23.request_to_speak_timestamp && Date.parse(data23.request_to_speak_timestamp);
+        if ("request_to_speak_timestamp" in data24) {
+          this.requestToSpeakTimestamp = data24.request_to_speak_timestamp && Date.parse(data24.request_to_speak_timestamp);
         } else {
           this.requestToSpeakTimestamp ??= null;
         }
@@ -51092,7 +51092,7 @@ var require_GuildMember = __commonJS({
     var { GuildMemberFlagsBitField } = require_GuildMemberFlagsBitField();
     var PermissionsBitField2 = require_PermissionsBitField();
     var GuildMember = class extends Base {
-      constructor(client2, data23, guild) {
+      constructor(client2, data24, guild) {
         super(client2);
         this.guild = guild;
         this.premiumSinceTimestamp = null;
@@ -51100,49 +51100,49 @@ var require_GuildMember = __commonJS({
         this.pending = null;
         this.communicationDisabledUntilTimestamp = null;
         Object.defineProperty(this, "_roles", { value: [], writable: true });
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("user" in data23) {
-          this.user = this.client.users._add(data23.user, true);
+      _patch(data24) {
+        if ("user" in data24) {
+          this.user = this.client.users._add(data24.user, true);
         }
-        if ("nick" in data23) this.nickname = data23.nick;
-        if ("avatar" in data23) {
-          this.avatar = data23.avatar;
+        if ("nick" in data24) this.nickname = data24.nick;
+        if ("avatar" in data24) {
+          this.avatar = data24.avatar;
         } else if (typeof this.avatar !== "string") {
           this.avatar = null;
         }
-        if ("banner" in data23) {
-          this.banner = data23.banner;
+        if ("banner" in data24) {
+          this.banner = data24.banner;
         } else {
           this.banner ??= null;
         }
-        if ("joined_at" in data23) {
-          this.joinedTimestamp = data23.joined_at && Date.parse(data23.joined_at);
+        if ("joined_at" in data24) {
+          this.joinedTimestamp = data24.joined_at && Date.parse(data24.joined_at);
         } else {
           this.joinedTimestamp ??= null;
         }
-        if ("premium_since" in data23) {
-          this.premiumSinceTimestamp = data23.premium_since ? Date.parse(data23.premium_since) : null;
+        if ("premium_since" in data24) {
+          this.premiumSinceTimestamp = data24.premium_since ? Date.parse(data24.premium_since) : null;
         }
-        if ("roles" in data23) this._roles = data23.roles;
-        if ("pending" in data23) {
-          this.pending = data23.pending;
+        if ("roles" in data24) this._roles = data24.roles;
+        if ("pending" in data24) {
+          this.pending = data24.pending;
         } else if (!this.partial) {
           this.pending ??= false;
         }
-        if ("communication_disabled_until" in data23) {
-          this.communicationDisabledUntilTimestamp = data23.communication_disabled_until && Date.parse(data23.communication_disabled_until);
+        if ("communication_disabled_until" in data24) {
+          this.communicationDisabledUntilTimestamp = data24.communication_disabled_until && Date.parse(data24.communication_disabled_until);
         }
-        if ("flags" in data23) {
-          this.flags = new GuildMemberFlagsBitField(data23.flags).freeze();
+        if ("flags" in data24) {
+          this.flags = new GuildMemberFlagsBitField(data24.flags).freeze();
         } else {
           this.flags ??= new GuildMemberFlagsBitField().freeze();
         }
-        if (data23.avatar_decoration_data) {
+        if (data24.avatar_decoration_data) {
           this.avatarDecorationData = {
-            asset: data23.avatar_decoration_data.asset,
-            skuId: data23.avatar_decoration_data.sku_id
+            asset: data24.avatar_decoration_data.asset,
+            skuId: data24.avatar_decoration_data.sku_id
           };
         } else {
           this.avatarDecorationData = null;
@@ -51547,8 +51547,8 @@ var require_MessageManager = __commonJS({
        * @type {Collection<Snowflake, Message>}
        * @name MessageManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache);
+      _add(data24, cache) {
+        return super._add(data24, cache);
       }
       /**
        * Data that can be resolved to a Message object. This can be:
@@ -51611,14 +51611,14 @@ var require_MessageManager = __commonJS({
           const existing = this.cache.get(message);
           if (existing && !existing.partial) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.channelMessage(this.channel.id, message));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.channelMessage(this.channel.id, message));
+        return this._add(data24, cache);
       }
       async _fetchMany({ cache, ...apiOptions } = {}) {
-        const data23 = await this.client.rest.get(Routes2.channelMessages(this.channel.id), {
+        const data24 = await this.client.rest.get(Routes2.channelMessages(this.channel.id), {
           query: makeURLSearchParams2(apiOptions)
         });
-        return data23.reduce((_data, message) => _data.set(message.id, this._add(message, cache)), new Collection3());
+        return data24.reduce((_data, message) => _data.set(message.id, this._add(message, cache)), new Collection3());
       }
       /**
        * Options used to fetch pinned messages.
@@ -51657,21 +51657,21 @@ var require_MessageManager = __commonJS({
        *   .catch(console.error);
        */
       async fetchPins({ cache, ...apiOptions } = {}) {
-        const data23 = await this.client.rest.get(Routes2.channelMessagesPins(this.channel.id), {
+        const data24 = await this.client.rest.get(Routes2.channelMessagesPins(this.channel.id), {
           query: makeURLSearchParams2({
             ...apiOptions,
             before: apiOptions.before && new Date(apiOptions.before).toISOString()
           })
         });
         return {
-          items: data23.items.map((item) => ({
+          items: data24.items.map((item) => ({
             pinnedTimestamp: Date.parse(item.pinned_at),
             get pinnedAt() {
               return new Date(this.pinnedTimestamp);
             },
             message: this._add(item.message, cache)
           })),
-          hasMore: data23.has_more
+          hasMore: data24.has_more
         };
       }
       /**
@@ -51690,9 +51690,9 @@ var require_MessageManager = __commonJS({
           );
           deprecationEmittedForFetchPinned = true;
         }
-        const data23 = await this.client.rest.get(Routes2.channelPins(this.channel.id));
+        const data24 = await this.client.rest.get(Routes2.channelPins(this.channel.id));
         const messages = new Collection3();
-        for (const message of data23) messages.set(message.id, this._add(message, cache));
+        for (const message of data24) messages.set(message.id, this._add(message, cache));
         return messages;
       }
       /**
@@ -51751,8 +51751,8 @@ var require_MessageManager = __commonJS({
       async crosspost(message) {
         message = this.resolveId(message);
         if (!message) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "message", "MessageResolvable");
-        const data23 = await this.client.rest.post(Routes2.channelMessageCrosspost(this.channel.id, message));
-        return this.cache.get(data23.id) ?? this._add(data23);
+        const data24 = await this.client.rest.post(Routes2.channelMessageCrosspost(this.channel.id, message));
+        return this.cache.get(data24.id) ?? this._add(data24);
       }
       /**
        * Pins a message to the channel's pinned messages, even if it's not cached.
@@ -52126,8 +52126,8 @@ var require_MessagePayload = __commonJS({
           attachment = fileLike.attachment;
           name = fileLike.name ?? findName(attachment);
         }
-        const { data: data23, contentType } = await resolveFile(attachment);
-        return { data: data23, name, contentType };
+        const { data: data24, contentType } = await resolveFile(attachment);
+        return { data: data24, name, contentType };
       }
       /**
        * Creates a {@link MessagePayload} from user-level arguments.
@@ -52590,68 +52590,68 @@ var require_User = __commonJS({
     var UserFlagsBitField = require_UserFlagsBitField();
     var { emitDeprecationWarningForUserFetchFlags } = require_Util();
     var User = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
+        this.id = data24.id;
         this.bot = null;
         this.system = null;
         this.flags = null;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("username" in data23) {
-          this.username = data23.username;
+      _patch(data24) {
+        if ("username" in data24) {
+          this.username = data24.username;
         } else {
           this.username ??= null;
         }
-        if ("global_name" in data23) {
-          this.globalName = data23.global_name;
+        if ("global_name" in data24) {
+          this.globalName = data24.global_name;
         } else {
           this.globalName ??= null;
         }
-        if ("bot" in data23) {
-          this.bot = Boolean(data23.bot);
+        if ("bot" in data24) {
+          this.bot = Boolean(data24.bot);
         } else if (!this.partial && typeof this.bot !== "boolean") {
           this.bot = false;
         }
-        if ("discriminator" in data23) {
-          this.discriminator = data23.discriminator;
+        if ("discriminator" in data24) {
+          this.discriminator = data24.discriminator;
         } else {
           this.discriminator ??= null;
         }
-        if ("avatar" in data23) {
-          this.avatar = data23.avatar;
+        if ("avatar" in data24) {
+          this.avatar = data24.avatar;
         } else {
           this.avatar ??= null;
         }
-        if ("banner" in data23) {
-          this.banner = data23.banner;
+        if ("banner" in data24) {
+          this.banner = data24.banner;
         } else if (this.banner !== null) {
           this.banner ??= void 0;
         }
-        if ("accent_color" in data23) {
-          this.accentColor = data23.accent_color;
+        if ("accent_color" in data24) {
+          this.accentColor = data24.accent_color;
         } else if (this.accentColor !== null) {
           this.accentColor ??= void 0;
         }
-        if ("system" in data23) {
-          this.system = Boolean(data23.system);
+        if ("system" in data24) {
+          this.system = Boolean(data24.system);
         } else if (!this.partial && typeof this.system !== "boolean") {
           this.system = false;
         }
-        if ("public_flags" in data23) {
-          this.flags = new UserFlagsBitField(data23.public_flags);
+        if ("public_flags" in data24) {
+          this.flags = new UserFlagsBitField(data24.public_flags);
         }
-        if ("avatar_decoration" in data23) {
-          this.avatarDecoration = data23.avatar_decoration;
+        if ("avatar_decoration" in data24) {
+          this.avatarDecoration = data24.avatar_decoration;
         } else {
           this.avatarDecoration ??= null;
         }
-        if ("avatar_decoration_data" in data23) {
-          if (data23.avatar_decoration_data) {
+        if ("avatar_decoration_data" in data24) {
+          if (data24.avatar_decoration_data) {
             this.avatarDecorationData = {
-              asset: data23.avatar_decoration_data.asset,
-              skuId: data23.avatar_decoration_data.sku_id
+              asset: data24.avatar_decoration_data.asset,
+              skuId: data24.avatar_decoration_data.sku_id
             };
           } else {
             this.avatarDecorationData = null;
@@ -52659,18 +52659,18 @@ var require_User = __commonJS({
         } else {
           this.avatarDecorationData ??= null;
         }
-        if (data23.collectibles) {
-          this.collectibles = _transformCollectibles(data23.collectibles);
+        if (data24.collectibles) {
+          this.collectibles = _transformCollectibles(data24.collectibles);
         } else {
           this.collectibles = null;
         }
-        if ("primary_guild" in data23) {
-          if (data23.primary_guild) {
+        if ("primary_guild" in data24) {
+          if (data24.primary_guild) {
             this.primaryGuild = {
-              identityGuildId: data23.primary_guild.identity_guild_id,
-              identityEnabled: data23.primary_guild.identity_enabled,
-              tag: data23.primary_guild.tag,
-              badge: data23.primary_guild.badge
+              identityGuildId: data24.primary_guild.identity_guild_id,
+              identityEnabled: data24.primary_guild.identity_enabled,
+              tag: data24.primary_guild.tag,
+              badge: data24.primary_guild.badge
             };
           } else {
             this.primaryGuild = null;
@@ -52905,10 +52905,10 @@ var require_PollAnswerVoterManager = __commonJS({
       async fetch({ after, limit } = {}) {
         const poll = this.answer.poll;
         const query = makeURLSearchParams2({ limit, after });
-        const data23 = await this.client.rest.get(Routes2.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
+        const data24 = await this.client.rest.get(Routes2.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
           query
         });
-        return data23.users.reduce((coll, rawUser) => {
+        return data24.users.reduce((coll, rawUser) => {
           const user = this.client.users._add(rawUser);
           this.cache.set(user.id, user);
           return coll.set(user.id, user);
@@ -52929,23 +52929,23 @@ var require_PollAnswer = __commonJS({
     var { PollAnswerVoterManager } = require_PollAnswerVoterManager();
     var deprecationEmittedForFetchVoters = false;
     var PollAnswer = class extends Base {
-      constructor(client2, data23, poll) {
+      constructor(client2, data24, poll) {
         super(client2);
         Object.defineProperty(this, "poll", { value: poll });
-        this.id = data23.answer_id;
+        this.id = data24.answer_id;
         this.voters = new PollAnswerVoterManager(this);
         Object.defineProperty(this, "_emoji", { value: null, writable: true });
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("count" in data23) {
-          this.voteCount = data23.count;
+      _patch(data24) {
+        if ("count" in data24) {
+          this.voteCount = data24.count;
         } else {
           this.voteCount ??= this.voters.cache.size;
         }
-        this.text ??= data23.poll_media?.text ?? null;
-        if (data23.poll_media?.emoji) {
-          this._emoji = data23.poll_media.emoji;
+        this.text ??= data24.poll_media?.text ?? null;
+        if (data24.poll_media?.emoji) {
+          this._emoji = data24.poll_media.emoji;
         }
       }
       /**
@@ -52998,18 +52998,18 @@ var require_Poll = __commonJS({
     var { DiscordjsError: DiscordjsError2 } = require_DJSError();
     var { ErrorCodes: ErrorCodes2 } = require_errors2();
     var Poll = class extends Base {
-      constructor(client2, data23, message, channel) {
+      constructor(client2, data24, message, channel) {
         super(client2);
-        this.channelId = data23.channel_id ?? channel.id;
+        this.channelId = data24.channel_id ?? channel.id;
         Object.defineProperty(this, "channel", { value: channel });
-        this.messageId = data23.message_id ?? message.id;
+        this.messageId = data24.message_id ?? message.id;
         Object.defineProperty(this, "message", { value: message });
         this.answers = new Collection3();
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if (data23.answers) {
-          for (const answer of data23.answers) {
+      _patch(data24) {
+        if (data24.answers) {
+          for (const answer of data24.answers) {
             const existing = this.answers.get(answer.answer_id);
             if (existing) {
               existing._patch(answer);
@@ -53018,33 +53018,33 @@ var require_Poll = __commonJS({
             }
           }
         }
-        if (data23.results) {
-          this.resultsFinalized = data23.results.is_finalized;
-          for (const answerResult of data23.results.answer_counts) {
+        if (data24.results) {
+          this.resultsFinalized = data24.results.is_finalized;
+          for (const answerResult of data24.results.answer_counts) {
             const answer = this.answers.get(answerResult.id);
             answer?._patch(answerResult);
           }
         } else {
           this.resultsFinalized ??= false;
         }
-        if ("allow_multiselect" in data23) {
-          this.allowMultiselect = data23.allow_multiselect;
+        if ("allow_multiselect" in data24) {
+          this.allowMultiselect = data24.allow_multiselect;
         } else {
           this.allowMultiselect ??= null;
         }
-        if ("layout_type" in data23) {
-          this.layoutType = data23.layout_type;
+        if ("layout_type" in data24) {
+          this.layoutType = data24.layout_type;
         } else {
           this.layoutType ??= null;
         }
-        if ("expiry" in data23) {
-          this.expiresTimestamp = data23.expiry && Date.parse(data23.expiry);
+        if ("expiry" in data24) {
+          this.expiresTimestamp = data24.expiry && Date.parse(data24.expiry);
         } else {
           this.expiresTimestamp ??= null;
         }
-        if (data23.question) {
+        if (data24.question) {
           this.question = {
-            text: data23.question.text
+            text: data24.question.text
           };
         } else {
           this.question ??= {
@@ -53140,34 +53140,34 @@ var require_Action = __commonJS({
       constructor(client2) {
         this.client = client2;
       }
-      handle(data23) {
-        return data23;
+      handle(data24) {
+        return data24;
       }
-      getPayload(data23, manager, id, partialType, cache) {
-        return this.client.options.partials.includes(partialType) ? manager._add(data23, cache) : manager.cache.get(id);
+      getPayload(data24, manager, id, partialType, cache) {
+        return this.client.options.partials.includes(partialType) ? manager._add(data24, cache) : manager.cache.get(id);
       }
-      getChannel(data23) {
+      getChannel(data24) {
         const payloadData = {};
-        const id = data23.channel_id ?? data23.id;
-        if ("recipients" in data23) {
-          const recipient = data23.author ?? data23.user ?? { id: data23.user_id };
-          if (!data23.recipients.some((existingRecipient) => recipient.id === existingRecipient.id)) {
-            payloadData.recipients = [...data23.recipients, recipient];
+        const id = data24.channel_id ?? data24.id;
+        if ("recipients" in data24) {
+          const recipient = data24.author ?? data24.user ?? { id: data24.user_id };
+          if (!data24.recipients.some((existingRecipient) => recipient.id === existingRecipient.id)) {
+            payloadData.recipients = [...data24.recipients, recipient];
           }
-        } else if (data23.type === ChannelType4.DM || data23.type === ChannelType4.GroupDM) {
-          const recipient = data23.author ?? data23.user ?? { id: data23.user_id };
+        } else if (data24.type === ChannelType4.DM || data24.type === ChannelType4.GroupDM) {
+          const recipient = data24.author ?? data24.user ?? { id: data24.user_id };
           payloadData.recipients = [recipient];
         }
         if (id !== void 0) payloadData.id = id;
-        return data23[this.client.actions.injectedChannel] ?? this.getPayload({ ...data23, ...payloadData }, this.client.channels, id, Partials.Channel);
+        return data24[this.client.actions.injectedChannel] ?? this.getPayload({ ...data24, ...payloadData }, this.client.channels, id, Partials.Channel);
       }
-      getMessage(data23, channel, cache) {
-        const id = data23.message_id ?? data23.id;
-        return data23[this.client.actions.injectedMessage] ?? this.getPayload(
+      getMessage(data24, channel, cache) {
+        const id = data24.message_id ?? data24.id;
+        return data24[this.client.actions.injectedMessage] ?? this.getPayload(
           {
             id,
             channel_id: channel.id,
-            guild_id: data23.guild_id ?? channel.guild?.id
+            guild_id: data24.guild_id ?? channel.guild?.id
           },
           channel.messages,
           id,
@@ -53175,24 +53175,24 @@ var require_Action = __commonJS({
           cache
         );
       }
-      getPoll(data23, message, channel) {
+      getPoll(data24, message, channel) {
         const includePollPartial = this.client.options.partials.includes(Partials.Poll);
         const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
         if (message.partial && (!includePollPartial || !includePollAnswerPartial)) return null;
         if (!message.poll && includePollPartial) {
-          message.poll = new Poll(this.client, data23, message, channel);
+          message.poll = new Poll(this.client, data24, message, channel);
         }
-        if (message.poll && !message.poll.answers.has(data23.answer_id) && includePollAnswerPartial) {
-          const pollAnswer = new PollAnswer(this.client, data23, message.poll);
-          message.poll.answers.set(data23.answer_id, pollAnswer);
+        if (message.poll && !message.poll.answers.has(data24.answer_id) && includePollAnswerPartial) {
+          const pollAnswer = new PollAnswer(this.client, data24, message.poll);
+          message.poll.answers.set(data24.answer_id, pollAnswer);
         }
         return message.poll;
       }
-      getReaction(data23, message, user) {
-        const id = data23.emoji.id ?? decodeURIComponent(data23.emoji.name);
+      getReaction(data24, message, user) {
+        const id = data24.emoji.id ?? decodeURIComponent(data24.emoji.name);
         return this.getPayload(
           {
-            emoji: data23.emoji,
+            emoji: data24.emoji,
             count: message.partial ? null : 0,
             me: user?.id === this.client.user.id
           },
@@ -53201,28 +53201,28 @@ var require_Action = __commonJS({
           Partials.Reaction
         );
       }
-      getMember(data23, guild) {
-        return this.getPayload(data23, guild.members, data23.user.id, Partials.GuildMember);
+      getMember(data24, guild) {
+        return this.getPayload(data24, guild.members, data24.user.id, Partials.GuildMember);
       }
-      getUser(data23) {
-        const id = data23.user_id;
-        return data23[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User);
+      getUser(data24) {
+        const id = data24.user_id;
+        return data24[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User);
       }
-      getUserFromMember(data23) {
-        if (data23.guild_id && data23.member?.user) {
-          const guild = this.client.guilds.cache.get(data23.guild_id);
+      getUserFromMember(data24) {
+        if (data24.guild_id && data24.member?.user) {
+          const guild = this.client.guilds.cache.get(data24.guild_id);
           if (guild) {
-            return guild.members._add(data23.member).user;
+            return guild.members._add(data24.member).user;
           } else {
-            return this.client.users._add(data23.member.user);
+            return this.client.users._add(data24.member.user);
           }
         }
-        return this.getUser(data23);
+        return this.getUser(data24);
       }
-      getScheduledEvent(data23, guild) {
-        const id = data23.guild_scheduled_event_id ?? data23.id;
+      getScheduledEvent(data24, guild) {
+        const id = data24.guild_scheduled_event_id ?? data24.id;
         return this.getPayload(
-          { id, guild_id: data23.guild_id ?? guild.id },
+          { id, guild_id: data24.guild_id ?? guild.id },
           guild.scheduledEvents,
           id,
           Partials.GuildScheduledEvent
@@ -53231,11 +53231,11 @@ var require_Action = __commonJS({
       getThreadMember(id, manager) {
         return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
       }
-      getSoundboardSound(data23, guild) {
-        return this.getPayload(data23, guild.soundboardSounds, data23.sound_id, Partials.SoundboardSound);
+      getSoundboardSound(data24, guild) {
+        return this.getPayload(data24, guild.soundboardSounds, data24.sound_id, Partials.SoundboardSound);
       }
-      spreadInjectedData(data23) {
-        return Object.fromEntries(Object.getOwnPropertySymbols(data23).map((symbol2) => [symbol2, data23[symbol2]]));
+      spreadInjectedData(data24) {
+        return Object.fromEntries(Object.getOwnPropertySymbols(data24).map((symbol2) => [symbol2, data24[symbol2]]));
       }
     };
     module2.exports = GenericAction;
@@ -53249,13 +53249,13 @@ var require_ApplicationCommandPermissionsUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ApplicationCommandPermissionsUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
         client2.emit(Events3.ApplicationCommandPermissionsUpdate, {
-          permissions: data23.permissions,
-          id: data23.id,
-          guildId: data23.guild_id,
-          applicationId: data23.application_id
+          permissions: data24.permissions,
+          id: data24.id,
+          guildId: data24.guild_id,
+          applicationId: data24.application_id
         });
       }
     };
@@ -53269,18 +53269,18 @@ var require_AutoModerationActionExecution = __commonJS({
     "use strict";
     var { _transformAPIAutoModerationAction } = require_Transformers();
     var AutoModerationActionExecution = class {
-      constructor(data23, guild) {
+      constructor(data24, guild) {
         this.guild = guild;
-        this.action = _transformAPIAutoModerationAction(data23.action);
-        this.ruleId = data23.rule_id;
-        this.ruleTriggerType = data23.rule_trigger_type;
-        this.userId = data23.user_id;
-        this.channelId = data23.channel_id ?? null;
-        this.messageId = data23.message_id ?? null;
-        this.alertSystemMessageId = data23.alert_system_message_id ?? null;
-        this.content = data23.content;
-        this.matchedKeyword = data23.matched_keyword ?? null;
-        this.matchedContent = data23.matched_content ?? null;
+        this.action = _transformAPIAutoModerationAction(data24.action);
+        this.ruleId = data24.rule_id;
+        this.ruleTriggerType = data24.rule_trigger_type;
+        this.userId = data24.user_id;
+        this.channelId = data24.channel_id ?? null;
+        this.messageId = data24.message_id ?? null;
+        this.alertSystemMessageId = data24.alert_system_message_id ?? null;
+        this.content = data24.content;
+        this.matchedKeyword = data24.matched_keyword ?? null;
+        this.matchedContent = data24.matched_content ?? null;
       }
       /**
        * The auto moderation rule this action belongs to.
@@ -53327,11 +53327,11 @@ var require_AutoModerationActionExecution2 = __commonJS({
     var AutoModerationActionExecution = require_AutoModerationActionExecution();
     var Events3 = require_Events();
     var AutoModerationActionExecutionAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const { client: client2 } = this;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          client2.emit(Events3.AutoModerationActionExecution, new AutoModerationActionExecution(data23, guild));
+          client2.emit(Events3.AutoModerationActionExecution, new AutoModerationActionExecution(data24, guild));
         }
         return {};
       }
@@ -53347,11 +53347,11 @@ var require_AutoModerationRuleCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var AutoModerationRuleCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const { client: client2 } = this;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const autoModerationRule = guild.autoModerationRules._add(data23);
+          const autoModerationRule = guild.autoModerationRules._add(data24);
           client2.emit(Events3.AutoModerationRuleCreate, autoModerationRule);
         }
         return {};
@@ -53368,11 +53368,11 @@ var require_AutoModerationRuleDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var AutoModerationRuleDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const { client: client2 } = this;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const autoModerationRule = guild.autoModerationRules.cache.get(data23.id);
+          const autoModerationRule = guild.autoModerationRules.cache.get(data24.id);
           if (autoModerationRule) {
             guild.autoModerationRules.cache.delete(autoModerationRule.id);
             client2.emit(Events3.AutoModerationRuleDelete, autoModerationRule);
@@ -53392,12 +53392,12 @@ var require_AutoModerationRuleUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var AutoModerationRuleUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const { client: client2 } = this;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const oldAutoModerationRule = guild.autoModerationRules.cache.get(data23.id)?._clone() ?? null;
-          const newAutoModerationRule = guild.autoModerationRules._add(data23);
+          const oldAutoModerationRule = guild.autoModerationRules.cache.get(data24.id)?._clone() ?? null;
+          const newAutoModerationRule = guild.autoModerationRules._add(data24);
           client2.emit(Events3.AutoModerationRuleUpdate, oldAutoModerationRule, newAutoModerationRule);
         }
         return {};
@@ -53414,10 +53414,10 @@ var require_ChannelCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ChannelCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const existing = client2.channels.cache.has(data23.id);
-        const channel = client2.channels._add(data23);
+        const existing = client2.channels.cache.has(data24.id);
+        const channel = client2.channels._add(data24);
         if (!existing && channel) {
           client2.emit(Events3.ChannelCreate, channel);
         }
@@ -53435,9 +53435,9 @@ var require_ChannelDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ChannelDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = client2.channels.cache.get(data23.id);
+        const channel = client2.channels.cache.get(data24.id);
         if (channel) {
           client2.channels._remove(channel.id);
           client2.emit(Events3.ChannelDelete, channel);
@@ -53586,28 +53586,28 @@ var require_DMChannel = __commonJS({
     var DMMessageManager = require_DMMessageManager();
     var Partials = require_Partials();
     var DMChannel = class extends BaseChannel {
-      constructor(client2, data23) {
-        super(client2, data23);
+      constructor(client2, data24) {
+        super(client2, data24);
         this.type = ChannelType4.DM;
         this.messages = new DMMessageManager(this);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if (data23.recipients) {
+      _patch(data24) {
+        super._patch(data24);
+        if (data24.recipients) {
           this.recipientIds = [
-            .../* @__PURE__ */ new Set([...this.recipientIds ?? [], ...data23.recipients.map((recipient) => recipient.id)])
+            .../* @__PURE__ */ new Set([...this.recipientIds ?? [], ...data24.recipients.map((recipient) => recipient.id)])
           ];
-          for (const recipient of data23.recipients) {
+          for (const recipient of data24.recipients) {
             if ("username" in recipient || this.client.options.partials.includes(Partials.User)) {
               this.client.users._add(recipient);
             }
           }
         }
-        if ("last_message_id" in data23) {
-          this.lastMessageId = data23.last_message_id;
+        if ("last_message_id" in data24) {
+          this.lastMessageId = data24.last_message_id;
         }
-        if ("last_pin_timestamp" in data23) {
-          this.lastPinTimestamp = Date.parse(data23.last_pin_timestamp);
+        if ("last_pin_timestamp" in data24) {
+          this.lastPinTimestamp = Date.parse(data24.last_pin_timestamp);
         } else {
           this.lastPinTimestamp ??= null;
         }
@@ -53748,7 +53748,7 @@ var require_GuildForumThreadManager = __commonJS({
           throw new DiscordjsTypeError2(ErrorCodes2.GuildForumMessageRequired);
         }
         const { body, files } = await (message instanceof MessagePayload ? message : MessagePayload.create(this, message)).resolveBody().resolveFiles();
-        const data23 = await this.client.rest.post(Routes2.threads(this.channel.id), {
+        const data24 = await this.client.rest.post(Routes2.threads(this.channel.id), {
           body: {
             name,
             auto_archive_duration: autoArchiveDuration,
@@ -53759,7 +53759,7 @@ var require_GuildForumThreadManager = __commonJS({
           files,
           reason
         });
-        return this.client.actions.ThreadCreate.handle(data23).thread;
+        return this.client.actions.ThreadCreate.handle(data24).thread;
       }
     };
     module2.exports = GuildForumThreadManager;
@@ -53775,48 +53775,48 @@ var require_ThreadOnlyChannel = __commonJS({
     var GuildForumThreadManager = require_GuildForumThreadManager();
     var { transformAPIGuildForumTag, transformAPIGuildDefaultReaction } = require_Channels();
     var ThreadOnlyChannel = class extends GuildChannel {
-      constructor(guild, data23, client2) {
-        super(guild, data23, client2, false);
+      constructor(guild, data24, client2) {
+        super(guild, data24, client2, false);
         this.threads = new GuildForumThreadManager(this);
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if ("available_tags" in data23) {
-          this.availableTags = data23.available_tags.map((tag) => transformAPIGuildForumTag(tag));
+      _patch(data24) {
+        super._patch(data24);
+        if ("available_tags" in data24) {
+          this.availableTags = data24.available_tags.map((tag) => transformAPIGuildForumTag(tag));
         } else {
           this.availableTags ??= [];
         }
-        if ("default_reaction_emoji" in data23) {
-          this.defaultReactionEmoji = data23.default_reaction_emoji ? transformAPIGuildDefaultReaction(data23.default_reaction_emoji) : null;
+        if ("default_reaction_emoji" in data24) {
+          this.defaultReactionEmoji = data24.default_reaction_emoji ? transformAPIGuildDefaultReaction(data24.default_reaction_emoji) : null;
         } else {
           this.defaultReactionEmoji ??= null;
         }
-        if ("default_thread_rate_limit_per_user" in data23) {
-          this.defaultThreadRateLimitPerUser = data23.default_thread_rate_limit_per_user;
+        if ("default_thread_rate_limit_per_user" in data24) {
+          this.defaultThreadRateLimitPerUser = data24.default_thread_rate_limit_per_user;
         } else {
           this.defaultThreadRateLimitPerUser ??= null;
         }
-        if ("rate_limit_per_user" in data23) {
-          this.rateLimitPerUser = data23.rate_limit_per_user;
+        if ("rate_limit_per_user" in data24) {
+          this.rateLimitPerUser = data24.rate_limit_per_user;
         } else {
           this.rateLimitPerUser ??= null;
         }
-        if ("default_auto_archive_duration" in data23) {
-          this.defaultAutoArchiveDuration = data23.default_auto_archive_duration;
+        if ("default_auto_archive_duration" in data24) {
+          this.defaultAutoArchiveDuration = data24.default_auto_archive_duration;
         } else {
           this.defaultAutoArchiveDuration ??= null;
         }
-        if ("nsfw" in data23) {
-          this.nsfw = data23.nsfw;
+        if ("nsfw" in data24) {
+          this.nsfw = data24.nsfw;
         } else {
           this.nsfw ??= false;
         }
-        if ("topic" in data23) {
-          this.topic = data23.topic;
+        if ("topic" in data24) {
+          this.topic = data24.topic;
         }
-        if ("default_sort_order" in data23) {
-          this.defaultSortOrder = data23.default_sort_order;
+        if ("default_sort_order" in data24) {
+          this.defaultSortOrder = data24.default_sort_order;
         } else {
           this.defaultSortOrder ??= null;
         }
@@ -53954,19 +53954,19 @@ var require_ThreadMember = __commonJS({
     var ThreadMemberFlagsBitField = require_ThreadMemberFlagsBitField();
     var { emitDeprecationWarningForRemoveThreadMember } = require_Util();
     var ThreadMember = class extends Base {
-      constructor(thread, data23, extra = {}) {
+      constructor(thread, data24, extra = {}) {
         super(thread.client);
         this.thread = thread;
         this.joinedTimestamp = null;
         this.flags = null;
-        this.id = data23.user_id;
-        this._patch(data23, extra);
+        this.id = data24.user_id;
+        this._patch(data24, extra);
       }
-      _patch(data23, extra = {}) {
-        if ("join_timestamp" in data23) this.joinedTimestamp = Date.parse(data23.join_timestamp);
-        if ("flags" in data23) this.flags = new ThreadMemberFlagsBitField(data23.flags).freeze();
-        if ("member" in data23) {
-          this.member = this.thread.guild.members._add(data23.member, extra.cache);
+      _patch(data24, extra = {}) {
+        if ("join_timestamp" in data24) this.joinedTimestamp = Date.parse(data24.join_timestamp);
+        if ("flags" in data24) this.flags = new ThreadMemberFlagsBitField(data24.flags).freeze();
+        if ("member" in data24) {
+          this.member = this.thread.guild.members._add(data24.member, extra.cache);
         } else {
           this.member ??= null;
         }
@@ -54052,12 +54052,12 @@ var require_ThreadMemberManager = __commonJS({
        * @type {Collection<Snowflake, ThreadMember>}
        * @name ThreadMemberManager#cache
        */
-      _add(data23, cache = true) {
-        const existing = this.cache.get(data23.user_id);
-        if (cache) existing?._patch(data23, { cache });
+      _add(data24, cache = true) {
+        const existing = this.cache.get(data24.user_id);
+        if (cache) existing?._patch(data24, { cache });
         if (existing) return existing;
-        const member = new ThreadMember(this.thread, data23, { cache });
-        if (cache) this.cache.set(data23.user_id, member);
+        const member = new ThreadMember(this.thread, data24, { cache });
+        if (cache) this.cache.set(data24.user_id, member);
         return member;
       }
       /**
@@ -54187,16 +54187,16 @@ var require_ThreadMemberManager = __commonJS({
           const existing = this.cache.get(member);
           if (existing) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.threadMembers(this.thread.id, member), {
+        const data24 = await this.client.rest.get(Routes2.threadMembers(this.thread.id, member), {
           query: makeURLSearchParams2({ with_member: withMember })
         });
-        return this._add(data23, cache);
+        return this._add(data24, cache);
       }
       async _fetchMany({ withMember, after, limit, cache } = {}) {
-        const data23 = await this.client.rest.get(Routes2.threadMembers(this.thread.id), {
+        const data24 = await this.client.rest.get(Routes2.threadMembers(this.thread.id), {
           query: makeURLSearchParams2({ with_member: withMember, after, limit })
         });
-        return data23.reduce((col, member) => col.set(member.user_id, this._add(member, cache)), new Collection3());
+        return data24.reduce((col, member) => col.set(member.user_id, this._add(member, cache)), new Collection3());
       }
     };
     module2.exports = ThreadMemberManager;
@@ -54218,37 +54218,37 @@ var require_ThreadChannel = __commonJS({
     var ThreadMemberManager = require_ThreadMemberManager();
     var ChannelFlagsBitField = require_ChannelFlagsBitField();
     var ThreadChannel = class extends BaseChannel {
-      constructor(guild, data23, client2) {
-        super(guild?.client ?? client2, data23, false);
+      constructor(guild, data24, client2) {
+        super(guild?.client ?? client2, data24, false);
         this.guild = guild;
-        this.guildId = guild?.id ?? data23.guild_id;
-        this.ownerId = data23.owner_id;
+        this.guildId = guild?.id ?? data24.guild_id;
+        this.ownerId = data24.owner_id;
         this.messages = new GuildMessageManager(this);
         this.members = new ThreadMemberManager(this);
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if ("message" in data23) this.messages._add(data23.message);
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        super._patch(data24);
+        if ("message" in data24) this.messages._add(data24.message);
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         }
-        if ("parent_id" in data23) {
-          this.parentId = data23.parent_id;
+        if ("parent_id" in data24) {
+          this.parentId = data24.parent_id;
         } else {
           this.parentId ??= null;
         }
-        if ("thread_metadata" in data23) {
-          this.locked = data23.thread_metadata.locked ?? false;
-          this.invitable = this.type === ChannelType4.PrivateThread ? data23.thread_metadata.invitable ?? false : null;
-          this.archived = data23.thread_metadata.archived;
-          this.autoArchiveDuration = data23.thread_metadata.auto_archive_duration;
-          this.archiveTimestamp = Date.parse(data23.thread_metadata.archive_timestamp);
-          if ("create_timestamp" in data23.thread_metadata) {
-            this._createdTimestamp = Date.parse(data23.thread_metadata.create_timestamp);
+        if ("thread_metadata" in data24) {
+          this.locked = data24.thread_metadata.locked ?? false;
+          this.invitable = this.type === ChannelType4.PrivateThread ? data24.thread_metadata.invitable ?? false : null;
+          this.archived = data24.thread_metadata.archived;
+          this.autoArchiveDuration = data24.thread_metadata.auto_archive_duration;
+          this.archiveTimestamp = Date.parse(data24.thread_metadata.archive_timestamp);
+          if ("create_timestamp" in data24.thread_metadata) {
+            this._createdTimestamp = Date.parse(data24.thread_metadata.create_timestamp);
           }
         } else {
           this.locked ??= null;
@@ -54258,40 +54258,40 @@ var require_ThreadChannel = __commonJS({
           this.invitable ??= null;
         }
         this._createdTimestamp ??= this.type === ChannelType4.PrivateThread ? super.createdTimestamp : null;
-        if ("last_message_id" in data23) {
-          this.lastMessageId = data23.last_message_id;
+        if ("last_message_id" in data24) {
+          this.lastMessageId = data24.last_message_id;
         } else {
           this.lastMessageId ??= null;
         }
-        if ("last_pin_timestamp" in data23) {
-          this.lastPinTimestamp = data23.last_pin_timestamp ? Date.parse(data23.last_pin_timestamp) : null;
+        if ("last_pin_timestamp" in data24) {
+          this.lastPinTimestamp = data24.last_pin_timestamp ? Date.parse(data24.last_pin_timestamp) : null;
         } else {
           this.lastPinTimestamp ??= null;
         }
-        if ("rate_limit_per_user" in data23) {
-          this.rateLimitPerUser = data23.rate_limit_per_user ?? 0;
+        if ("rate_limit_per_user" in data24) {
+          this.rateLimitPerUser = data24.rate_limit_per_user ?? 0;
         } else {
           this.rateLimitPerUser ??= null;
         }
-        if ("message_count" in data23) {
-          this.messageCount = data23.message_count;
+        if ("message_count" in data24) {
+          this.messageCount = data24.message_count;
         } else {
           this.messageCount ??= null;
         }
-        if ("member_count" in data23) {
-          this.memberCount = data23.member_count;
+        if ("member_count" in data24) {
+          this.memberCount = data24.member_count;
         } else {
           this.memberCount ??= null;
         }
-        if ("total_message_sent" in data23) {
-          this.totalMessageSent = data23.total_message_sent;
+        if ("total_message_sent" in data24) {
+          this.totalMessageSent = data24.total_message_sent;
         } else {
           this.totalMessageSent ??= null;
         }
-        if (data23.member && this.client.user) this.members._add({ user_id: this.client.user.id, ...data23.member });
-        if (data23.messages) for (const message of data23.messages) this.messages._add(message);
-        if ("applied_tags" in data23) {
-          this.appliedTags = data23.applied_tags;
+        if (data24.member && this.client.user) this.members._add({ user_id: this.client.user.id, ...data24.member });
+        if (data24.messages) for (const message of data24.messages) this.messages._add(message);
+        if ("applied_tags" in data24) {
+          this.appliedTags = data24.applied_tags;
         } else {
           this.appliedTags ??= [];
         }
@@ -54801,8 +54801,8 @@ var require_ThreadManager = __commonJS({
        * @returns {Promise<FetchedThreads>}
        */
       async fetchActive(cache = true) {
-        const data23 = await this.channel.guild.channels.rawFetchGuildActiveThreads();
-        return this.constructor._mapThreads(data23, this.client, { parent: this.channel, cache });
+        const data24 = await this.channel.guild.channels.rawFetchGuildActiveThreads();
+        return this.constructor._mapThreads(data24, this.client, { parent: this.channel, cache });
       }
       static _mapThreads(rawThreads, client2, { parent, guild, cache }) {
         const threads = rawThreads.threads.reduce((coll, raw) => {
@@ -54891,7 +54891,7 @@ var require_GuildTextThreadManager = __commonJS({
         } else if (this.channel.type !== ChannelType4.GuildAnnouncement) {
           resolvedType = type ?? resolvedType;
         }
-        const data23 = await this.client.rest.post(Routes2.threads(this.channel.id, startMessageId), {
+        const data24 = await this.client.rest.post(Routes2.threads(this.channel.id, startMessageId), {
           body: {
             name,
             auto_archive_duration: autoArchiveDuration,
@@ -54901,7 +54901,7 @@ var require_GuildTextThreadManager = __commonJS({
           },
           reason
         });
-        return this.client.actions.ThreadCreate.handle(data23).thread;
+        return this.client.actions.ThreadCreate.handle(data24).thread;
       }
     };
     module2.exports = GuildTextThreadManager;
@@ -54917,37 +54917,37 @@ var require_BaseGuildTextChannel = __commonJS({
     var GuildMessageManager = require_GuildMessageManager();
     var GuildTextThreadManager = require_GuildTextThreadManager();
     var BaseGuildTextChannel = class extends GuildChannel {
-      constructor(guild, data23, client2) {
-        super(guild, data23, client2, false);
+      constructor(guild, data24, client2) {
+        super(guild, data24, client2, false);
         this.messages = new GuildMessageManager(this);
         this.threads = new GuildTextThreadManager(this);
-        this.nsfw = Boolean(data23.nsfw);
-        this._patch(data23);
+        this.nsfw = Boolean(data24.nsfw);
+        this._patch(data24);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if ("topic" in data23) {
-          this.topic = data23.topic;
+      _patch(data24) {
+        super._patch(data24);
+        if ("topic" in data24) {
+          this.topic = data24.topic;
         }
-        if ("nsfw" in data23) {
-          this.nsfw = Boolean(data23.nsfw);
+        if ("nsfw" in data24) {
+          this.nsfw = Boolean(data24.nsfw);
         }
-        if ("last_message_id" in data23) {
-          this.lastMessageId = data23.last_message_id;
+        if ("last_message_id" in data24) {
+          this.lastMessageId = data24.last_message_id;
         }
-        if ("last_pin_timestamp" in data23) {
-          this.lastPinTimestamp = data23.last_pin_timestamp ? Date.parse(data23.last_pin_timestamp) : null;
+        if ("last_pin_timestamp" in data24) {
+          this.lastPinTimestamp = data24.last_pin_timestamp ? Date.parse(data24.last_pin_timestamp) : null;
         }
-        if ("default_auto_archive_duration" in data23) {
-          this.defaultAutoArchiveDuration = data23.default_auto_archive_duration;
+        if ("default_auto_archive_duration" in data24) {
+          this.defaultAutoArchiveDuration = data24.default_auto_archive_duration;
         }
-        if ("default_thread_rate_limit_per_user" in data23) {
-          this.defaultThreadRateLimitPerUser = data23.default_thread_rate_limit_per_user;
+        if ("default_thread_rate_limit_per_user" in data24) {
+          this.defaultThreadRateLimitPerUser = data24.default_thread_rate_limit_per_user;
         } else {
           this.defaultThreadRateLimitPerUser ??= null;
         }
-        if ("messages" in data23) {
-          for (const message of data23.messages) this.messages._add(message);
+        if ("messages" in data24) {
+          for (const message of data24.messages) this.messages._add(message);
         }
       }
       /**
@@ -55103,39 +55103,39 @@ var require_BaseGuildVoiceChannel = __commonJS({
     var TextBasedChannel = require_TextBasedChannel();
     var GuildMessageManager = require_GuildMessageManager();
     var BaseGuildVoiceChannel = class extends GuildChannel {
-      constructor(guild, data23, client2) {
-        super(guild, data23, client2, false);
+      constructor(guild, data24, client2) {
+        super(guild, data24, client2, false);
         this.messages = new GuildMessageManager(this);
-        this.nsfw = Boolean(data23.nsfw);
-        this._patch(data23);
+        this.nsfw = Boolean(data24.nsfw);
+        this._patch(data24);
       }
-      _patch(data23) {
-        super._patch(data23);
-        if ("rtc_region" in data23) {
-          this.rtcRegion = data23.rtc_region;
+      _patch(data24) {
+        super._patch(data24);
+        if ("rtc_region" in data24) {
+          this.rtcRegion = data24.rtc_region;
         }
-        if ("bitrate" in data23) {
-          this.bitrate = data23.bitrate;
+        if ("bitrate" in data24) {
+          this.bitrate = data24.bitrate;
         }
-        if ("user_limit" in data23) {
-          this.userLimit = data23.user_limit;
+        if ("user_limit" in data24) {
+          this.userLimit = data24.user_limit;
         }
-        if ("video_quality_mode" in data23) {
-          this.videoQualityMode = data23.video_quality_mode;
+        if ("video_quality_mode" in data24) {
+          this.videoQualityMode = data24.video_quality_mode;
         } else {
           this.videoQualityMode ??= null;
         }
-        if ("last_message_id" in data23) {
-          this.lastMessageId = data23.last_message_id;
+        if ("last_message_id" in data24) {
+          this.lastMessageId = data24.last_message_id;
         }
-        if ("messages" in data23) {
-          for (const message of data23.messages) this.messages._add(message);
+        if ("messages" in data24) {
+          for (const message of data24.messages) this.messages._add(message);
         }
-        if ("rate_limit_per_user" in data23) {
-          this.rateLimitPerUser = data23.rate_limit_per_user;
+        if ("rate_limit_per_user" in data24) {
+          this.rateLimitPerUser = data24.rate_limit_per_user;
         }
-        if ("nsfw" in data23) {
-          this.nsfw = data23.nsfw;
+        if ("nsfw" in data24) {
+          this.nsfw = data24.nsfw;
         }
       }
       /**
@@ -55283,10 +55283,10 @@ var require_StageChannel = __commonJS({
     "use strict";
     var BaseGuildVoiceChannel = require_BaseGuildVoiceChannel();
     var StageChannel = class extends BaseGuildVoiceChannel {
-      _patch(data23) {
-        super._patch(data23);
-        if ("topic" in data23) {
-          this.topic = data23.topic;
+      _patch(data24) {
+        super._patch(data24);
+        if ("topic" in data24) {
+          this.topic = data24.topic;
         }
       }
       /**
@@ -55330,10 +55330,10 @@ var require_TextChannel = __commonJS({
     "use strict";
     var BaseGuildTextChannel = require_BaseGuildTextChannel();
     var TextChannel = class extends BaseGuildTextChannel {
-      _patch(data23) {
-        super._patch(data23);
-        if ("rate_limit_per_user" in data23) {
-          this.rateLimitPerUser = data23.rate_limit_per_user;
+      _patch(data24) {
+        super._patch(data24);
+        if ("rate_limit_per_user" in data24) {
+          this.rateLimitPerUser = data24.rate_limit_per_user;
         }
       }
       /**
@@ -55407,14 +55407,14 @@ var require_DirectoryChannel = __commonJS({
     "use strict";
     var { BaseChannel } = require_BaseChannel();
     var DirectoryChannel = class extends BaseChannel {
-      constructor(guild, data23, client2) {
-        super(client2, data23);
+      constructor(guild, data24, client2) {
+        super(client2, data24);
         this.guild = guild;
         this.guildId = guild.id;
       }
-      _patch(data23) {
-        super._patch(data23);
-        this.name = data23.name;
+      _patch(data24) {
+        super._patch(data24);
+        this.name = data24.name;
       }
     };
     module2.exports = DirectoryChannel;
@@ -55446,25 +55446,25 @@ var require_PartialGroupDMChannel = __commonJS({
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var PartialGroupDMMessageManager = require_PartialGroupDMMessageManager();
     var PartialGroupDMChannel = class extends BaseChannel {
-      constructor(client2, data23) {
-        super(client2, data23);
+      constructor(client2, data24) {
+        super(client2, data24);
         this.flags = null;
-        this.name = data23.name;
-        this.icon = data23.icon ?? null;
-        this.recipients = data23.recipients ?? [];
+        this.name = data24.name;
+        this.icon = data24.icon ?? null;
+        this.recipients = data24.recipients ?? [];
         this.messages = new PartialGroupDMMessageManager(this);
-        if ("owner_id" in data23) {
-          this.ownerId = data23.owner_id;
+        if ("owner_id" in data24) {
+          this.ownerId = data24.owner_id;
         } else {
           this.ownerId ??= null;
         }
-        if ("last_message_id" in data23) {
-          this.lastMessageId = data23.last_message_id;
+        if ("last_message_id" in data24) {
+          this.lastMessageId = data24.last_message_id;
         } else {
           this.lastMessageId ??= null;
         }
-        if ("last_pin_timestamp" in data23) {
-          this.lastPinTimestamp = data23.last_pin_timestamp ? Date.parse(data23.last_pin_timestamp) : null;
+        if ("last_pin_timestamp" in data24) {
+          this.lastPinTimestamp = data24.last_pin_timestamp ? Date.parse(data24.last_pin_timestamp) : null;
         } else {
           this.lastPinTimestamp ??= null;
         }
@@ -55526,9 +55526,9 @@ var require_ForumChannel = __commonJS({
     "use strict";
     var ThreadOnlyChannel = require_ThreadOnlyChannel();
     var ForumChannel = class extends ThreadOnlyChannel {
-      _patch(data23) {
-        super._patch(data23);
-        this.defaultForumLayout = data23.default_forum_layout;
+      _patch(data24) {
+        super._patch(data24);
+        this.defaultForumLayout = data24.default_forum_layout;
       }
       /**
        * Sets the default forum layout type used to display posts
@@ -55572,53 +55572,53 @@ var require_Channels = __commonJS({
     var getPartialGroupDMChannel = lazy2(() => require_PartialGroupDMChannel());
     var getForumChannel = lazy2(() => require_ForumChannel());
     var getMediaChannel = lazy2(() => require_MediaChannel());
-    function createChannel(client2, data23, guild, { allowUnknownGuild } = {}) {
+    function createChannel(client2, data24, guild, { allowUnknownGuild } = {}) {
       let channel;
-      if (!data23.guild_id && !guild) {
-        if (data23.recipients && data23.type !== ChannelType4.GroupDM || data23.type === ChannelType4.DM) {
-          channel = new (getDMChannel())(client2, data23);
-        } else if (data23.type === ChannelType4.GroupDM) {
-          channel = new (getPartialGroupDMChannel())(client2, data23);
+      if (!data24.guild_id && !guild) {
+        if (data24.recipients && data24.type !== ChannelType4.GroupDM || data24.type === ChannelType4.DM) {
+          channel = new (getDMChannel())(client2, data24);
+        } else if (data24.type === ChannelType4.GroupDM) {
+          channel = new (getPartialGroupDMChannel())(client2, data24);
         }
       } else {
-        guild ??= client2.guilds.cache.get(data23.guild_id);
+        guild ??= client2.guilds.cache.get(data24.guild_id);
         if (guild || allowUnknownGuild) {
-          switch (data23.type) {
+          switch (data24.type) {
             case ChannelType4.GuildText: {
-              channel = new (getTextChannel())(guild, data23, client2);
+              channel = new (getTextChannel())(guild, data24, client2);
               break;
             }
             case ChannelType4.GuildVoice: {
-              channel = new (getVoiceChannel())(guild, data23, client2);
+              channel = new (getVoiceChannel())(guild, data24, client2);
               break;
             }
             case ChannelType4.GuildCategory: {
-              channel = new (getCategoryChannel())(guild, data23, client2);
+              channel = new (getCategoryChannel())(guild, data24, client2);
               break;
             }
             case ChannelType4.GuildAnnouncement: {
-              channel = new (getNewsChannel())(guild, data23, client2);
+              channel = new (getNewsChannel())(guild, data24, client2);
               break;
             }
             case ChannelType4.GuildStageVoice: {
-              channel = new (getStageChannel())(guild, data23, client2);
+              channel = new (getStageChannel())(guild, data24, client2);
               break;
             }
             case ChannelType4.AnnouncementThread:
             case ChannelType4.PublicThread:
             case ChannelType4.PrivateThread: {
-              channel = new (getThreadChannel())(guild, data23, client2);
+              channel = new (getThreadChannel())(guild, data24, client2);
               if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
               break;
             }
             case ChannelType4.GuildDirectory:
-              channel = new (getDirectoryChannel())(guild, data23, client2);
+              channel = new (getDirectoryChannel())(guild, data24, client2);
               break;
             case ChannelType4.GuildForum:
-              channel = new (getForumChannel())(guild, data23, client2);
+              channel = new (getForumChannel())(guild, data24, client2);
               break;
             case ChannelType4.GuildMedia:
-              channel = new (getMediaChannel())(guild, data23, client2);
+              channel = new (getMediaChannel())(guild, data24, client2);
               break;
           }
           if (channel && !allowUnknownGuild) guild.channels?.cache.set(channel.id, channel);
@@ -55675,13 +55675,13 @@ var require_ChannelUpdate = __commonJS({
     var Action = require_Action();
     var { createChannel } = require_Channels();
     var ChannelUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        let channel = client2.channels.cache.get(data23.id);
+        let channel = client2.channels.cache.get(data24.id);
         if (channel) {
-          const old = channel._update(data23);
-          if (channel.type !== data23.type) {
-            const newChannel = createChannel(this.client, data23, channel.guild);
+          const old = channel._update(data24);
+          if (channel.type !== data24.type) {
+            const newChannel = createChannel(this.client, data24, channel.guild);
             if (!newChannel) {
               this.client.channels.cache.delete(channel.id);
               return {};
@@ -55697,7 +55697,7 @@ var require_ChannelUpdate = __commonJS({
             updated: channel
           };
         } else {
-          client2.channels._add(data23);
+          client2.channels._add(data24);
         }
         return {};
       }
@@ -55713,9 +55713,9 @@ var require_EntitlementCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var EntitlementCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const entitlement = client2.application.entitlements._add(data23);
+        const entitlement = client2.application.entitlements._add(data24);
         client2.emit(Events3.EntitlementCreate, entitlement);
         return {};
       }
@@ -55731,9 +55731,9 @@ var require_EntitlementDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var EntitlementDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const entitlement = client2.application.entitlements._add(data23, false);
+        const entitlement = client2.application.entitlements._add(data24, false);
         client2.application.entitlements.cache.delete(entitlement.id);
         client2.emit(Events3.EntitlementDelete, entitlement);
         return {};
@@ -55750,10 +55750,10 @@ var require_EntitlementUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var EntitlementUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const oldEntitlement = client2.application.entitlements.cache.get(data23.id)?._clone() ?? null;
-        const newEntitlement = client2.application.entitlements._add(data23);
+        const oldEntitlement = client2.application.entitlements.cache.get(data24.id)?._clone() ?? null;
+        const newEntitlement = client2.application.entitlements._add(data24);
         client2.emit(Events3.EntitlementUpdate, oldEntitlement, newEntitlement);
         return {};
       }
@@ -55770,45 +55770,45 @@ var require_AutoModerationRule = __commonJS({
     var Base = require_Base();
     var { _transformAPIAutoModerationAction } = require_Transformers();
     var AutoModerationRule = class extends Base {
-      constructor(client2, data23, guild) {
+      constructor(client2, data24, guild) {
         super(client2);
-        this.id = data23.id;
+        this.id = data24.id;
         this.guild = guild;
-        this.creatorId = data23.creator_id;
-        this.triggerType = data23.trigger_type;
-        this._patch(data23);
+        this.creatorId = data24.creator_id;
+        this.triggerType = data24.trigger_type;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("event_type" in data23) {
-          this.eventType = data23.event_type;
+        if ("event_type" in data24) {
+          this.eventType = data24.event_type;
         }
-        if ("trigger_metadata" in data23) {
+        if ("trigger_metadata" in data24) {
           this.triggerMetadata = {
-            keywordFilter: data23.trigger_metadata.keyword_filter ?? [],
-            regexPatterns: data23.trigger_metadata.regex_patterns ?? [],
-            presets: data23.trigger_metadata.presets ?? [],
-            allowList: data23.trigger_metadata.allow_list ?? [],
-            mentionTotalLimit: data23.trigger_metadata.mention_total_limit ?? null,
-            mentionRaidProtectionEnabled: data23.trigger_metadata.mention_raid_protection_enabled ?? false
+            keywordFilter: data24.trigger_metadata.keyword_filter ?? [],
+            regexPatterns: data24.trigger_metadata.regex_patterns ?? [],
+            presets: data24.trigger_metadata.presets ?? [],
+            allowList: data24.trigger_metadata.allow_list ?? [],
+            mentionTotalLimit: data24.trigger_metadata.mention_total_limit ?? null,
+            mentionRaidProtectionEnabled: data24.trigger_metadata.mention_raid_protection_enabled ?? false
           };
         }
-        if ("actions" in data23) {
-          this.actions = data23.actions.map((action) => _transformAPIAutoModerationAction(action));
+        if ("actions" in data24) {
+          this.actions = data24.actions.map((action) => _transformAPIAutoModerationAction(action));
         }
-        if ("enabled" in data23) {
-          this.enabled = data23.enabled;
+        if ("enabled" in data24) {
+          this.enabled = data24.enabled;
         }
-        if ("exempt_roles" in data23) {
+        if ("exempt_roles" in data24) {
           this.exemptRoles = new Collection3(
-            data23.exempt_roles.map((exemptRole) => [exemptRole, this.guild.roles.cache.get(exemptRole)])
+            data24.exempt_roles.map((exemptRole) => [exemptRole, this.guild.roles.cache.get(exemptRole)])
           );
         }
-        if ("exempt_channels" in data23) {
+        if ("exempt_channels" in data24) {
           this.exemptChannels = new Collection3(
-            data23.exempt_channels.map((exemptChannel) => [exemptChannel, this.guild.channels.cache.get(exemptChannel)])
+            data24.exempt_channels.map((exemptChannel) => [exemptChannel, this.guild.channels.cache.get(exemptChannel)])
           );
         }
       }
@@ -55956,22 +55956,22 @@ var require_GuildOnboardingPromptOption = __commonJS({
     var Base = require_Base();
     var { Emoji } = require_Emoji();
     var GuildOnboardingPromptOption = class extends Base {
-      constructor(client2, data23, guildId) {
+      constructor(client2, data24, guildId) {
         super(client2);
         this.guildId = guildId;
         const guild = this.guild;
-        this.id = data23.id;
-        this.channels = data23.channel_ids.reduce(
+        this.id = data24.id;
+        this.channels = data24.channel_ids.reduce(
           (channels, channelId) => channels.set(channelId, guild.channels.cache.get(channelId)),
           new Collection3()
         );
-        this.roles = data23.role_ids.reduce(
+        this.roles = data24.role_ids.reduce(
           (roles, roleId) => roles.set(roleId, guild.roles.cache.get(roleId)),
           new Collection3()
         );
-        this._emoji = data23.emoji;
-        this.title = data23.title;
-        this.description = data23.description;
+        this._emoji = data24.emoji;
+        this.title = data24.title;
+        this.description = data24.description;
       }
       /**
        * The guild this onboarding prompt option is from
@@ -56002,19 +56002,19 @@ var require_GuildOnboardingPrompt = __commonJS({
     var Base = require_Base();
     var { GuildOnboardingPromptOption } = require_GuildOnboardingPromptOption();
     var GuildOnboardingPrompt = class extends Base {
-      constructor(client2, data23, guildId) {
+      constructor(client2, data24, guildId) {
         super(client2);
         this.guildId = guildId;
-        this.id = data23.id;
-        this.options = data23.options.reduce(
+        this.id = data24.id;
+        this.options = data24.options.reduce(
           (options, option) => options.set(option.id, new GuildOnboardingPromptOption(client2, option, guildId)),
           new Collection3()
         );
-        this.title = data23.title;
-        this.singleSelect = data23.single_select;
-        this.required = data23.required;
-        this.inOnboarding = data23.in_onboarding;
-        this.type = data23.type;
+        this.title = data24.title;
+        this.singleSelect = data24.single_select;
+        this.required = data24.required;
+        this.inOnboarding = data24.in_onboarding;
+        this.type = data24.type;
       }
       /**
        * The guild this onboarding prompt is from
@@ -56037,46 +56037,46 @@ var require_Integration = __commonJS({
     var Base = require_Base();
     var IntegrationApplication = require_IntegrationApplication();
     var Integration = class extends Base {
-      constructor(client2, data23, guild) {
+      constructor(client2, data24, guild) {
         super(client2);
         this.guild = guild;
-        this.id = data23.id;
-        this.name = data23.name;
-        this.type = data23.type;
-        this.enabled = data23.enabled ?? null;
-        if ("syncing" in data23) {
-          this.syncing = data23.syncing;
+        this.id = data24.id;
+        this.name = data24.name;
+        this.type = data24.type;
+        this.enabled = data24.enabled ?? null;
+        if ("syncing" in data24) {
+          this.syncing = data24.syncing;
         } else {
           this.syncing ??= null;
         }
-        this.role = this.guild.roles.resolve(data23.role_id);
-        if ("enable_emoticons" in data23) {
-          this.enableEmoticons = data23.enable_emoticons;
+        this.role = this.guild.roles.resolve(data24.role_id);
+        if ("enable_emoticons" in data24) {
+          this.enableEmoticons = data24.enable_emoticons;
         } else {
           this.enableEmoticons ??= null;
         }
-        if (data23.user) {
-          this.user = this.client.users._add(data23.user);
+        if (data24.user) {
+          this.user = this.client.users._add(data24.user);
         } else {
           this.user ??= null;
         }
-        this.account = data23.account;
-        if ("synced_at" in data23) {
-          this.syncedTimestamp = Date.parse(data23.synced_at);
+        this.account = data24.account;
+        if ("synced_at" in data24) {
+          this.syncedTimestamp = Date.parse(data24.synced_at);
         } else {
           this.syncedTimestamp ??= null;
         }
-        if ("subscriber_count" in data23) {
-          this.subscriberCount = data23.subscriber_count;
+        if ("subscriber_count" in data24) {
+          this.subscriberCount = data24.subscriber_count;
         } else {
           this.subscriberCount ??= null;
         }
-        if ("revoked" in data23) {
-          this.revoked = data23.revoked;
+        if ("revoked" in data24) {
+          this.revoked = data24.revoked;
         } else {
           this.revoked ??= null;
         }
-        this._patch(data23);
+        this._patch(data24);
       }
       /**
        * The date at which this integration was last synced at
@@ -56095,28 +56095,28 @@ var require_Integration = __commonJS({
         const roles = this.guild.roles.cache;
         return roles.filter((role) => role.tags?.integrationId === this.id);
       }
-      _patch(data23) {
-        if ("expire_behavior" in data23) {
-          this.expireBehavior = data23.expire_behavior;
+      _patch(data24) {
+        if ("expire_behavior" in data24) {
+          this.expireBehavior = data24.expire_behavior;
         } else {
           this.expireBehavior ??= null;
         }
-        if ("expire_grace_period" in data23) {
-          this.expireGracePeriod = data23.expire_grace_period;
+        if ("expire_grace_period" in data24) {
+          this.expireGracePeriod = data24.expire_grace_period;
         } else {
           this.expireGracePeriod ??= null;
         }
-        if ("application" in data23) {
+        if ("application" in data24) {
           if (this.application) {
-            this.application._patch(data23.application);
+            this.application._patch(data24.application);
           } else {
-            this.application = new IntegrationApplication(this.client, data23.application);
+            this.application = new IntegrationApplication(this.client, data24.application);
           }
         } else {
           this.application ??= null;
         }
-        if ("scopes" in data23) {
-          this.scopes = data23.scopes;
+        if ("scopes" in data24) {
+          this.scopes = data24.scopes;
         } else {
           this.scopes ??= [];
         }
@@ -56149,31 +56149,31 @@ var require_StageInstance = __commonJS({
     var { DiscordSnowflake } = require_cjs3();
     var Base = require_Base();
     var StageInstance = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this._patch(data23);
+        this.id = data24.id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+      _patch(data24) {
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         }
-        if ("channel_id" in data23) {
-          this.channelId = data23.channel_id;
+        if ("channel_id" in data24) {
+          this.channelId = data24.channel_id;
         }
-        if ("topic" in data23) {
-          this.topic = data23.topic;
+        if ("topic" in data24) {
+          this.topic = data24.topic;
         }
-        if ("privacy_level" in data23) {
-          this.privacyLevel = data23.privacy_level;
+        if ("privacy_level" in data24) {
+          this.privacyLevel = data24.privacy_level;
         }
-        if ("discoverable_disabled" in data23) {
-          this.discoverableDisabled = data23.discoverable_disabled;
+        if ("discoverable_disabled" in data24) {
+          this.discoverableDisabled = data24.discoverable_disabled;
         } else {
           this.discoverableDisabled ??= null;
         }
-        if ("guild_scheduled_event_id" in data23) {
-          this.guildScheduledEventId = data23.guild_scheduled_event_id;
+        if ("guild_scheduled_event_id" in data24) {
+          this.guildScheduledEventId = data24.guild_scheduled_event_id;
         } else {
           this.guildScheduledEventId ??= null;
         }
@@ -56314,62 +56314,62 @@ var require_GuildAuditLogsEntry = __commonJS({
        * @memberof GuildAuditLogsEntry
        */
       static Targets = Targets;
-      constructor(guild, data23, logs) {
-        this.targetType = _GuildAuditLogsEntry.targetType(data23.action_type);
+      constructor(guild, data24, logs) {
+        this.targetType = _GuildAuditLogsEntry.targetType(data24.action_type);
         const targetType = this.targetType;
-        this.actionType = _GuildAuditLogsEntry.actionType(data23.action_type);
-        this.action = data23.action_type;
-        this.reason = data23.reason ?? null;
-        this.executorId = data23.user_id;
-        this.executor = data23.user_id ? guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data23.user_id }) : guild.client.users.cache.get(data23.user_id) ?? null : null;
-        this.changes = data23.changes?.map((change) => ({
+        this.actionType = _GuildAuditLogsEntry.actionType(data24.action_type);
+        this.action = data24.action_type;
+        this.reason = data24.reason ?? null;
+        this.executorId = data24.user_id;
+        this.executor = data24.user_id ? guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data24.user_id }) : guild.client.users.cache.get(data24.user_id) ?? null : null;
+        this.changes = data24.changes?.map((change) => ({
           key: change.key,
           ..."old_value" in change ? { old: change.old_value } : {},
           ..."new_value" in change ? { new: change.new_value } : {}
         })) ?? [];
-        this.id = data23.id;
+        this.id = data24.id;
         this.extra = null;
-        switch (data23.action_type) {
+        switch (data24.action_type) {
           case AuditLogEvent.MemberPrune:
             this.extra = {
-              removed: Number(data23.options.members_removed),
-              days: Number(data23.options.delete_member_days)
+              removed: Number(data24.options.members_removed),
+              days: Number(data24.options.delete_member_days)
             };
             break;
           case AuditLogEvent.MemberMove:
           case AuditLogEvent.MessageDelete:
             this.extra = {
-              channel: guild.channels.cache.get(data23.options.channel_id) ?? { id: data23.options.channel_id },
-              count: Number(data23.options.count)
+              channel: guild.channels.cache.get(data24.options.channel_id) ?? { id: data24.options.channel_id },
+              count: Number(data24.options.count)
             };
             break;
           case AuditLogEvent.MessagePin:
           case AuditLogEvent.MessageUnpin:
             this.extra = {
-              channel: guild.client.channels.cache.get(data23.options.channel_id) ?? { id: data23.options.channel_id },
-              messageId: data23.options.message_id
+              channel: guild.client.channels.cache.get(data24.options.channel_id) ?? { id: data24.options.channel_id },
+              messageId: data24.options.message_id
             };
             break;
           case AuditLogEvent.MessageBulkDelete:
           case AuditLogEvent.MemberDisconnect:
             this.extra = {
-              count: Number(data23.options.count)
+              count: Number(data24.options.count)
             };
             break;
           case AuditLogEvent.ChannelOverwriteCreate:
           case AuditLogEvent.ChannelOverwriteUpdate:
           case AuditLogEvent.ChannelOverwriteDelete:
-            switch (data23.options.type) {
+            switch (data24.options.type) {
               case AuditLogOptionsType.Role:
-                this.extra = guild.roles.cache.get(data23.options.id) ?? {
-                  id: data23.options.id,
-                  name: data23.options.role_name,
+                this.extra = guild.roles.cache.get(data24.options.id) ?? {
+                  id: data24.options.id,
+                  name: data24.options.role_name,
                   type: AuditLogOptionsType.Role
                 };
                 break;
               case AuditLogOptionsType.Member:
-                this.extra = guild.members.cache.get(data23.options.id) ?? {
-                  id: data23.options.id,
+                this.extra = guild.members.cache.get(data24.options.id) ?? {
+                  id: data24.options.id,
                   type: AuditLogOptionsType.Member
                 };
                 break;
@@ -56381,28 +56381,28 @@ var require_GuildAuditLogsEntry = __commonJS({
           case AuditLogEvent.StageInstanceDelete:
           case AuditLogEvent.StageInstanceUpdate:
             this.extra = {
-              channel: guild.client.channels.cache.get(data23.options?.channel_id) ?? { id: data23.options?.channel_id }
+              channel: guild.client.channels.cache.get(data24.options?.channel_id) ?? { id: data24.options?.channel_id }
             };
             break;
           case AuditLogEvent.ApplicationCommandPermissionUpdate:
             this.extra = {
-              applicationId: data23.options.application_id
+              applicationId: data24.options.application_id
             };
             break;
           case AuditLogEvent.AutoModerationBlockMessage:
           case AuditLogEvent.AutoModerationFlagToChannel:
           case AuditLogEvent.AutoModerationUserCommunicationDisabled:
             this.extra = {
-              autoModerationRuleName: data23.options.auto_moderation_rule_name,
-              autoModerationRuleTriggerType: data23.options.auto_moderation_rule_trigger_type,
-              channel: guild.client.channels.cache.get(data23.options?.channel_id) ?? { id: data23.options?.channel_id }
+              autoModerationRuleName: data24.options.auto_moderation_rule_name,
+              autoModerationRuleTriggerType: data24.options.auto_moderation_rule_trigger_type,
+              channel: guild.client.channels.cache.get(data24.options?.channel_id) ?? { id: data24.options?.channel_id }
             };
             break;
           case AuditLogEvent.MemberKick:
           case AuditLogEvent.MemberRoleUpdate: {
-            if (data23.integration_type) {
+            if (data24.integration_type) {
               this.extra = {
-                integrationType: data23.integration_type
+                integrationType: data24.integration_type
               };
             }
             break;
@@ -56410,20 +56410,20 @@ var require_GuildAuditLogsEntry = __commonJS({
           default:
             break;
         }
-        this.targetId = data23.target_id;
+        this.targetId = data24.target_id;
         this.target = null;
         if (targetType === Targets.Unknown) {
           this.target = changesReduce(this.changes);
-          this.target.id = data23.target_id;
-        } else if (targetType === Targets.User && data23.target_id) {
-          this.target = guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data23.target_id }) : guild.client.users.cache.get(data23.target_id) ?? null;
+          this.target.id = data24.target_id;
+        } else if (targetType === Targets.User && data24.target_id) {
+          this.target = guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data24.target_id }) : guild.client.users.cache.get(data24.target_id) ?? null;
         } else if (targetType === Targets.Guild) {
-          this.target = guild.client.guilds.cache.get(data23.target_id);
+          this.target = guild.client.guilds.cache.get(data24.target_id);
         } else if (targetType === Targets.Webhook) {
-          this.target = logs?.webhooks.get(data23.target_id) ?? new Webhook2(
+          this.target = logs?.webhooks.get(data24.target_id) ?? new Webhook2(
             guild.client,
             changesReduce(this.changes, {
-              id: data23.target_id,
+              id: data24.target_id,
               guild_id: guild.id
             })
           );
@@ -56431,42 +56431,42 @@ var require_GuildAuditLogsEntry = __commonJS({
           const inviteChange = this.changes.find(({ key }) => key === "code");
           this.target = guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ?? new Invite2(guild.client, changesReduce(this.changes, { guild }));
         } else if (targetType === Targets.Message) {
-          this.target = data23.action_type === AuditLogEvent.MessageBulkDelete ? guild.channels.cache.get(data23.target_id) ?? { id: data23.target_id } : guild.client.users.cache.get(data23.target_id) ?? null;
+          this.target = data24.action_type === AuditLogEvent.MessageBulkDelete ? guild.channels.cache.get(data24.target_id) ?? { id: data24.target_id } : guild.client.users.cache.get(data24.target_id) ?? null;
         } else if (targetType === Targets.Integration) {
-          this.target = logs?.integrations.get(data23.target_id) ?? new Integration(guild.client, changesReduce(this.changes, { id: data23.target_id }), guild);
+          this.target = logs?.integrations.get(data24.target_id) ?? new Integration(guild.client, changesReduce(this.changes, { id: data24.target_id }), guild);
         } else if (targetType === Targets.Channel || targetType === Targets.Thread) {
-          this.target = guild.channels.cache.get(data23.target_id) ?? changesReduce(this.changes, { id: data23.target_id });
+          this.target = guild.channels.cache.get(data24.target_id) ?? changesReduce(this.changes, { id: data24.target_id });
         } else if (targetType === Targets.StageInstance) {
-          this.target = guild.stageInstances.cache.get(data23.target_id) ?? new StageInstance(
+          this.target = guild.stageInstances.cache.get(data24.target_id) ?? new StageInstance(
             guild.client,
             changesReduce(this.changes, {
-              id: data23.target_id,
-              channel_id: data23.options?.channel_id,
+              id: data24.target_id,
+              channel_id: data24.options?.channel_id,
               guild_id: guild.id
             })
           );
         } else if (targetType === Targets.Sticker) {
-          this.target = guild.stickers.cache.get(data23.target_id) ?? new Sticker2(guild.client, changesReduce(this.changes, { id: data23.target_id }));
+          this.target = guild.stickers.cache.get(data24.target_id) ?? new Sticker2(guild.client, changesReduce(this.changes, { id: data24.target_id }));
         } else if (targetType === Targets.GuildScheduledEvent) {
-          this.target = guild.scheduledEvents.cache.get(data23.target_id) ?? new GuildScheduledEvent(guild.client, changesReduce(this.changes, { id: data23.target_id, guild_id: guild.id }));
+          this.target = guild.scheduledEvents.cache.get(data24.target_id) ?? new GuildScheduledEvent(guild.client, changesReduce(this.changes, { id: data24.target_id, guild_id: guild.id }));
         } else if (targetType === Targets.ApplicationCommand) {
-          this.target = logs?.applicationCommands.get(data23.target_id) ?? { id: data23.target_id };
+          this.target = logs?.applicationCommands.get(data24.target_id) ?? { id: data24.target_id };
         } else if (targetType === Targets.AutoModeration) {
-          this.target = guild.autoModerationRules.cache.get(data23.target_id) ?? new AutoModerationRule(
+          this.target = guild.autoModerationRules.cache.get(data24.target_id) ?? new AutoModerationRule(
             guild.client,
-            changesReduce(this.changes, { id: data23.target_id, guild_id: guild.id }),
+            changesReduce(this.changes, { id: data24.target_id, guild_id: guild.id }),
             guild
           );
         } else if (targetType === Targets.GuildOnboardingPrompt) {
-          this.target = data23.action_type === AuditLogEvent.OnboardingPromptCreate ? new GuildOnboardingPrompt(guild.client, changesReduce(this.changes, { id: data23.target_id }), guild.id) : changesReduce(this.changes, { id: data23.target_id });
+          this.target = data24.action_type === AuditLogEvent.OnboardingPromptCreate ? new GuildOnboardingPrompt(guild.client, changesReduce(this.changes, { id: data24.target_id }), guild.id) : changesReduce(this.changes, { id: data24.target_id });
         } else if (targetType === Targets.Role) {
-          this.target = guild.roles.cache.get(data23.target_id) ?? { id: data23.target_id };
+          this.target = guild.roles.cache.get(data24.target_id) ?? { id: data24.target_id };
         } else if (targetType === Targets.Emoji) {
-          this.target = guild.emojis.cache.get(data23.target_id) ?? { id: data23.target_id };
+          this.target = guild.emojis.cache.get(data24.target_id) ?? { id: data24.target_id };
         } else if (targetType === Targets.SoundboardSound) {
-          this.target = guild.soundboardSounds.cache.get(data23.target_id) ?? { id: data23.target_id };
-        } else if (data23.target_id) {
-          this.target = { id: data23.target_id };
+          this.target = guild.soundboardSounds.cache.get(data24.target_id) ?? { id: data24.target_id };
+        } else if (data24.target_id) {
+          this.target = { id: data24.target_id };
         }
       }
       /**
@@ -56611,12 +56611,12 @@ var require_GuildAuditLogEntryCreate = __commonJS({
     var GuildAuditLogsEntry = require_GuildAuditLogsEntry();
     var Events3 = require_Events();
     var GuildAuditLogEntryCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         let auditLogEntry;
         if (guild) {
-          auditLogEntry = new GuildAuditLogsEntry(guild, data23);
+          auditLogEntry = new GuildAuditLogsEntry(guild, data24);
           client2.emit(Events3.GuildAuditLogEntryCreate, auditLogEntry, guild);
         }
         return { auditLogEntry };
@@ -56633,10 +56633,10 @@ var require_GuildBanAdd = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildBanAdd = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
-        if (guild) client2.emit(Events3.GuildBanAdd, guild.bans._add(data23));
+        const guild = client2.guilds.cache.get(data24.guild_id);
+        if (guild) client2.emit(Events3.GuildBanAdd, guild.bans._add(data24));
       }
     };
     module2.exports = GuildBanAdd;
@@ -56649,17 +56649,17 @@ var require_GuildBan = __commonJS({
     "use strict";
     var Base = require_Base();
     var GuildBan = class extends Base {
-      constructor(client2, data23, guild) {
+      constructor(client2, data24, guild) {
         super(client2);
         this.guild = guild;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("user" in data23) {
-          this.user = this.client.users._add(data23.user, true);
+      _patch(data24) {
+        if ("user" in data24) {
+          this.user = this.client.users._add(data24.user, true);
         }
-        if ("reason" in data23) {
-          this.reason = data23.reason;
+        if ("reason" in data24) {
+          this.reason = data24.reason;
         }
       }
       /**
@@ -56691,11 +56691,11 @@ var require_GuildBanRemove = __commonJS({
     var GuildBan = require_GuildBan();
     var Events3 = require_Events();
     var GuildBanRemove = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const ban = guild.bans.cache.get(data23.user.id) ?? new GuildBan(client2, data23, guild);
+          const ban = guild.bans.cache.get(data24.user.id) ?? new GuildBan(client2, data24, guild);
           guild.bans.cache.delete(ban.user.id);
           client2.emit(Events3.GuildBanRemove, ban);
         }
@@ -56711,11 +56711,11 @@ var require_GuildChannelsPositionUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildChannelsPositionUpdate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          for (const partialChannel of data23.channels) {
+          for (const partialChannel of data24.channels) {
             const channel = guild.channels.cache.get(partialChannel.id);
             if (channel) channel.rawPosition = partialChannel.position;
           }
@@ -56734,17 +56734,17 @@ var require_GuildDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        let guild = client2.guilds.cache.get(data23.id);
+        let guild = client2.guilds.cache.get(data24.id);
         if (guild) {
-          if (data23.unavailable) {
+          if (data24.unavailable) {
             guild.available = false;
             client2.emit(Events3.GuildUnavailable, guild);
             return;
           }
           for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
-          client2.voice.adapters.get(data23.id)?.destroy();
+          client2.voice.adapters.get(data24.id)?.destroy();
           client2.guilds.cache.delete(guild.id);
           client2.emit(Events3.GuildDelete, guild);
         }
@@ -56796,8 +56796,8 @@ var require_GuildEmojiUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildEmojiUpdateAction = class extends Action {
-      handle(current, data23) {
-        const old = current._update(data23);
+      handle(current, data24) {
+        const old = current._update(data24);
         this.client.emit(Events3.GuildEmojiUpdate, old, current);
         return { emoji: current };
       }
@@ -56812,11 +56812,11 @@ var require_GuildEmojisUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildEmojisUpdateAction = class extends Action {
-      handle(data23) {
-        const guild = this.client.guilds.cache.get(data23.guild_id);
+      handle(data24) {
+        const guild = this.client.guilds.cache.get(data24.guild_id);
         if (!guild?.emojis) return;
         const deletions = new Map(guild.emojis.cache);
-        for (const emoji3 of data23.emojis) {
+        for (const emoji3 of data24.emojis) {
           const cachedEmoji = guild.emojis.cache.get(emoji3.id);
           if (cachedEmoji) {
             deletions.delete(emoji3.id);
@@ -56843,9 +56843,9 @@ var require_GuildIntegrationsUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildIntegrationsUpdate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) client2.emit(Events3.GuildIntegrationsUpdate, guild);
       }
     };
@@ -56880,19 +56880,19 @@ var require_GuildMemberRemove = __commonJS({
     var Events3 = require_Events();
     var Status2 = require_Status();
     var GuildMemberRemoveAction = class extends Action {
-      handle(data23, shard) {
+      handle(data24, shard) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         let member = null;
         if (guild) {
-          member = this.getMember({ user: data23.user }, guild);
+          member = this.getMember({ user: data24.user }, guild);
           guild.memberCount--;
           if (member) {
             guild.members.cache.delete(member.id);
             if (shard.status === Status2.Ready) client2.emit(Events3.GuildMemberRemove, member);
           }
-          guild.presences.cache.delete(data23.user.id);
-          guild.voiceStates.cache.delete(data23.user.id);
+          guild.presences.cache.delete(data24.user.id);
+          guild.voiceStates.cache.delete(data24.user.id);
         }
         return { guild, member };
       }
@@ -56909,24 +56909,24 @@ var require_GuildMemberUpdate = __commonJS({
     var Events3 = require_Events();
     var Status2 = require_Status();
     var GuildMemberUpdateAction = class extends Action {
-      handle(data23, shard) {
+      handle(data24, shard) {
         const { client: client2 } = this;
-        if (data23.user.username) {
-          const user = client2.users.cache.get(data23.user.id);
+        if (data24.user.username) {
+          const user = client2.users.cache.get(data24.user.id);
           if (!user) {
-            client2.users._add(data23.user);
-          } else if (!user._equals(data23.user)) {
-            client2.actions.UserUpdate.handle(data23.user);
+            client2.users._add(data24.user);
+          } else if (!user._equals(data24.user)) {
+            client2.actions.UserUpdate.handle(data24.user);
           }
         }
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const member = this.getMember({ user: data23.user }, guild);
+          const member = this.getMember({ user: data24.user }, guild);
           if (member) {
-            const old = member._update(data23);
+            const old = member._update(data24);
             if (shard.status === Status2.Ready && !member.equals(old)) client2.emit(Events3.GuildMemberUpdate, old, member);
           } else {
-            const newMember = guild.members._add(data23);
+            const newMember = guild.members._add(data24);
             this.client.emit(Events3.GuildMemberAvailable, newMember);
           }
         }
@@ -56943,13 +56943,13 @@ var require_GuildRoleCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildRoleCreate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         let role;
         if (guild) {
-          const already = guild.roles.cache.has(data23.role.id);
-          role = guild.roles._add(data23.role);
+          const already = guild.roles.cache.has(data24.role.id);
+          role = guild.roles._add(data24.role);
           if (!already) client2.emit(Events3.GuildRoleCreate, role);
         }
         return { role };
@@ -56966,14 +56966,14 @@ var require_GuildRoleDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildRoleDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         let role;
         if (guild) {
-          role = guild.roles.cache.get(data23.role_id);
+          role = guild.roles.cache.get(data24.role_id);
           if (role) {
-            guild.roles.cache.delete(data23.role_id);
+            guild.roles.cache.delete(data24.role_id);
             client2.emit(Events3.GuildRoleDelete, role);
           }
         }
@@ -56991,14 +56991,14 @@ var require_GuildRoleUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildRoleUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
           let old = null;
-          const role = guild.roles.cache.get(data23.role.id);
+          const role = guild.roles.cache.get(data24.role.id);
           if (role) {
-            old = role._update(data23.role);
+            old = role._update(data24.role);
             client2.emit(Events3.GuildRoleUpdate, old, role);
           }
           return {
@@ -57022,11 +57022,11 @@ var require_GuildRolesPositionUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildRolesPositionUpdate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          for (const partialRole of data23.roles) {
+          for (const partialRole of data24.roles) {
             const role = guild.roles.cache.get(partialRole.id);
             if (role) role.rawPosition = partialRole.position;
           }
@@ -57045,11 +57045,11 @@ var require_GuildScheduledEventCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildScheduledEventCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const guildScheduledEvent = guild.scheduledEvents._add(data23);
+          const guildScheduledEvent = guild.scheduledEvents._add(data24);
           client2.emit(Events3.GuildScheduledEventCreate, guildScheduledEvent);
           return { guildScheduledEvent };
         }
@@ -57067,11 +57067,11 @@ var require_GuildScheduledEventDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildScheduledEventDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const guildScheduledEvent = this.getScheduledEvent(data23, guild);
+          const guildScheduledEvent = this.getScheduledEvent(data24, guild);
           if (guildScheduledEvent) {
             guild.scheduledEvents.cache.delete(guildScheduledEvent.id);
             client2.emit(Events3.GuildScheduledEventDelete, guildScheduledEvent);
@@ -57092,12 +57092,12 @@ var require_GuildScheduledEventUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildScheduledEventUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const oldGuildScheduledEvent = guild.scheduledEvents.cache.get(data23.id)?._clone() ?? null;
-          const newGuildScheduledEvent = guild.scheduledEvents._add(data23);
+          const oldGuildScheduledEvent = guild.scheduledEvents.cache.get(data24.id)?._clone() ?? null;
+          const newGuildScheduledEvent = guild.scheduledEvents._add(data24);
           client2.emit(Events3.GuildScheduledEventUpdate, oldGuildScheduledEvent, newGuildScheduledEvent);
           return { oldGuildScheduledEvent, newGuildScheduledEvent };
         }
@@ -57115,12 +57115,12 @@ var require_GuildScheduledEventUserAdd = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildScheduledEventUserAddAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const guildScheduledEvent = this.getScheduledEvent(data23, guild);
-          const user = this.getUser(data23);
+          const guildScheduledEvent = this.getScheduledEvent(data24, guild);
+          const user = this.getUser(data24);
           if (guildScheduledEvent && user) {
             client2.emit(Events3.GuildScheduledEventUserAdd, guildScheduledEvent, user);
             return { guildScheduledEvent, user };
@@ -57140,12 +57140,12 @@ var require_GuildScheduledEventUserRemove = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildScheduledEventUserRemoveAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const guildScheduledEvent = this.getScheduledEvent(data23, guild);
-          const user = this.getUser(data23);
+          const guildScheduledEvent = this.getScheduledEvent(data24, guild);
+          const user = this.getUser(data24);
           if (guildScheduledEvent && user) {
             client2.emit(Events3.GuildScheduledEventUserRemove, guildScheduledEvent, user);
             return { guildScheduledEvent, user };
@@ -57165,10 +57165,10 @@ var require_GuildSoundboardSoundDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildSoundboardSoundDeleteAction = class extends Action {
-      handle(data23) {
-        const guild = this.client.guilds.cache.get(data23.guild_id);
+      handle(data24) {
+        const guild = this.client.guilds.cache.get(data24.guild_id);
         if (!guild) return {};
-        const soundboardSound = this.getSoundboardSound(data23, guild);
+        const soundboardSound = this.getSoundboardSound(data24, guild);
         if (soundboardSound) {
           guild.soundboardSounds.cache.delete(soundboardSound.soundId);
           this.client.emit(Events3.GuildSoundboardSoundDelete, soundboardSound);
@@ -57222,8 +57222,8 @@ var require_GuildStickerUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildStickerUpdateAction = class extends Action {
-      handle(current, data23) {
-        const old = current._update(data23);
+      handle(current, data24) {
+        const old = current._update(data24);
         this.client.emit(Events3.GuildStickerUpdate, old, current);
         return { sticker: current };
       }
@@ -57238,11 +57238,11 @@ var require_GuildStickersUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildStickersUpdateAction = class extends Action {
-      handle(data23) {
-        const guild = this.client.guilds.cache.get(data23.guild_id);
+      handle(data24) {
+        const guild = this.client.guilds.cache.get(data24.guild_id);
         if (!guild?.stickers) return;
         const deletions = new Map(guild.stickers.cache);
-        for (const sticker of data23.stickers) {
+        for (const sticker of data24.stickers) {
           const cachedSticker = guild.stickers.cache.get(sticker.id);
           if (cachedSticker) {
             deletions.delete(sticker.id);
@@ -57269,11 +57269,11 @@ var require_GuildUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var GuildUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.id);
+        const guild = client2.guilds.cache.get(data24.id);
         if (guild) {
-          const old = guild._update(data23);
+          const old = guild._update(data24);
           client2.emit(Events3.GuildUpdate, old, guild);
           return {
             old,
@@ -57547,14 +57547,14 @@ var require_AutocompleteInteraction = __commonJS({
     var CommandInteractionOptionResolver = require_CommandInteractionOptionResolver();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var AutocompleteInteraction = class extends BaseInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.commandId = data23.data.id;
-        this.commandName = data23.data.name;
-        this.commandType = data23.data.type;
-        this.commandGuildId = data23.data.guild_id ?? null;
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.commandId = data24.data.id;
+        this.commandName = data24.data.name;
+        this.commandType = data24.data.type;
+        this.commandGuildId = data24.data.guild_id ?? null;
         this.responded = false;
-        this.options = new CommandInteractionOptionResolver(this.client, data23.data.options ?? []);
+        this.options = new CommandInteractionOptionResolver(this.client, data24.data.options ?? []);
       }
       /**
        * The invoked application command, if it was fetched before
@@ -57606,14 +57606,14 @@ var require_InteractionCallback = __commonJS({
     "use strict";
     var { DiscordSnowflake } = require_cjs3();
     var InteractionCallback = class {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         Object.defineProperty(this, "client", { value: client2 });
-        this.id = data23.id;
-        this.type = data23.type;
-        this.activityInstanceId = data23.activity_instance_id ?? null;
-        this.responseMessageId = data23.response_message_id ?? null;
-        this.responseMessageLoading = data23.response_message_loading ?? null;
-        this.responseMessageEphemeral = data23.response_message_ephemeral ?? null;
+        this.id = data24.id;
+        this.type = data24.type;
+        this.activityInstanceId = data24.activity_instance_id ?? null;
+        this.responseMessageId = data24.response_message_id ?? null;
+        this.responseMessageLoading = data24.response_message_loading ?? null;
+        this.responseMessageEphemeral = data24.response_message_ephemeral ?? null;
       }
       /**
        * The timestamp the original interaction was created at
@@ -57643,12 +57643,12 @@ var require_InteractionCallbackResource = __commonJS({
     var { lazy: lazy2 } = require_dist();
     var getMessage = lazy2(() => require_Message().Message);
     var InteractionCallbackResource = class {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         Object.defineProperty(this, "client", { value: client2 });
-        this.type = data23.type;
-        this.activityInstance = data23.activity_instance ?? null;
-        if ("message" in data23) {
-          this.message = this.client.channels.cache.get(data23.message.channel_id)?.messages._add(data23.message) ?? new (getMessage())(client2, data23.message);
+        this.type = data24.type;
+        this.activityInstance = data24.activity_instance ?? null;
+        if ("message" in data24) {
+          this.message = this.client.channels.cache.get(data24.message.channel_id)?.messages._add(data24.message) ?? new (getMessage())(client2, data24.message);
         } else {
           this.message = null;
         }
@@ -57665,10 +57665,10 @@ var require_InteractionCallbackResponse = __commonJS({
     var InteractionCallback = require_InteractionCallback();
     var InteractionCallbackResource = require_InteractionCallbackResource();
     var InteractionCallbackResponse = class {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         Object.defineProperty(this, "client", { value: client2 });
-        this.interaction = new InteractionCallback(client2, data23.interaction);
-        this.resource = data23.resource ? new InteractionCallbackResource(client2, data23.resource) : null;
+        this.interaction = new InteractionCallback(client2, data24.interaction);
+        this.resource = data24.resource ? new InteractionCallbackResource(client2, data24.resource) : null;
       }
     };
     module2.exports = InteractionCallbackResponse;
@@ -57921,17 +57921,17 @@ var require_InteractionResponses = __commonJS({
         let messagePayload;
         if (options instanceof MessagePayload) messagePayload = options;
         else messagePayload = MessagePayload.create(this, options);
-        const { body: data23, files } = await messagePayload.resolveBody().resolveFiles();
+        const { body: data24, files } = await messagePayload.resolveBody().resolveFiles();
         const response = await this.client.rest.post(Routes2.interactionCallback(this.id, this.token), {
           body: {
             type: InteractionResponseType.ChannelMessageWithSource,
-            data: data23
+            data: data24
           },
           files,
           auth: false,
           query: makeURLSearchParams2({ with_response: options.withResponse ?? false })
         });
-        this.ephemeral = Boolean(data23.flags & MessageFlags.Ephemeral);
+        this.ephemeral = Boolean(data24.flags & MessageFlags.Ephemeral);
         this.replied = true;
         return options.withResponse ? new InteractionCallbackResponse(this.client, response) : options.fetchReply ? this.fetchReply() : new InteractionResponse(this);
       }
@@ -58055,11 +58055,11 @@ var require_InteractionResponses = __commonJS({
         let messagePayload;
         if (options instanceof MessagePayload) messagePayload = options;
         else messagePayload = MessagePayload.create(this, options);
-        const { body: data23, files } = await messagePayload.resolveBody().resolveFiles();
+        const { body: data24, files } = await messagePayload.resolveBody().resolveFiles();
         const response = await this.client.rest.post(Routes2.interactionCallback(this.id, this.token), {
           body: {
             type: InteractionResponseType.UpdateMessage,
-            data: data23
+            data: data24
           },
           files,
           auth: false,
@@ -58195,11 +58195,11 @@ var require_MessageComponentInteraction = __commonJS({
     var { findComponentByCustomId } = require_Components();
     var getMessage = lazy2(() => require_Message().Message);
     var MessageComponentInteraction = class extends BaseInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.message = this.channel?.messages._add(data23.message) ?? new (getMessage())(client2, data23.message);
-        this.customId = data23.data.custom_id;
-        this.componentType = data23.data.component_type;
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.message = this.channel?.messages._add(data24.message) ?? new (getMessage())(client2, data24.message);
+        this.customId = data24.data.custom_id;
+        this.componentType = data24.data.component_type;
         this.deferred = false;
         this.ephemeral = null;
         this.replied = false;
@@ -58274,9 +58274,9 @@ var require_ChannelSelectMenuInteraction = __commonJS({
     var { Collection: Collection3 } = require_dist6();
     var MessageComponentInteraction = require_MessageComponentInteraction();
     var ChannelSelectMenuInteraction = class extends MessageComponentInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        const { resolved, values } = data23.data;
+      constructor(client2, data24) {
+        super(client2, data24);
+        const { resolved, values } = data24.data;
         this.values = values ?? [];
         this.channels = new Collection3();
         for (const channel of Object.values(resolved?.channels ?? {})) {
@@ -58297,12 +58297,12 @@ var require_CommandInteraction = __commonJS({
     var InteractionWebhook = require_InteractionWebhook();
     var InteractionResponses = require_InteractionResponses();
     var CommandInteraction = class extends BaseInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.commandId = data23.data.id;
-        this.commandName = data23.data.name;
-        this.commandType = data23.data.type;
-        this.commandGuildId = data23.data.guild_id ?? null;
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.commandId = data24.data.id;
+        this.commandName = data24.data.name;
+        this.commandType = data24.data.type;
+        this.commandGuildId = data24.data.guild_id ?? null;
         this.deferred = false;
         this.replied = false;
         this.ephemeral = null;
@@ -58410,13 +58410,13 @@ var require_ChatInputCommandInteraction = __commonJS({
     var CommandInteraction = require_CommandInteraction();
     var CommandInteractionOptionResolver = require_CommandInteractionOptionResolver();
     var { transformResolved } = require_Util();
-    var ChatInputCommandInteraction24 = class extends CommandInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
+    var ChatInputCommandInteraction25 = class extends CommandInteraction {
+      constructor(client2, data24) {
+        super(client2, data24);
         this.options = new CommandInteractionOptionResolver(
           this.client,
-          data23.data.options?.map((option) => this.transformOption(option, data23.data.resolved)) ?? [],
-          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data23.data.resolved)
+          data24.data.options?.map((option) => this.transformOption(option, data24.data.resolved)) ?? [],
+          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data24.data.resolved)
         );
       }
       /**
@@ -58434,7 +58434,7 @@ var require_ChatInputCommandInteraction = __commonJS({
         return `/${properties.filter(Boolean).join(" ")}`;
       }
     };
-    module2.exports = ChatInputCommandInteraction24;
+    module2.exports = ChatInputCommandInteraction25;
   }
 });
 
@@ -58446,9 +58446,9 @@ var require_MentionableSelectMenuInteraction = __commonJS({
     var MessageComponentInteraction = require_MessageComponentInteraction();
     var Events3 = require_Events();
     var MentionableSelectMenuInteraction = class extends MessageComponentInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        const { resolved, values } = data23.data;
+      constructor(client2, data24) {
+        super(client2, data24);
+        const { resolved, values } = data24.data;
         const { members, users, roles } = resolved ?? {};
         this.values = values ?? [];
         this.users = new Collection3();
@@ -58494,14 +58494,14 @@ var require_ContextMenuCommandInteraction = __commonJS({
     var { transformResolved } = require_Util();
     var getMessage = lazy2(() => require_Message().Message);
     var ContextMenuCommandInteraction = class extends CommandInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
+      constructor(client2, data24) {
+        super(client2, data24);
         this.options = new CommandInteractionOptionResolver(
           this.client,
-          this.resolveContextMenuOptions(data23.data),
-          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data23.data.resolved)
+          this.resolveContextMenuOptions(data24.data),
+          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data24.data.resolved)
         );
-        this.targetId = data23.data.target_id;
+        this.targetId = data24.data.target_id;
       }
       /**
        * Resolves and transforms options received from the API for a context menu interaction.
@@ -58780,23 +58780,23 @@ var require_ModalSubmitInteraction = __commonJS({
     var getMessage = lazy2(() => require_Message().Message);
     var getAttachment = lazy2(() => require_Attachment());
     var ModalSubmitInteraction = class _ModalSubmitInteraction extends BaseInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.customId = data23.data.custom_id;
-        if ("message" in data23) {
-          this.message = this.channel?.messages._add(data23.message) ?? new (getMessage())(this.client, data23.message);
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.customId = data24.data.custom_id;
+        if ("message" in data24) {
+          this.message = this.channel?.messages._add(data24.message) ?? new (getMessage())(this.client, data24.message);
         } else {
           this.message = null;
         }
-        this.components = data23.data.components?.map(
-          (component) => _ModalSubmitInteraction.transformComponent(component, data23.data.resolved, {
+        this.components = data24.data.components?.map(
+          (component) => _ModalSubmitInteraction.transformComponent(component, data24.data.resolved, {
             client: this.client,
             guild: this.guild
           })
         );
         this.fields = new ModalSubmitFields(
           this.components,
-          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data23.data.resolved)
+          transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data24.data.resolved)
         );
         this.deferred = false;
         this.replied = false;
@@ -58827,61 +58827,61 @@ var require_ModalSubmitInteraction = __commonJS({
             component: this.transformComponent(rawComponent.component, resolved, { client: client2, guild })
           };
         }
-        const data23 = {
+        const data24 = {
           type: rawComponent.type,
           id: rawComponent.id
         };
-        if ("custom_id" in rawComponent) data23.customId = rawComponent.custom_id;
-        if ("value" in rawComponent) data23.value = rawComponent.value;
+        if ("custom_id" in rawComponent) data24.customId = rawComponent.custom_id;
+        if ("value" in rawComponent) data24.value = rawComponent.value;
         if (rawComponent.values) {
-          data23.values = rawComponent.values;
+          data24.values = rawComponent.values;
           if (resolved) {
             const { members, users, channels, roles, attachments } = resolved;
             const valueSet = new Set(rawComponent.values);
             if (users) {
-              data23.users = new Collection3();
+              data24.users = new Collection3();
               for (const [id, user] of Object.entries(users)) {
                 if (valueSet.has(id)) {
-                  data23.users.set(id, client2.users._add(user));
+                  data24.users.set(id, client2.users._add(user));
                 }
               }
             }
             if (channels) {
-              data23.channels = new Collection3();
+              data24.channels = new Collection3();
               for (const [id, apiChannel] of Object.entries(channels)) {
                 if (valueSet.has(id)) {
-                  data23.channels.set(id, client2.channels._add(apiChannel, guild) ?? apiChannel);
+                  data24.channels.set(id, client2.channels._add(apiChannel, guild) ?? apiChannel);
                 }
               }
             }
             if (members) {
-              data23.members = new Collection3();
+              data24.members = new Collection3();
               for (const [id, member] of Object.entries(members)) {
                 if (valueSet.has(id)) {
                   const user = users?.[id];
-                  data23.members.set(id, guild?.members._add({ user, ...member }) ?? member);
+                  data24.members.set(id, guild?.members._add({ user, ...member }) ?? member);
                 }
               }
             }
             if (roles) {
-              data23.roles = new Collection3();
+              data24.roles = new Collection3();
               for (const [id, role] of Object.entries(roles)) {
                 if (valueSet.has(id)) {
-                  data23.roles.set(id, guild?.roles._add(role) ?? role);
+                  data24.roles.set(id, guild?.roles._add(role) ?? role);
                 }
               }
             }
             if (attachments) {
-              data23.attachments = new Collection3();
+              data24.attachments = new Collection3();
               for (const [id, attachment] of Object.entries(attachments)) {
                 if (valueSet.has(id)) {
-                  data23.attachments.set(id, new (getAttachment())(attachment));
+                  data24.attachments.set(id, new (getAttachment())(attachment));
                 }
               }
             }
           }
         }
-        return data23;
+        return data24;
       }
       /**
        * Whether this is from a {@link MessageComponentInteraction}.
@@ -58936,9 +58936,9 @@ var require_RoleSelectMenuInteraction = __commonJS({
     var { Collection: Collection3 } = require_dist6();
     var MessageComponentInteraction = require_MessageComponentInteraction();
     var RoleSelectMenuInteraction = class extends MessageComponentInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        const { resolved, values } = data23.data;
+      constructor(client2, data24) {
+        super(client2, data24);
+        const { resolved, values } = data24.data;
         this.values = values ?? [];
         this.roles = new Collection3();
         for (const role of Object.values(resolved?.roles ?? {})) {
@@ -58956,9 +58956,9 @@ var require_StringSelectMenuInteraction = __commonJS({
     "use strict";
     var MessageComponentInteraction = require_MessageComponentInteraction();
     var StringSelectMenuInteraction = class extends MessageComponentInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.values = data23.data.values ?? [];
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.values = data24.data.values ?? [];
       }
     };
     module2.exports = StringSelectMenuInteraction;
@@ -59000,9 +59000,9 @@ var require_UserSelectMenuInteraction = __commonJS({
     var MessageComponentInteraction = require_MessageComponentInteraction();
     var Events3 = require_Events();
     var UserSelectMenuInteraction = class extends MessageComponentInteraction {
-      constructor(client2, data23) {
-        super(client2, data23);
-        const { resolved, values } = data23.data;
+      constructor(client2, data24) {
+        super(client2, data24);
+        const { resolved, values } = data24.data;
         this.values = values ?? [];
         this.users = new Collection3();
         this.members = new Collection3();
@@ -59032,7 +59032,7 @@ var require_InteractionCreate = __commonJS({
     var AutocompleteInteraction = require_AutocompleteInteraction();
     var ButtonInteraction5 = require_ButtonInteraction();
     var ChannelSelectMenuInteraction = require_ChannelSelectMenuInteraction();
-    var ChatInputCommandInteraction24 = require_ChatInputCommandInteraction();
+    var ChatInputCommandInteraction25 = require_ChatInputCommandInteraction();
     var MentionableSelectMenuInteraction = require_MentionableSelectMenuInteraction();
     var MessageContextMenuCommandInteraction = require_MessageContextMenuCommandInteraction();
     var ModalSubmitInteraction = require_ModalSubmitInteraction();
@@ -59043,15 +59043,15 @@ var require_InteractionCreate = __commonJS({
     var UserSelectMenuInteraction = require_UserSelectMenuInteraction();
     var Events3 = require_Events();
     var InteractionCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = data23.channel && this.getChannel({ ...data23.channel, ..."recipients" in data23.channel ? { user: data23.user } : void 0 });
+        const channel = data24.channel && this.getChannel({ ...data24.channel, ..."recipients" in data24.channel ? { user: data24.user } : void 0 });
         let InteractionClass;
-        switch (data23.type) {
+        switch (data24.type) {
           case InteractionType.ApplicationCommand:
-            switch (data23.data.type) {
+            switch (data24.data.type) {
               case ApplicationCommandType.ChatInput:
-                InteractionClass = ChatInputCommandInteraction24;
+                InteractionClass = ChatInputCommandInteraction25;
                 break;
               case ApplicationCommandType.User:
                 InteractionClass = UserContextMenuCommandInteraction;
@@ -59066,14 +59066,14 @@ var require_InteractionCreate = __commonJS({
               default:
                 client2.emit(
                   Events3.Debug,
-                  `[INTERACTION] Received application command interaction with unknown type: ${data23.data.type}`
+                  `[INTERACTION] Received application command interaction with unknown type: ${data24.data.type}`
                 );
                 return;
             }
             break;
           case InteractionType.MessageComponent:
             if (channel && !channel.isTextBased()) return;
-            switch (data23.data.component_type) {
+            switch (data24.data.component_type) {
               case ComponentType4.Button:
                 InteractionClass = ButtonInteraction5;
                 break;
@@ -59095,7 +59095,7 @@ var require_InteractionCreate = __commonJS({
               default:
                 client2.emit(
                   Events3.Debug,
-                  `[INTERACTION] Received component interaction with unknown type: ${data23.data.component_type}`
+                  `[INTERACTION] Received component interaction with unknown type: ${data24.data.component_type}`
                 );
                 return;
             }
@@ -59107,10 +59107,10 @@ var require_InteractionCreate = __commonJS({
             InteractionClass = ModalSubmitInteraction;
             break;
           default:
-            client2.emit(Events3.Debug, `[INTERACTION] Received interaction with unknown type: ${data23.type}`);
+            client2.emit(Events3.Debug, `[INTERACTION] Received interaction with unknown type: ${data24.type}`);
             return;
         }
-        const interaction = new InteractionClass(client2, data23);
+        const interaction = new InteractionClass(client2, data24);
         client2.emit(Events3.InteractionCreate, interaction);
       }
     };
@@ -59125,12 +59125,12 @@ var require_InviteCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var InviteCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = client2.channels.cache.get(data23.channel_id);
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const channel = client2.channels.cache.get(data24.channel_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (!channel) return false;
-        const inviteData = Object.assign(data23, { channel, guild });
+        const inviteData = Object.assign(data24, { channel, guild });
         const invite = guild.invites._add(inviteData);
         client2.emit(Events3.InviteCreate, invite);
         return { invite };
@@ -59148,12 +59148,12 @@ var require_InviteDelete = __commonJS({
     var Invite2 = require_Invite();
     var Events3 = require_Events();
     var InviteDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = client2.channels.cache.get(data23.channel_id);
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const channel = client2.channels.cache.get(data24.channel_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (!channel) return false;
-        const inviteData = Object.assign(data23, { channel, guild });
+        const inviteData = Object.assign(data24, { channel, guild });
         const invite = new Invite2(client2, inviteData);
         guild.invites.cache.delete(invite.code);
         client2.emit(Events3.InviteDelete, invite);
@@ -59171,13 +59171,13 @@ var require_MessageCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
         const channel = this.getChannel({
-          id: data23.channel_id,
-          author: data23.author,
-          ..."guild_id" in data23 && { guild_id: data23.guild_id },
-          ..."channel_type" in data23 && { type: data23.channel_type }
+          id: data24.channel_id,
+          author: data24.author,
+          ..."guild_id" in data24 && { guild_id: data24.guild_id },
+          ..."channel_type" in data24 && { type: data24.channel_type }
         });
         if (channel) {
           if (!channel.isTextBased()) return {};
@@ -59185,10 +59185,10 @@ var require_MessageCreate = __commonJS({
             channel.messageCount++;
             channel.totalMessageSent++;
           }
-          const existing = channel.messages.cache.get(data23.id);
+          const existing = channel.messages.cache.get(data24.id);
           if (existing && existing.author?.id !== this.client.user.id) return { message: existing };
-          const message = existing ?? channel.messages._add(data23);
-          channel.lastMessageId = data23.id;
+          const message = existing ?? channel.messages._add(data24);
+          channel.lastMessageId = data24.id;
           client2.emit(Events3.MessageCreate, message);
           return { message };
         }
@@ -59206,14 +59206,14 @@ var require_MessageDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         let message;
         if (channel) {
           if (!channel.isTextBased()) return {};
           if (channel.isThread()) channel.messageCount--;
-          message = this.getMessage(data23, channel);
+          message = this.getMessage(data24, channel);
           if (message) {
             channel.messages.cache.delete(message.id);
             client2.emit(Events3.MessageDelete, message);
@@ -59234,19 +59234,19 @@ var require_MessageDeleteBulk = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageDeleteBulkAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = client2.channels.cache.get(data23.channel_id);
+        const channel = client2.channels.cache.get(data24.channel_id);
         if (channel) {
           if (!channel.isTextBased()) return {};
-          if (channel.isThread()) channel.messageCount -= data23.ids.length;
-          const ids = data23.ids;
+          if (channel.isThread()) channel.messageCount -= data24.ids.length;
+          const ids = data24.ids;
           const messages = new Collection3();
           for (const id of ids) {
             const message = this.getMessage(
               {
                 id,
-                guild_id: data23.guild_id
+                guild_id: data24.guild_id
               },
               channel,
               false
@@ -59273,21 +59273,21 @@ var require_MessagePollVoteAdd = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessagePollVoteAddAction = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
-        const poll = this.getPoll(data23, message, channel);
+        const poll = this.getPoll(data24, message, channel);
         if (!poll) return false;
-        const answer = poll.answers.get(data23.answer_id);
+        const answer = poll.answers.get(data24.answer_id);
         if (!answer) return false;
-        const user = this.getUser(data23);
+        const user = this.getUser(data24);
         if (user) {
           answer.voters._add(user);
         }
         answer.voteCount++;
-        this.client.emit(Events3.MessagePollVoteAdd, answer, data23.user_id);
+        this.client.emit(Events3.MessagePollVoteAdd, answer, data24.user_id);
         return { poll };
       }
     };
@@ -59302,20 +59302,20 @@ var require_MessagePollVoteRemove = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessagePollVoteRemoveAction = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
-        const poll = this.getPoll(data23, message, channel);
+        const poll = this.getPoll(data24, message, channel);
         if (!poll) return false;
-        const answer = poll.answers.get(data23.answer_id);
+        const answer = poll.answers.get(data24.answer_id);
         if (!answer) return false;
-        answer.voters.cache.delete(data23.user_id);
+        answer.voters.cache.delete(data24.user_id);
         if (answer.voteCount > 0) {
           answer.voteCount--;
         }
-        this.client.emit(Events3.MessagePollVoteRemove, answer, data23.user_id);
+        this.client.emit(Events3.MessagePollVoteRemove, answer, data24.user_id);
         return { poll };
       }
     };
@@ -59331,31 +59331,31 @@ var require_MessageReactionAdd = __commonJS({
     var Events3 = require_Events();
     var Partials = require_Partials();
     var MessageReactionAdd = class extends Action {
-      handle(data23, fromStructure = false) {
-        if (!data23.emoji) return false;
-        const user = this.getUserFromMember(data23);
+      handle(data24, fromStructure = false) {
+        if (!data24.emoji) return false;
+        const user = this.getUserFromMember(data24);
         if (!user) return false;
         const channel = this.getChannel({
-          id: data23.channel_id,
-          ..."guild_id" in data23 && { guild_id: data23.guild_id },
-          user_id: data23.user_id,
-          ...this.spreadInjectedData(data23)
+          id: data24.channel_id,
+          ..."guild_id" in data24 && { guild_id: data24.guild_id },
+          user_id: data24.user_id,
+          ...this.spreadInjectedData(data24)
         });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
         const includePartial = this.client.options.partials.includes(Partials.Reaction);
         if (message.partial && !includePartial) return false;
         const reaction = message.reactions._add({
-          emoji: data23.emoji,
+          emoji: data24.emoji,
           count: message.partial ? null : 0,
           me: user.id === this.client.user.id,
-          burst_colors: data23.burst_colors
+          burst_colors: data24.burst_colors
         });
         if (!reaction) return false;
-        reaction._add(user, data23.burst);
+        reaction._add(user, data24.burst);
         if (fromStructure) return { message, reaction, user };
-        this.client.emit(Events3.MessageReactionAdd, reaction, user, { type: data23.type, burst: data23.burst });
+        this.client.emit(Events3.MessageReactionAdd, reaction, user, { type: data24.type, burst: data24.burst });
         return { message, reaction, user };
       }
     };
@@ -59370,22 +59370,22 @@ var require_MessageReactionRemove = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageReactionRemove = class extends Action {
-      handle(data23) {
-        if (!data23.emoji) return false;
-        const user = this.getUser(data23);
+      handle(data24) {
+        if (!data24.emoji) return false;
+        const user = this.getUser(data24);
         if (!user) return false;
         const channel = this.getChannel({
-          id: data23.channel_id,
-          ..."guild_id" in data23 && { guild_id: data23.guild_id },
-          user_id: data23.user_id
+          id: data24.channel_id,
+          ..."guild_id" in data24 && { guild_id: data24.guild_id },
+          user_id: data24.user_id
         });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
-        const reaction = this.getReaction(data23, message, user);
+        const reaction = this.getReaction(data24, message, user);
         if (!reaction) return false;
-        reaction._remove(user, data23.burst);
-        this.client.emit(Events3.MessageReactionRemove, reaction, user, { type: data23.type, burst: data23.burst });
+        reaction._remove(user, data24.burst);
+        this.client.emit(Events3.MessageReactionRemove, reaction, user, { type: data24.type, burst: data24.burst });
         return { message, reaction, user };
       }
     };
@@ -59400,10 +59400,10 @@ var require_MessageReactionRemoveAll = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageReactionRemoveAll = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
         const removed = message.reactions.cache.clone();
         message.reactions.cache.clear();
@@ -59422,12 +59422,12 @@ var require_MessageReactionRemoveEmoji = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var MessageReactionRemoveEmoji = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (!channel?.isTextBased()) return false;
-        const message = this.getMessage(data23, channel);
+        const message = this.getMessage(data24, channel);
         if (!message) return false;
-        const reaction = this.getReaction(data23, message);
+        const reaction = this.getReaction(data24, message);
         if (!reaction) return false;
         if (!message.partial) message.reactions.cache.delete(reaction.emoji.id ?? reaction.emoji.name);
         this.client.emit(Events3.MessageReactionRemoveEmoji, reaction);
@@ -59444,14 +59444,14 @@ var require_MessageUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var MessageUpdateAction = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (channel) {
           if (!channel.isTextBased()) return {};
-          const { id, channel_id, guild_id, author, timestamp: timestamp2, type } = data23;
+          const { id, channel_id, guild_id, author, timestamp: timestamp2, type } = data24;
           const message = this.getMessage({ id, channel_id, guild_id, author, timestamp: timestamp2, type }, channel);
           if (message) {
-            const old = message._update(data23);
+            const old = message._update(data24);
             return {
               old,
               updated: message
@@ -59473,20 +59473,20 @@ var require_PresenceUpdate = __commonJS({
     var Events3 = require_Events();
     var Partials = require_Partials();
     var PresenceUpdateAction = class extends Action {
-      handle(data23) {
-        let user = this.client.users.cache.get(data23.user.id);
-        if (!user && ("username" in data23.user || this.client.options.partials.includes(Partials.User))) {
-          user = this.client.users._add(data23.user);
+      handle(data24) {
+        let user = this.client.users.cache.get(data24.user.id);
+        if (!user && ("username" in data24.user || this.client.options.partials.includes(Partials.User))) {
+          user = this.client.users._add(data24.user);
         }
         if (!user) return;
-        if (data23.user.username) {
-          if (!user._equals(data23.user)) this.client.actions.UserUpdate.handle(data23.user);
+        if (data24.user.username) {
+          if (!user._equals(data24.user)) this.client.actions.UserUpdate.handle(data24.user);
         }
-        const guild = this.client.guilds.cache.get(data23.guild_id);
+        const guild = this.client.guilds.cache.get(data24.guild_id);
         if (!guild) return;
         const oldPresence = guild.presences.cache.get(user.id)?._clone() ?? null;
         let member = guild.members.cache.get(user.id);
-        if (!member && data23.status !== "offline") {
+        if (!member && data24.status !== "offline") {
           member = guild.members._add({
             user,
             deaf: false,
@@ -59494,7 +59494,7 @@ var require_PresenceUpdate = __commonJS({
           });
           this.client.emit(Events3.GuildMemberAvailable, member);
         }
-        const newPresence = guild.presences._add(Object.assign(data23, { guild }));
+        const newPresence = guild.presences._add(Object.assign(data24, { guild }));
         if (this.client.listenerCount(Events3.PresenceUpdate) && !newPresence.equals(oldPresence)) {
           this.client.emit(Events3.PresenceUpdate, oldPresence, newPresence);
         }
@@ -59511,11 +59511,11 @@ var require_StageInstanceCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var StageInstanceCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = this.getChannel({ id: data23.channel_id, guild_id: data23.guild_id });
+        const channel = this.getChannel({ id: data24.channel_id, guild_id: data24.guild_id });
         if (channel) {
-          const stageInstance = channel.guild.stageInstances._add(data23);
+          const stageInstance = channel.guild.stageInstances._add(data24);
           client2.emit(Events3.StageInstanceCreate, stageInstance);
           return { stageInstance };
         }
@@ -59533,11 +59533,11 @@ var require_StageInstanceDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var StageInstanceDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = this.getChannel({ id: data23.channel_id, guild_id: data23.guild_id });
+        const channel = this.getChannel({ id: data24.channel_id, guild_id: data24.guild_id });
         if (channel) {
-          const stageInstance = channel.guild.stageInstances._add(data23);
+          const stageInstance = channel.guild.stageInstances._add(data24);
           if (stageInstance) {
             channel.guild.stageInstances.cache.delete(stageInstance.id);
             client2.emit(Events3.StageInstanceDelete, stageInstance);
@@ -59558,12 +59558,12 @@ var require_StageInstanceUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var StageInstanceUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = this.getChannel({ id: data23.channel_id, guild_id: data23.guild_id });
+        const channel = this.getChannel({ id: data24.channel_id, guild_id: data24.guild_id });
         if (channel) {
-          const oldStageInstance = channel.guild.stageInstances.cache.get(data23.id)?._clone() ?? null;
-          const newStageInstance = channel.guild.stageInstances._add(data23);
+          const oldStageInstance = channel.guild.stageInstances.cache.get(data24.id)?._clone() ?? null;
+          const newStageInstance = channel.guild.stageInstances._add(data24);
           client2.emit(Events3.StageInstanceUpdate, oldStageInstance, newStageInstance);
           return { oldStageInstance, newStageInstance };
         }
@@ -59581,12 +59581,12 @@ var require_ThreadCreate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ThreadCreateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const existing = client2.channels.cache.has(data23.id);
-        const thread = client2.channels._add(data23);
+        const existing = client2.channels.cache.has(data24.id);
+        const thread = client2.channels._add(data24);
         if (!existing && thread) {
-          client2.emit(Events3.ThreadCreate, thread, data23.newly_created ?? false);
+          client2.emit(Events3.ThreadCreate, thread, data24.newly_created ?? false);
         }
         return { thread };
       }
@@ -59602,9 +59602,9 @@ var require_ThreadDelete = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ThreadDeleteAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const thread = client2.channels.cache.get(data23.id);
+        const thread = client2.channels.cache.get(data24.id);
         if (thread) {
           client2.channels._remove(thread.id);
           client2.emit(Events3.ThreadDelete, thread);
@@ -59624,12 +59624,12 @@ var require_ThreadListSync = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ThreadListSyncAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (!guild) return {};
-        if (data23.channel_ids) {
-          for (const id of data23.channel_ids) {
+        if (data24.channel_ids) {
+          for (const id of data24.channel_ids) {
             const channel = client2.channels.cache.get(id);
             if (channel) this.removeStale(channel);
           }
@@ -59638,11 +59638,11 @@ var require_ThreadListSync = __commonJS({
             this.removeStale(channel);
           }
         }
-        const syncedThreads = data23.threads.reduce((coll, rawThread) => {
+        const syncedThreads = data24.threads.reduce((coll, rawThread) => {
           const thread = client2.channels._add(rawThread);
           return coll.set(thread.id, thread);
         }, new Collection3());
-        for (const rawMember of Object.values(data23.members)) {
+        for (const rawMember of Object.values(data24.members)) {
           const thread = client2.channels.cache.get(rawMember.id);
           if (thread) {
             thread.members._add(rawMember);
@@ -59672,16 +59672,16 @@ var require_ThreadMemberUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ThreadMemberUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const thread = client2.channels.cache.get(data23.id);
+        const thread = client2.channels.cache.get(data24.id);
         if (thread) {
-          const member = thread.members.cache.get(data23.user_id);
+          const member = thread.members.cache.get(data24.user_id);
           if (!member) {
-            const newMember = thread.members._add(data23);
+            const newMember = thread.members._add(data24);
             return { newMember };
           }
-          const old = member._update(data23);
+          const old = member._update(data24);
           client2.emit(Events3.ThreadMemberUpdate, old, member);
         }
         return {};
@@ -59699,18 +59699,18 @@ var require_ThreadMembersUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var ThreadMembersUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const thread = client2.channels.cache.get(data23.id);
+        const thread = client2.channels.cache.get(data24.id);
         if (thread) {
-          thread.memberCount = data23.member_count;
+          thread.memberCount = data24.member_count;
           const addedMembers = new Collection3();
           const removedMembers = new Collection3();
-          data23.added_members?.reduce(
+          data24.added_members?.reduce(
             (_addedMembers, addedMember) => _addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
             addedMembers
           );
-          data23.removed_member_ids?.reduce((removedMembersIds, removedMembersId) => {
+          data24.removed_member_ids?.reduce((removedMembersIds, removedMembersId) => {
             const threadMember = this.getThreadMember(removedMembersId, thread.members);
             if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
             thread.members.cache.delete(removedMembersId);
@@ -59734,15 +59734,15 @@ var require_Typing = __commonJS({
     "use strict";
     var Base = require_Base();
     var Typing = class extends Base {
-      constructor(channel, user, data23) {
+      constructor(channel, user, data24) {
         super(channel.client);
         this.channel = channel;
         this.user = user;
-        this._patch(data23);
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("timestamp" in data23) {
-          this.startedTimestamp = data23.timestamp * 1e3;
+      _patch(data24) {
+        if ("timestamp" in data24) {
+          this.startedTimestamp = data24.timestamp * 1e3;
         }
       }
       /**
@@ -59789,16 +59789,16 @@ var require_TypingStart = __commonJS({
     var Typing = require_Typing();
     var Events3 = require_Events();
     var TypingStart = class extends Action {
-      handle(data23) {
-        const channel = this.getChannel({ id: data23.channel_id, ..."guild_id" in data23 && { guild_id: data23.guild_id } });
+      handle(data24) {
+        const channel = this.getChannel({ id: data24.channel_id, ..."guild_id" in data24 && { guild_id: data24.guild_id } });
         if (!channel) return;
         if (!channel.isTextBased()) {
           this.client.emit(Events3.Warn, `Discord sent a typing packet to a ${channel.type} channel ${channel.id}`);
           return;
         }
-        const user = this.getUserFromMember(data23);
+        const user = this.getUserFromMember(data24);
         if (user) {
-          this.client.emit(Events3.TypingStart, new Typing(channel, user, data23));
+          this.client.emit(Events3.TypingStart, new Typing(channel, user, data24));
         }
       }
     };
@@ -59813,10 +59813,10 @@ var require_UserUpdate = __commonJS({
     var Action = require_Action();
     var Events3 = require_Events();
     var UserUpdateAction = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const newUser = data23.id === client2.user.id ? client2.user : client2.users.cache.get(data23.id);
-        const oldUser = newUser._update(data23);
+        const newUser = data24.id === client2.user.id ? client2.user : client2.users.cache.get(data24.id);
+        const oldUser = newUser._update(data24);
         if (!oldUser.equals(newUser)) {
           client2.emit(Events3.UserUpdate, oldUser, newUser);
           return {
@@ -59842,21 +59842,21 @@ var require_VoiceStateUpdate = __commonJS({
     var VoiceState = require_VoiceState();
     var Events3 = require_Events();
     var VoiceStateUpdate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const guild = client2.guilds.cache.get(data23.guild_id);
+        const guild = client2.guilds.cache.get(data24.guild_id);
         if (guild) {
-          const oldState = guild.voiceStates.cache.get(data23.user_id)?._clone() ?? new VoiceState(guild, { user_id: data23.user_id });
-          const newState = guild.voiceStates._add(data23);
-          let member = guild.members.cache.get(data23.user_id);
-          if (member && data23.member) {
-            member._patch(data23.member);
-          } else if (data23.member?.user && data23.member.joined_at) {
-            member = guild.members._add(data23.member);
+          const oldState = guild.voiceStates.cache.get(data24.user_id)?._clone() ?? new VoiceState(guild, { user_id: data24.user_id });
+          const newState = guild.voiceStates._add(data24);
+          let member = guild.members.cache.get(data24.user_id);
+          if (member && data24.member) {
+            member._patch(data24.member);
+          } else if (data24.member?.user && data24.member.joined_at) {
+            member = guild.members._add(data24.member);
           }
           if (member?.user.id === client2.user.id) {
-            client2.emit("debug", `[VOICE] received voice state update: ${JSON.stringify(data23)}`);
-            client2.voice.onVoiceStateUpdate(data23);
+            client2.emit("debug", `[VOICE] received voice state update: ${JSON.stringify(data24)}`);
+            client2.voice.onVoiceStateUpdate(data24);
           }
           client2.emit(Events3.VoiceStateUpdate, oldState, newState);
         }
@@ -59874,9 +59874,9 @@ var require_WebhooksUpdate = __commonJS({
     var Action = require_Action();
     var deprecationEmitted = false;
     var WebhooksUpdate = class extends Action {
-      handle(data23) {
+      handle(data24) {
         const client2 = this.client;
-        const channel = client2.channels.cache.get(data23.channel_id);
+        const channel = client2.channels.cache.get(data24.channel_id);
         if (!channel) return;
         client2.emit("webhooksUpdate", channel);
         if (client2.emit("webhookUpdate", channel) && !deprecationEmitted) {
@@ -60065,16 +60065,16 @@ var require_buffer_util = __commonJS({
       }
       return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
     }
-    function toBuffer(data23) {
+    function toBuffer(data24) {
       toBuffer.readOnly = true;
-      if (Buffer.isBuffer(data23)) return data23;
+      if (Buffer.isBuffer(data24)) return data24;
       let buf;
-      if (data23 instanceof ArrayBuffer) {
-        buf = new FastBuffer(data23);
-      } else if (ArrayBuffer.isView(data23)) {
-        buf = new FastBuffer(data23.buffer, data23.byteOffset, data23.byteLength);
+      if (data24 instanceof ArrayBuffer) {
+        buf = new FastBuffer(data24);
+      } else if (ArrayBuffer.isView(data24)) {
+        buf = new FastBuffer(data24.buffer, data24.byteOffset, data24.byteLength);
       } else {
-        buf = Buffer.from(data23);
+        buf = Buffer.from(data24);
         toBuffer.readOnly = false;
       }
       return buf;
@@ -60388,9 +60388,9 @@ var require_permessage_deflate2 = __commonJS({
        * @param {Function} callback Callback
        * @public
        */
-      decompress(data23, fin, callback) {
+      decompress(data24, fin, callback) {
         zlibLimiter.add((done) => {
-          this._decompress(data23, fin, (err, result) => {
+          this._decompress(data24, fin, (err, result) => {
             done();
             callback(err, result);
           });
@@ -60404,9 +60404,9 @@ var require_permessage_deflate2 = __commonJS({
        * @param {Function} callback Callback
        * @public
        */
-      compress(data23, fin, callback) {
+      compress(data24, fin, callback) {
         zlibLimiter.add((done) => {
-          this._compress(data23, fin, (err, result) => {
+          this._compress(data24, fin, (err, result) => {
             done();
             callback(err, result);
           });
@@ -60420,7 +60420,7 @@ var require_permessage_deflate2 = __commonJS({
        * @param {Function} callback Callback
        * @private
        */
-      _decompress(data23, fin, callback) {
+      _decompress(data24, fin, callback) {
         const endpoint = this._isServer ? "client" : "server";
         if (!this._inflate) {
           const key = `${endpoint}_max_window_bits`;
@@ -60436,7 +60436,7 @@ var require_permessage_deflate2 = __commonJS({
           this._inflate.on("data", inflateOnData);
         }
         this._inflate[kCallback] = callback;
-        this._inflate.write(data23);
+        this._inflate.write(data24);
         if (fin) this._inflate.write(TRAILER);
         this._inflate.flush(() => {
           const err = this._inflate[kError];
@@ -60446,7 +60446,7 @@ var require_permessage_deflate2 = __commonJS({
             callback(err);
             return;
           }
-          const data24 = bufferUtil.concat(
+          const data25 = bufferUtil.concat(
             this._inflate[kBuffers],
             this._inflate[kTotalLength]
           );
@@ -60460,7 +60460,7 @@ var require_permessage_deflate2 = __commonJS({
               this._inflate.reset();
             }
           }
-          callback(null, data24);
+          callback(null, data25);
         });
       }
       /**
@@ -60471,7 +60471,7 @@ var require_permessage_deflate2 = __commonJS({
        * @param {Function} callback Callback
        * @private
        */
-      _compress(data23, fin, callback) {
+      _compress(data24, fin, callback) {
         const endpoint = this._isServer ? "server" : "client";
         if (!this._deflate) {
           const key = `${endpoint}_max_window_bits`;
@@ -60485,17 +60485,17 @@ var require_permessage_deflate2 = __commonJS({
           this._deflate.on("data", deflateOnData);
         }
         this._deflate[kCallback] = callback;
-        this._deflate.write(data23);
+        this._deflate.write(data24);
         this._deflate.flush(zlib.Z_SYNC_FLUSH, () => {
           if (!this._deflate) {
             return;
           }
-          let data24 = bufferUtil.concat(
+          let data25 = bufferUtil.concat(
             this._deflate[kBuffers],
             this._deflate[kTotalLength]
           );
           if (fin) {
-            data24 = new FastBuffer(data24.buffer, data24.byteOffset, data24.length - 4);
+            data25 = new FastBuffer(data25.buffer, data25.byteOffset, data25.length - 4);
           }
           this._deflate[kCallback] = null;
           this._deflate[kTotalLength] = 0;
@@ -60503,7 +60503,7 @@ var require_permessage_deflate2 = __commonJS({
           if (fin && this.params[`${endpoint}_no_context_takeover`]) {
             this._deflate.reset();
           }
-          callback(null, data24);
+          callback(null, data25);
         });
       }
     };
@@ -61137,27 +61137,27 @@ var require_receiver2 = __commonJS({
        * @private
        */
       getData(cb) {
-        let data23 = EMPTY_BUFFER;
+        let data24 = EMPTY_BUFFER;
         if (this._payloadLength) {
           if (this._bufferedBytes < this._payloadLength) {
             this._loop = false;
             return;
           }
-          data23 = this.consume(this._payloadLength);
+          data24 = this.consume(this._payloadLength);
           if (this._masked && (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0) {
-            unmask(data23, this._mask);
+            unmask(data24, this._mask);
           }
         }
         if (this._opcode > 7) {
-          this.controlMessage(data23, cb);
+          this.controlMessage(data24, cb);
           return;
         }
         if (this._compressed) {
           this._state = INFLATING;
-          this.decompress(data23, cb);
+          this.decompress(data24, cb);
           return;
         }
-        if (data23.length) {
+        if (data24.length) {
           if (this._maxFragments > 0 && this._fragments.length >= this._maxFragments) {
             const error40 = this.createError(
               RangeError,
@@ -61170,7 +61170,7 @@ var require_receiver2 = __commonJS({
             return;
           }
           this._messageLength = this._totalPayloadLength;
-          this._fragments.push(data23);
+          this._fragments.push(data24);
         }
         this.dataMessage(cb);
       }
@@ -61181,9 +61181,9 @@ var require_receiver2 = __commonJS({
        * @param {Function} cb Callback
        * @private
        */
-      decompress(data23, cb) {
+      decompress(data24, cb) {
         const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
-        perMessageDeflate.decompress(data23, this._fin, (err, buf) => {
+        perMessageDeflate.decompress(data24, this._fin, (err, buf) => {
           if (err) return cb(err);
           if (buf.length) {
             this._messageLength += buf.length;
@@ -61233,23 +61233,23 @@ var require_receiver2 = __commonJS({
         this._fragmented = 0;
         this._fragments = [];
         if (this._opcode === 2) {
-          let data23;
+          let data24;
           if (this._binaryType === "nodebuffer") {
-            data23 = concat(fragments, messageLength);
+            data24 = concat(fragments, messageLength);
           } else if (this._binaryType === "arraybuffer") {
-            data23 = toArrayBuffer(concat(fragments, messageLength));
+            data24 = toArrayBuffer(concat(fragments, messageLength));
           } else if (this._binaryType === "blob") {
-            data23 = new Blob(fragments);
+            data24 = new Blob(fragments);
           } else {
-            data23 = fragments;
+            data24 = fragments;
           }
           if (this._allowSynchronousEvents) {
-            this.emit("message", data23, true);
+            this.emit("message", data24, true);
             this._state = GET_INFO;
           } else {
             this._state = DEFER_EVENT;
             setImmediate(() => {
-              this.emit("message", data23, true);
+              this.emit("message", data24, true);
               this._state = GET_INFO;
               this.startLoop(cb);
             });
@@ -61287,14 +61287,14 @@ var require_receiver2 = __commonJS({
        * @return {(Error|RangeError|undefined)} A possible error
        * @private
        */
-      controlMessage(data23, cb) {
+      controlMessage(data24, cb) {
         if (this._opcode === 8) {
-          if (data23.length === 0) {
+          if (data24.length === 0) {
             this._loop = false;
             this.emit("conclude", 1005, EMPTY_BUFFER);
             this.end();
           } else {
-            const code = data23.readUInt16BE(0);
+            const code = data24.readUInt16BE(0);
             if (!isValidStatusCode(code)) {
               const error40 = this.createError(
                 RangeError,
@@ -61307,9 +61307,9 @@ var require_receiver2 = __commonJS({
               return;
             }
             const buf = new FastBuffer(
-              data23.buffer,
-              data23.byteOffset + 2,
-              data23.length - 2
+              data24.buffer,
+              data24.byteOffset + 2,
+              data24.length - 2
             );
             if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
               const error40 = this.createError(
@@ -61330,12 +61330,12 @@ var require_receiver2 = __commonJS({
           return;
         }
         if (this._allowSynchronousEvents) {
-          this.emit(this._opcode === 9 ? "ping" : "pong", data23);
+          this.emit(this._opcode === 9 ? "ping" : "pong", data24);
           this._state = GET_INFO;
         } else {
           this._state = DEFER_EVENT;
           setImmediate(() => {
-            this.emit(this._opcode === 9 ? "ping" : "pong", data23);
+            this.emit(this._opcode === 9 ? "ping" : "pong", data24);
             this._state = GET_INFO;
             this.startLoop(cb);
           });
@@ -61435,7 +61435,7 @@ var require_sender2 = __commonJS({
        * @return {(Buffer|String)[]} The framed data
        * @public
        */
-      static frame(data23, options) {
+      static frame(data24, options) {
         let mask;
         let merge2 = false;
         let offset = 2;
@@ -61461,15 +61461,15 @@ var require_sender2 = __commonJS({
           offset = 6;
         }
         let dataLength;
-        if (typeof data23 === "string") {
+        if (typeof data24 === "string") {
           if ((!options.mask || skipMasking) && options[kByteLength] !== void 0) {
             dataLength = options[kByteLength];
           } else {
-            data23 = Buffer.from(data23);
-            dataLength = data23.length;
+            data24 = Buffer.from(data24);
+            dataLength = data24.length;
           }
         } else {
-          dataLength = data23.length;
+          dataLength = data24.length;
           merge2 = options.mask && options.readOnly && !skipMasking;
         }
         let payloadLength = dataLength;
@@ -61490,19 +61490,19 @@ var require_sender2 = __commonJS({
           target[2] = target[3] = 0;
           target.writeUIntBE(dataLength, 4, 6);
         }
-        if (!options.mask) return [target, data23];
+        if (!options.mask) return [target, data24];
         target[1] |= 128;
         target[offset - 4] = mask[0];
         target[offset - 3] = mask[1];
         target[offset - 2] = mask[2];
         target[offset - 1] = mask[3];
-        if (skipMasking) return [target, data23];
+        if (skipMasking) return [target, data24];
         if (merge2) {
-          applyMask(data23, mask, target, offset, dataLength);
+          applyMask(data24, mask, target, offset, dataLength);
           return [target];
         }
-        applyMask(data23, mask, data23, 0, dataLength);
-        return [target, data23];
+        applyMask(data24, mask, data24, 0, dataLength);
+        return [target, data24];
       }
       /**
        * Sends a close message to the other peer.
@@ -61513,26 +61513,26 @@ var require_sender2 = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      close(code, data23, mask, cb) {
+      close(code, data24, mask, cb) {
         let buf;
         if (code === void 0) {
           buf = EMPTY_BUFFER;
         } else if (typeof code !== "number" || !isValidStatusCode(code)) {
           throw new TypeError("First argument must be a valid error code number");
-        } else if (data23 === void 0 || !data23.length) {
+        } else if (data24 === void 0 || !data24.length) {
           buf = Buffer.allocUnsafe(2);
           buf.writeUInt16BE(code, 0);
         } else {
-          const length = Buffer.byteLength(data23);
+          const length = Buffer.byteLength(data24);
           if (length > 123) {
             throw new RangeError("The message must not be greater than 123 bytes");
           }
           buf = Buffer.allocUnsafe(2 + length);
           buf.writeUInt16BE(code, 0);
-          if (typeof data23 === "string") {
-            buf.write(data23, 2);
-          } else if (isUint8Array(data23)) {
-            buf.set(data23, 2);
+          if (typeof data24 === "string") {
+            buf.write(data24, 2);
+          } else if (isUint8Array(data24)) {
+            buf.set(data24, 2);
           } else {
             throw new TypeError("Second argument must be a string or a Uint8Array");
           }
@@ -61561,18 +61561,18 @@ var require_sender2 = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      ping(data23, mask, cb) {
+      ping(data24, mask, cb) {
         let byteLength;
         let readOnly;
-        if (typeof data23 === "string") {
-          byteLength = Buffer.byteLength(data23);
+        if (typeof data24 === "string") {
+          byteLength = Buffer.byteLength(data24);
           readOnly = false;
-        } else if (isBlob(data23)) {
-          byteLength = data23.size;
+        } else if (isBlob(data24)) {
+          byteLength = data24.size;
           readOnly = false;
         } else {
-          data23 = toBuffer(data23);
-          byteLength = data23.length;
+          data24 = toBuffer(data24);
+          byteLength = data24.length;
           readOnly = toBuffer.readOnly;
         }
         if (byteLength > 125) {
@@ -61588,16 +61588,16 @@ var require_sender2 = __commonJS({
           readOnly,
           rsv1: false
         };
-        if (isBlob(data23)) {
+        if (isBlob(data24)) {
           if (this._state !== DEFAULT) {
-            this.enqueue([this.getBlobData, data23, false, options, cb]);
+            this.enqueue([this.getBlobData, data24, false, options, cb]);
           } else {
-            this.getBlobData(data23, false, options, cb);
+            this.getBlobData(data24, false, options, cb);
           }
         } else if (this._state !== DEFAULT) {
-          this.enqueue([this.dispatch, data23, false, options, cb]);
+          this.enqueue([this.dispatch, data24, false, options, cb]);
         } else {
-          this.sendFrame(_Sender.frame(data23, options), cb);
+          this.sendFrame(_Sender.frame(data24, options), cb);
         }
       }
       /**
@@ -61608,18 +61608,18 @@ var require_sender2 = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      pong(data23, mask, cb) {
+      pong(data24, mask, cb) {
         let byteLength;
         let readOnly;
-        if (typeof data23 === "string") {
-          byteLength = Buffer.byteLength(data23);
+        if (typeof data24 === "string") {
+          byteLength = Buffer.byteLength(data24);
           readOnly = false;
-        } else if (isBlob(data23)) {
-          byteLength = data23.size;
+        } else if (isBlob(data24)) {
+          byteLength = data24.size;
           readOnly = false;
         } else {
-          data23 = toBuffer(data23);
-          byteLength = data23.length;
+          data24 = toBuffer(data24);
+          byteLength = data24.length;
           readOnly = toBuffer.readOnly;
         }
         if (byteLength > 125) {
@@ -61635,16 +61635,16 @@ var require_sender2 = __commonJS({
           readOnly,
           rsv1: false
         };
-        if (isBlob(data23)) {
+        if (isBlob(data24)) {
           if (this._state !== DEFAULT) {
-            this.enqueue([this.getBlobData, data23, false, options, cb]);
+            this.enqueue([this.getBlobData, data24, false, options, cb]);
           } else {
-            this.getBlobData(data23, false, options, cb);
+            this.getBlobData(data24, false, options, cb);
           }
         } else if (this._state !== DEFAULT) {
-          this.enqueue([this.dispatch, data23, false, options, cb]);
+          this.enqueue([this.dispatch, data24, false, options, cb]);
         } else {
-          this.sendFrame(_Sender.frame(data23, options), cb);
+          this.sendFrame(_Sender.frame(data24, options), cb);
         }
       }
       /**
@@ -61663,21 +61663,21 @@ var require_sender2 = __commonJS({
        * @param {Function} [cb] Callback
        * @public
        */
-      send(data23, options, cb) {
+      send(data24, options, cb) {
         const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
         let opcode = options.binary ? 2 : 1;
         let rsv1 = options.compress;
         let byteLength;
         let readOnly;
-        if (typeof data23 === "string") {
-          byteLength = Buffer.byteLength(data23);
+        if (typeof data24 === "string") {
+          byteLength = Buffer.byteLength(data24);
           readOnly = false;
-        } else if (isBlob(data23)) {
-          byteLength = data23.size;
+        } else if (isBlob(data24)) {
+          byteLength = data24.size;
           readOnly = false;
         } else {
-          data23 = toBuffer(data23);
-          byteLength = data23.length;
+          data24 = toBuffer(data24);
+          byteLength = data24.length;
           readOnly = toBuffer.readOnly;
         }
         if (this._firstFragment) {
@@ -61701,16 +61701,16 @@ var require_sender2 = __commonJS({
           readOnly,
           rsv1
         };
-        if (isBlob(data23)) {
+        if (isBlob(data24)) {
           if (this._state !== DEFAULT) {
-            this.enqueue([this.getBlobData, data23, this._compress, opts, cb]);
+            this.enqueue([this.getBlobData, data24, this._compress, opts, cb]);
           } else {
-            this.getBlobData(data23, this._compress, opts, cb);
+            this.getBlobData(data24, this._compress, opts, cb);
           }
         } else if (this._state !== DEFAULT) {
-          this.enqueue([this.dispatch, data23, this._compress, opts, cb]);
+          this.enqueue([this.dispatch, data24, this._compress, opts, cb]);
         } else {
-          this.dispatch(data23, this._compress, opts, cb);
+          this.dispatch(data24, this._compress, opts, cb);
         }
       }
       /**
@@ -61748,13 +61748,13 @@ var require_sender2 = __commonJS({
             return;
           }
           this._bufferedBytes -= options[kByteLength];
-          const data23 = toBuffer(arrayBuffer);
+          const data24 = toBuffer(arrayBuffer);
           if (!compress) {
             this._state = DEFAULT;
-            this.sendFrame(_Sender.frame(data23, options), cb);
+            this.sendFrame(_Sender.frame(data24, options), cb);
             this.dequeue();
           } else {
-            this.dispatch(data23, compress, options, cb);
+            this.dispatch(data24, compress, options, cb);
           }
         }).catch((err) => {
           process.nextTick(onError, this, err, cb);
@@ -61783,15 +61783,15 @@ var require_sender2 = __commonJS({
        * @param {Function} [cb] Callback
        * @private
        */
-      dispatch(data23, compress, options, cb) {
+      dispatch(data24, compress, options, cb) {
         if (!compress) {
-          this.sendFrame(_Sender.frame(data23, options), cb);
+          this.sendFrame(_Sender.frame(data24, options), cb);
           return;
         }
         const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
         this._bufferedBytes += options[kByteLength];
         this._state = DEFLATING;
-        perMessageDeflate.compress(data23, options.fin, (_, buf) => {
+        perMessageDeflate.compress(data24, options.fin, (_, buf) => {
           if (this._socket.destroyed) {
             const err = new Error(
               "The socket was closed while data was being compressed"
@@ -62015,9 +62015,9 @@ var require_event_target = __commonJS({
         }
         let wrapper;
         if (type === "message") {
-          wrapper = function onMessage(data23, isBinary) {
+          wrapper = function onMessage(data24, isBinary) {
             const event = new MessageEvent("message", {
-              data: isBinary ? data23 : data23.toString()
+              data: isBinary ? data24 : data24.toString()
             });
             event[kTarget] = this;
             callListener(handler, this, event);
@@ -62497,7 +62497,7 @@ var require_websocket2 = __commonJS({
        *     closing
        * @public
        */
-      close(code, data23) {
+      close(code, data24) {
         if (this.readyState === _WebSocket.CLOSED) return;
         if (this.readyState === _WebSocket.CONNECTING) {
           const msg = "WebSocket was closed before the connection was established";
@@ -62511,7 +62511,7 @@ var require_websocket2 = __commonJS({
           return;
         }
         this._readyState = _WebSocket.CLOSING;
-        this._sender.close(code, data23, !this._isServer, (err) => {
+        this._sender.close(code, data24, !this._isServer, (err) => {
           if (err) return;
           this._closeFrameSent = true;
           if (this._closeFrameReceived || this._receiver._writableState.errorEmitted) {
@@ -62540,24 +62540,24 @@ var require_websocket2 = __commonJS({
        * @param {Function} [cb] Callback which is executed when the ping is sent
        * @public
        */
-      ping(data23, mask, cb) {
+      ping(data24, mask, cb) {
         if (this.readyState === _WebSocket.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
-        if (typeof data23 === "function") {
-          cb = data23;
-          data23 = mask = void 0;
+        if (typeof data24 === "function") {
+          cb = data24;
+          data24 = mask = void 0;
         } else if (typeof mask === "function") {
           cb = mask;
           mask = void 0;
         }
-        if (typeof data23 === "number") data23 = data23.toString();
+        if (typeof data24 === "number") data24 = data24.toString();
         if (this.readyState !== _WebSocket.OPEN) {
-          sendAfterClose(this, data23, cb);
+          sendAfterClose(this, data24, cb);
           return;
         }
         if (mask === void 0) mask = !this._isServer;
-        this._sender.ping(data23 || EMPTY_BUFFER, mask, cb);
+        this._sender.ping(data24 || EMPTY_BUFFER, mask, cb);
       }
       /**
        * Send a pong.
@@ -62567,24 +62567,24 @@ var require_websocket2 = __commonJS({
        * @param {Function} [cb] Callback which is executed when the pong is sent
        * @public
        */
-      pong(data23, mask, cb) {
+      pong(data24, mask, cb) {
         if (this.readyState === _WebSocket.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
-        if (typeof data23 === "function") {
-          cb = data23;
-          data23 = mask = void 0;
+        if (typeof data24 === "function") {
+          cb = data24;
+          data24 = mask = void 0;
         } else if (typeof mask === "function") {
           cb = mask;
           mask = void 0;
         }
-        if (typeof data23 === "number") data23 = data23.toString();
+        if (typeof data24 === "number") data24 = data24.toString();
         if (this.readyState !== _WebSocket.OPEN) {
-          sendAfterClose(this, data23, cb);
+          sendAfterClose(this, data24, cb);
           return;
         }
         if (mask === void 0) mask = !this._isServer;
-        this._sender.pong(data23 || EMPTY_BUFFER, mask, cb);
+        this._sender.pong(data24 || EMPTY_BUFFER, mask, cb);
       }
       /**
        * Resume the socket.
@@ -62613,7 +62613,7 @@ var require_websocket2 = __commonJS({
        * @param {Function} [cb] Callback which is executed when data is written out
        * @public
        */
-      send(data23, options, cb) {
+      send(data24, options, cb) {
         if (this.readyState === _WebSocket.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
@@ -62621,13 +62621,13 @@ var require_websocket2 = __commonJS({
           cb = options;
           options = {};
         }
-        if (typeof data23 === "number") data23 = data23.toString();
+        if (typeof data24 === "number") data24 = data24.toString();
         if (this.readyState !== _WebSocket.OPEN) {
-          sendAfterClose(this, data23, cb);
+          sendAfterClose(this, data24, cb);
           return;
         }
         const opts = {
-          binary: typeof data23 !== "string",
+          binary: typeof data24 !== "string",
           mask: !this._isServer,
           compress: true,
           fin: true,
@@ -62636,7 +62636,7 @@ var require_websocket2 = __commonJS({
         if (!this._extensions[PerMessageDeflate.extensionName]) {
           opts.compress = false;
         }
-        this._sender.send(data23 || EMPTY_BUFFER, opts, cb);
+        this._sender.send(data24 || EMPTY_BUFFER, opts, cb);
       }
       /**
        * Forcibly close the connection.
@@ -63021,9 +63021,9 @@ var require_websocket2 = __commonJS({
         stream.once("close", websocket.emitClose.bind(websocket));
       }
     }
-    function sendAfterClose(websocket, data23, cb) {
-      if (data23) {
-        const length = isBlob(data23) ? data23.size : toBuffer(data23).length;
+    function sendAfterClose(websocket, data24, cb) {
+      if (data24) {
+        const length = isBlob(data24) ? data24.size : toBuffer(data24).length;
         if (websocket._socket) websocket._sender._bufferedBytes += length;
         else websocket._bufferedAmount += length;
       }
@@ -63064,16 +63064,16 @@ var require_websocket2 = __commonJS({
     function receiverOnFinish() {
       this[kWebSocket].emitClose();
     }
-    function receiverOnMessage(data23, isBinary) {
-      this[kWebSocket].emit("message", data23, isBinary);
+    function receiverOnMessage(data24, isBinary) {
+      this[kWebSocket].emit("message", data24, isBinary);
     }
-    function receiverOnPing(data23) {
+    function receiverOnPing(data24) {
       const websocket = this[kWebSocket];
-      if (websocket._autoPong) websocket.pong(data23, !this._isServer, NOOP);
-      websocket.emit("ping", data23);
+      if (websocket._autoPong) websocket.pong(data24, !this._isServer, NOOP);
+      websocket.emit("ping", data24);
     }
-    function receiverOnPong(data23) {
-      this[kWebSocket].emit("pong", data23);
+    function receiverOnPong(data24) {
+      this[kWebSocket].emit("pong", data24);
     }
     function resume(stream) {
       stream.resume();
@@ -63171,8 +63171,8 @@ var require_stream = __commonJS({
         writableObjectMode: false
       });
       ws.on("message", function message(msg, isBinary) {
-        const data23 = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
-        if (!duplex.push(data23)) ws.pause();
+        const data24 = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+        if (!duplex.push(data24)) ws.pause();
       });
       ws.once("error", function error40(err) {
         if (duplex.destroyed) return;
@@ -63919,7 +63919,7 @@ var require_dist9 = __commonJS({
       /**
        * {@inheritDoc IShardingStrategy.send}
        */
-      send(shardId, data23) {
+      send(shardId, data24) {
         const worker = this.#workerByShardId.get(shardId);
         if (!worker) {
           throw new Error(`No worker found for shard ${shardId}`);
@@ -63927,7 +63927,7 @@ var require_dist9 = __commonJS({
         const payload = {
           op: 2,
           shardId,
-          payload: data23
+          payload: data24
         };
         worker.postMessage(payload);
       }
@@ -64613,15 +64613,15 @@ var require_dist9 = __commonJS({
         this.lastHeartbeatAt = Date.now();
         this.isAck = false;
       }
-      async unpackMessage(data23, isBinary) {
+      async unpackMessage(data24, isBinary) {
         if (!isBinary) {
           try {
-            return JSON.parse(data23);
+            return JSON.parse(data24);
           } catch {
             return null;
           }
         }
-        const decompressable = new Uint8Array(data23);
+        const decompressable = new Uint8Array(data24);
         if (this.useIdentifyCompress) {
           return new Promise((resolve2, reject) => {
             (0, import_node_zlib.inflate)(decompressable, { chunkSize: 65535 }, (err, result) => {
@@ -64660,8 +64660,8 @@ var require_dist9 = __commonJS({
         ]);
         return null;
       }
-      async onMessage(data23, isBinary) {
-        const payload = await this.unpackMessage(data23, isBinary);
+      async onMessage(data24, isBinary) {
+        const payload = await this.unpackMessage(data24, isBinary);
         if (!payload) {
           return;
         }
@@ -65072,11 +65072,11 @@ var require_dist9 = __commonJS({
         for (const shardId of this.data.shardIds) {
           const shard = new WebSocketShard(new WorkerContextFetchingStrategy(this.data), shardId);
           for (const event of options.forwardEvents ?? Object.values(WebSocketShardEvents)) {
-            shard.on(event, (data23) => {
+            shard.on(event, (data24) => {
               const payload = {
                 op: 2,
                 event,
-                data: data23,
+                data: data24,
                 shardId
               };
               import_node_worker_threads3.parentPort.postMessage(payload);
@@ -65138,8 +65138,8 @@ var require_dist9 = __commonJS({
             return this.gatewayInformation.data;
           }
         }
-        const data23 = await this.options.rest.get(import_v103.Routes.gatewayBot());
-        this.gatewayInformation = { data: data23, expiresAt: Date.now() + (data23.session_start_limit.reset_after || 5e3) };
+        const data24 = await this.options.rest.get(import_v103.Routes.gatewayBot());
+        this.gatewayInformation = { data: data24, expiresAt: Date.now() + (data24.session_start_limit.reset_after || 5e3) };
         return this.gatewayInformation.data;
       }
       /**
@@ -65180,8 +65180,8 @@ var require_dist9 = __commonJS({
             shardIds = [...(0, import_util32.range)({ start, end: end + 1 })];
           }
         } else {
-          const data23 = await this.fetchGatewayInformation();
-          shardIds = [...(0, import_util32.range)(this.options.shardCount ?? data23.shards)];
+          const data24 = await this.fetchGatewayInformation();
+          shardIds = [...(0, import_util32.range)(this.options.shardCount ?? data24.shards)];
         }
         this.shardIds = shardIds;
         return shardIds;
@@ -65190,10 +65190,10 @@ var require_dist9 = __commonJS({
         const shardCount = await this.getShardCount();
         await this.updateShardCount(shardCount);
         const shardIds = await this.getShardIds();
-        const data23 = await this.fetchGatewayInformation();
-        if (data23.session_start_limit.remaining < shardIds.length) {
+        const data24 = await this.fetchGatewayInformation();
+        if (data24.session_start_limit.remaining < shardIds.length) {
           throw new Error(
-            `Not enough sessions remaining to spawn ${shardIds.length} shards; only ${data23.session_start_limit.remaining} remaining; resets at ${new Date(Date.now() + data23.session_start_limit.reset_after).toISOString()}`
+            `Not enough sessions remaining to spawn ${shardIds.length} shards; only ${data24.session_start_limit.remaining} remaining; resets at ${new Date(Date.now() + data24.session_start_limit.reset_after).toISOString()}`
           );
         }
         await this.strategy.connect();
@@ -65348,7 +65348,7 @@ var require_WebSocketShard = __commonJS({
        * @param {boolean} [important=false] If this packet should be added first in queue
        * <warn>This parameter is **deprecated**. Important payloads are determined by their opcode instead.</warn>
        */
-      send(data23, important = false) {
+      send(data24, important = false) {
         if (important && !deprecationEmittedForImportant) {
           process2.emitWarning(
             "Sending important payloads explicitly is deprecated. They are determined by their opcode implicitly now.",
@@ -65356,7 +65356,7 @@ var require_WebSocketShard = __commonJS({
           );
           deprecationEmittedForImportant = true;
         }
-        this.manager._ws.send(this.id, data23);
+        this.manager._ws.send(this.id, data24);
       }
     };
     module2.exports = WebSocketShard;
@@ -65438,9 +65438,9 @@ var require_CHANNEL_PINS_UPDATE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/CHANNEL_PINS_UPDATE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const channel = client2.channels.cache.get(data23.channel_id);
-      const time4 = data23.last_pin_timestamp ? Date.parse(data23.last_pin_timestamp) : null;
+    module2.exports = (client2, { d: data24 }) => {
+      const channel = client2.channels.cache.get(data24.channel_id);
+      const time4 = data24.last_pin_timestamp ? Date.parse(data24.last_pin_timestamp) : null;
       if (channel) {
         channel.lastPinTimestamp = time4;
         client2.emit(Events3.ChannelPinsUpdate, channel, time4);
@@ -65529,16 +65529,16 @@ var require_GUILD_CREATE = __commonJS({
     "use strict";
     var Events3 = require_Events();
     var Status2 = require_Status();
-    module2.exports = (client2, { d: data23 }, shard) => {
-      let guild = client2.guilds.cache.get(data23.id);
+    module2.exports = (client2, { d: data24 }, shard) => {
+      let guild = client2.guilds.cache.get(data24.id);
       if (guild) {
-        if (!guild.available && !data23.unavailable) {
-          guild._patch(data23);
+        if (!guild.available && !data24.unavailable) {
+          guild._patch(data24);
           client2.emit(Events3.GuildAvailable, guild);
         }
       } else {
-        data23.shardId = shard.id;
-        guild = client2.guilds._add(data23);
+        data24.shardId = shard.id;
+        guild = client2.guilds._add(data24);
         if (client2.ws.status === Status2.Ready) {
           client2.emit(Events3.GuildCreate, guild);
         }
@@ -65583,19 +65583,19 @@ var require_GUILD_MEMBERS_CHUNK = __commonJS({
     "use strict";
     var { Collection: Collection3 } = require_dist6();
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
       const members = new Collection3();
-      for (const member of data23.members) members.set(member.user.id, guild.members._add(member));
-      if (data23.presences) {
-        for (const presence of data23.presences) guild.presences._add(Object.assign(presence, { guild }));
+      for (const member of data24.members) members.set(member.user.id, guild.members._add(member));
+      if (data24.presences) {
+        for (const presence of data24.presences) guild.presences._add(Object.assign(presence, { guild }));
       }
       client2.emit(Events3.GuildMembersChunk, members, guild, {
-        index: data23.chunk_index,
-        count: data23.chunk_count,
-        notFound: data23.not_found,
-        nonce: data23.nonce
+        index: data24.chunk_index,
+        count: data24.chunk_count,
+        notFound: data24.not_found,
+        nonce: data24.nonce
       });
     };
   }
@@ -65607,11 +65607,11 @@ var require_GUILD_MEMBER_ADD = __commonJS({
     "use strict";
     var Events3 = require_Events();
     var Status2 = require_Status();
-    module2.exports = (client2, { d: data23 }, shard) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }, shard) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (guild) {
         guild.memberCount++;
-        const member = guild.members._add(data23);
+        const member = guild.members._add(data24);
         if (shard.status === Status2.Ready) {
           client2.emit(Events3.GuildMemberAdd, member);
         }
@@ -65726,11 +65726,11 @@ var require_GUILD_SOUNDBOARD_SOUNDS_UPDATE = __commonJS({
     "use strict";
     var { Collection: Collection3 } = require_dist6();
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
       const soundboardSounds = new Collection3();
-      for (const soundboardSound of data23.soundboard_sounds) {
+      for (const soundboardSound of data24.soundboard_sounds) {
         soundboardSounds.set(soundboardSound.sound_id, guild.soundboardSounds._add(soundboardSound));
       }
       client2.emit(Events3.GuildSoundboardSoundsUpdate, soundboardSounds, guild);
@@ -65743,10 +65743,10 @@ var require_GUILD_SOUNDBOARD_SOUND_CREATE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUND_CREATE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
-      const soundboardSound = guild.soundboardSounds._add(data23);
+      const soundboardSound = guild.soundboardSounds._add(data24);
       client2.emit(Events3.GuildSoundboardSoundCreate, soundboardSound);
     };
   }
@@ -65756,8 +65756,8 @@ var require_GUILD_SOUNDBOARD_SOUND_CREATE = __commonJS({
 var require_GUILD_SOUNDBOARD_SOUND_DELETE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUND_DELETE.js"(exports2, module2) {
     "use strict";
-    module2.exports = (client2, { d: data23 }) => {
-      client2.actions.GuildSoundboardSoundDelete.handle(data23);
+    module2.exports = (client2, { d: data24 }) => {
+      client2.actions.GuildSoundboardSoundDelete.handle(data24);
     };
   }
 });
@@ -65767,11 +65767,11 @@ var require_GUILD_SOUNDBOARD_SOUND_UPDATE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUND_UPDATE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
-      const oldGuildSoundboardSound = guild.soundboardSounds.cache.get(data23.sound_id)?._clone() ?? null;
-      const newGuildSoundboardSound = guild.soundboardSounds._add(data23);
+      const oldGuildSoundboardSound = guild.soundboardSounds.cache.get(data24.sound_id)?._clone() ?? null;
+      const newGuildSoundboardSound = guild.soundboardSounds._add(data24);
       client2.emit(Events3.GuildSoundboardSoundUpdate, oldGuildSoundboardSound, newGuildSoundboardSound);
     };
   }
@@ -65948,18 +65948,18 @@ var require_RATE_LIMITED = __commonJS({
     var process2 = require("node:process");
     var { GatewayOpcodes } = require_v106();
     var emittedFor = /* @__PURE__ */ new Set();
-    module2.exports = (_, { d: data23 }) => {
-      switch (data23.opcode) {
+    module2.exports = (_, { d: data24 }) => {
+      switch (data24.opcode) {
         case GatewayOpcodes.RequestGuildMembers: {
           break;
         }
         default: {
-          if (!emittedFor.has(data23.opcode)) {
+          if (!emittedFor.has(data24.opcode)) {
             process2.emitWarning(
               // eslint-disable-next-line max-len
-              `Hit a gateway rate limit on opcode ${data23.opcode} (${GatewayOpcodes[data23.opcode]}). If the discord.js version you're using is up-to-date, please open an issue on GitHub.`
+              `Hit a gateway rate limit on opcode ${data24.opcode} (${GatewayOpcodes[data24.opcode]}). If the discord.js version you're using is up-to-date, please open an issue on GitHub.`
             );
-            emittedFor.add(data23.opcode);
+            emittedFor.add(data24.opcode);
           }
         }
       }
@@ -65975,17 +65975,17 @@ var require_ClientUser = __commonJS({
     var User = require_User();
     var { resolveImage } = require_DataResolver();
     var ClientUser = class extends User {
-      _patch(data23) {
-        super._patch(data23);
-        if ("verified" in data23) {
-          this.verified = data23.verified;
+      _patch(data24) {
+        super._patch(data24);
+        if ("verified" in data24) {
+          this.verified = data24.verified;
         }
-        if ("mfa_enabled" in data23) {
-          this.mfaEnabled = typeof data23.mfa_enabled === "boolean" ? data23.mfa_enabled : null;
+        if ("mfa_enabled" in data24) {
+          this.mfaEnabled = typeof data24.mfa_enabled === "boolean" ? data24.mfa_enabled : null;
         } else {
           this.mfaEnabled ??= null;
         }
-        if ("token" in data23) this.client.token = data23.token;
+        if ("token" in data24) this.client.token = data24.token;
       }
       /**
        * Represents the client user's presence
@@ -66008,14 +66008,14 @@ var require_ClientUser = __commonJS({
        * @returns {Promise<ClientUser>}
        */
       async edit({ username, avatar, banner }) {
-        const data23 = await this.client.rest.patch(Routes2.user(), {
+        const data24 = await this.client.rest.patch(Routes2.user(), {
           body: {
             username,
             avatar: avatar && await resolveImage(avatar),
             banner: banner && await resolveImage(banner)
           }
         });
-        const { updated } = this.client.actions.UserUpdate.handle(data23);
+        const { updated } = this.client.actions.UserUpdate.handle(data24);
         return updated ?? this;
       }
       /**
@@ -66083,8 +66083,8 @@ var require_ClientUser = __commonJS({
        * // Set the client user's presence
        * client.user.setPresence({ activities: [{ name: 'with discord.js' }], status: 'idle' });
        */
-      setPresence(data23) {
-        return this.client.presence.set(data23);
+      setPresence(data24) {
+        return this.client.presence.set(data24);
       }
       /**
        * A user's status. Must be one of:
@@ -66149,22 +66149,22 @@ var require_READY = __commonJS({
     "use strict";
     var ClientApplication = require_ClientApplication();
     var ClientUser;
-    module2.exports = (client2, { d: data23 }, shard) => {
+    module2.exports = (client2, { d: data24 }, shard) => {
       if (client2.user) {
-        client2.user._patch(data23.user);
+        client2.user._patch(data24.user);
       } else {
         ClientUser ??= require_ClientUser();
-        client2.user = new ClientUser(client2, data23.user);
+        client2.user = new ClientUser(client2, data24.user);
         client2.users.cache.set(client2.user.id, client2.user);
       }
-      for (const guild of data23.guilds) {
+      for (const guild of data24.guilds) {
         guild.shardId = shard.id;
         client2.guilds._add(guild);
       }
       if (client2.application) {
-        client2.application._patch(data23.application);
+        client2.application._patch(data24.application);
       } else {
-        client2.application = new ClientApplication(client2, data23.application);
+        client2.application = new ClientApplication(client2, data24.application);
       }
       shard.checkReady();
     };
@@ -66189,11 +66189,11 @@ var require_SOUNDBOARD_SOUNDS = __commonJS({
     "use strict";
     var { Collection: Collection3 } = require_dist6();
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
       const soundboardSounds = new Collection3();
-      for (const soundboardSound of data23.soundboard_sounds) {
+      for (const soundboardSound of data24.soundboard_sounds) {
         soundboardSounds.set(soundboardSound.sound_id, guild.soundboardSounds._add(soundboardSound));
       }
       client2.emit(Events3.SoundboardSounds, soundboardSounds, guild);
@@ -66236,8 +66236,8 @@ var require_SUBSCRIPTION_CREATE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_CREATE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const subscription = client2.application.subscriptions._add(data23);
+    module2.exports = (client2, { d: data24 }) => {
+      const subscription = client2.application.subscriptions._add(data24);
       client2.emit(Events3.SubscriptionCreate, subscription);
     };
   }
@@ -66248,8 +66248,8 @@ var require_SUBSCRIPTION_DELETE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_DELETE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const subscription = client2.application.subscriptions._add(data23, false);
+    module2.exports = (client2, { d: data24 }) => {
+      const subscription = client2.application.subscriptions._add(data24, false);
       client2.application.subscriptions.cache.delete(subscription.id);
       client2.emit(Events3.SubscriptionDelete, subscription);
     };
@@ -66261,9 +66261,9 @@ var require_SUBSCRIPTION_UPDATE = __commonJS({
   "../../node_modules/.pnpm/discord.js@14.26.4/node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_UPDATE.js"(exports2, module2) {
     "use strict";
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const oldSubscription = client2.application.subscriptions.cache.get(data23.id)?._clone() ?? null;
-      const newSubscription = client2.application.subscriptions._add(data23);
+    module2.exports = (client2, { d: data24 }) => {
+      const oldSubscription = client2.application.subscriptions.cache.get(data24.id)?._clone() ?? null;
+      const newSubscription = client2.application.subscriptions._add(data24);
       client2.emit(Events3.SubscriptionUpdate, oldSubscription, newSubscription);
     };
   }
@@ -66359,15 +66359,15 @@ var require_VoiceChannelEffect = __commonJS({
     "use strict";
     var { Emoji } = require_Emoji();
     var VoiceChannelEffect = class {
-      constructor(data23, guild) {
+      constructor(data24, guild) {
         this.guild = guild;
-        this.channelId = data23.channel_id;
-        this.userId = data23.user_id;
-        this.emoji = data23.emoji ? new Emoji(guild.client, data23.emoji) : null;
-        this.animationType = data23.animation_type ?? null;
-        this.animationId = data23.animation_id ?? null;
-        this.soundId = data23.sound_id ?? null;
-        this.soundVolume = data23.sound_volume ?? null;
+        this.channelId = data24.channel_id;
+        this.userId = data24.user_id;
+        this.emoji = data24.emoji ? new Emoji(guild.client, data24.emoji) : null;
+        this.animationType = data24.animation_type ?? null;
+        this.animationId = data24.animation_id ?? null;
+        this.soundId = data24.sound_id ?? null;
+        this.soundVolume = data24.sound_volume ?? null;
       }
       /**
        * The channel the effect was sent in.
@@ -66396,10 +66396,10 @@ var require_VOICE_CHANNEL_EFFECT_SEND = __commonJS({
     "use strict";
     var VoiceChannelEffect = require_VoiceChannelEffect();
     var Events3 = require_Events();
-    module2.exports = (client2, { d: data23 }) => {
-      const guild = client2.guilds.cache.get(data23.guild_id);
+    module2.exports = (client2, { d: data24 }) => {
+      const guild = client2.guilds.cache.get(data24.guild_id);
       if (!guild) return;
-      client2.emit(Events3.VoiceChannelEffectSend, new VoiceChannelEffect(data23, guild));
+      client2.emit(Events3.VoiceChannelEffectSend, new VoiceChannelEffect(data24, guild));
     };
   }
 });
@@ -66679,17 +66679,17 @@ var require_WebSocketManager = __commonJS({
        */
       attachEvents() {
         this._ws.on(WSWebSocketShardEvents.Debug, ({ message, shardId }) => this.debug([message], shardId));
-        this._ws.on(WSWebSocketShardEvents.Dispatch, ({ data: data23, shardId }) => {
-          this.client.emit(Events3.Raw, data23, shardId);
-          this.emit(data23.t, data23.d, shardId);
+        this._ws.on(WSWebSocketShardEvents.Dispatch, ({ data: data24, shardId }) => {
+          this.client.emit(Events3.Raw, data24, shardId);
+          this.emit(data24.t, data24.d, shardId);
           const shard = this.shards.get(shardId);
-          this.handlePacket(data23, shard);
-          if (shard.status === Status2.WaitingForGuilds && WaitingForGuildEvents.includes(data23.t)) {
-            shard.gotGuild(data23.d.id);
+          this.handlePacket(data24, shard);
+          if (shard.status === Status2.WaitingForGuilds && WaitingForGuildEvents.includes(data24.t)) {
+            shard.gotGuild(data24.d.id);
           }
         });
-        this._ws.on(WSWebSocketShardEvents.Ready, ({ data: data23, shardId }) => {
-          this.shards.get(shardId).onReadyPacket(data23);
+        this._ws.on(WSWebSocketShardEvents.Ready, ({ data: data24, shardId }) => {
+          this.shards.get(shardId).onReadyPacket(data24);
         });
         this._ws.on(WSWebSocketShardEvents.Closed, ({ code, shardId }) => {
           const shard = this.shards.get(shardId);
@@ -66911,19 +66911,19 @@ var require_ChannelManager = __commonJS({
        * @type {Collection<Snowflake, BaseChannel>}
        * @name ChannelManager#cache
        */
-      _add(data23, guild, { cache = true, allowUnknownGuild = false } = {}) {
-        const existing = this.cache.get(data23.id);
+      _add(data24, guild, { cache = true, allowUnknownGuild = false } = {}) {
+        const existing = this.cache.get(data24.id);
         if (existing) {
-          if (cache) existing._patch(data23);
+          if (cache) existing._patch(data24);
           guild?.channels?._add(existing);
           if (ThreadChannelTypes.includes(existing.type)) {
             existing.parent?.threads?._add(existing);
           }
           return existing;
         }
-        const channel = createChannel(this.client, data23, guild, { allowUnknownGuild });
+        const channel = createChannel(this.client, data24, guild, { allowUnknownGuild });
         if (!channel) {
-          this.client.emit(Events3.Debug, `Failed to find guild, or unknown type for channel ${data23.id} ${data23.type}`);
+          this.client.emit(Events3.Debug, `Failed to find guild, or unknown type for channel ${data24.id} ${data24.type}`);
           return null;
         }
         if (cache && !allowUnknownGuild) this.cache.set(channel.id, channel);
@@ -66988,8 +66988,8 @@ var require_ChannelManager = __commonJS({
           const existing = this.cache.get(id);
           if (existing && !existing.partial) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.channel(id));
-        return this._add(data23, null, { cache, allowUnknownGuild });
+        const data24 = await this.client.rest.get(Routes2.channel(id));
+        return this._add(data24, null, { cache, allowUnknownGuild });
       }
     };
     module2.exports = ChannelManager2;
@@ -67259,37 +67259,37 @@ var require_GuildAuditLogs = __commonJS({
     var Webhook2 = require_Webhook();
     var { flatten } = require_Util();
     var GuildAuditLogs = class {
-      constructor(guild, data23) {
-        if (data23.users) for (const user of data23.users) guild.client.users._add(user);
-        if (data23.threads) for (const thread of data23.threads) guild.client.channels._add(thread, guild);
+      constructor(guild, data24) {
+        if (data24.users) for (const user of data24.users) guild.client.users._add(user);
+        if (data24.threads) for (const thread of data24.threads) guild.client.channels._add(thread, guild);
         this.webhooks = new Collection3();
-        if (data23.webhooks) {
-          for (const hook of data23.webhooks) {
+        if (data24.webhooks) {
+          for (const hook of data24.webhooks) {
             this.webhooks.set(hook.id, new Webhook2(guild.client, hook));
           }
         }
         this.integrations = new Collection3();
-        if (data23.integrations) {
-          for (const integration of data23.integrations) {
+        if (data24.integrations) {
+          for (const integration of data24.integrations) {
             this.integrations.set(integration.id, new Integration(guild.client, integration, guild));
           }
         }
-        this.guildScheduledEvents = data23.guild_scheduled_events.reduce(
+        this.guildScheduledEvents = data24.guild_scheduled_events.reduce(
           (guildScheduledEvents, guildScheduledEvent) => guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
           new Collection3()
         );
         this.applicationCommands = new Collection3();
-        if (data23.application_commands) {
-          for (const command of data23.application_commands) {
+        if (data24.application_commands) {
+          for (const command of data24.application_commands) {
             this.applicationCommands.set(command.id, new ApplicationCommand(guild.client, command, guild));
           }
         }
-        this.autoModerationRules = data23.auto_moderation_rules.reduce(
+        this.autoModerationRules = data24.auto_moderation_rules.reduce(
           (autoModerationRules, autoModerationRule) => autoModerationRules.set(autoModerationRule.id, guild.autoModerationRules._add(autoModerationRule)),
           new Collection3()
         );
         this.entries = new Collection3();
-        for (const item of data23.audit_log_entries) {
+        for (const item of data24.audit_log_entries) {
           const entry = new GuildAuditLogsEntry(guild, item, this);
           this.entries.set(entry.id, entry);
         }
@@ -67310,20 +67310,20 @@ var require_GuildOnboarding = __commonJS({
     var Base = require_Base();
     var { GuildOnboardingPrompt } = require_GuildOnboardingPrompt();
     var GuildOnboarding = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.guildId = data23.guild_id;
+        this.guildId = data24.guild_id;
         const guild = this.guild;
-        this.prompts = data23.prompts.reduce(
+        this.prompts = data24.prompts.reduce(
           (prompts, prompt) => prompts.set(prompt.id, new GuildOnboardingPrompt(client2, prompt, this.guildId)),
           new Collection3()
         );
-        this.defaultChannels = data23.default_channel_ids.reduce(
+        this.defaultChannels = data24.default_channel_ids.reduce(
           (channels, channelId) => channels.set(channelId, guild.channels.cache.get(channelId)),
           new Collection3()
         );
-        this.enabled = data23.enabled;
-        this.mode = data23.mode;
+        this.enabled = data24.enabled;
+        this.mode = data24.mode;
       }
       /**
        * The guild this onboarding is from
@@ -67349,9 +67349,9 @@ var require_GuildPreviewEmoji = __commonJS({
        * @type {GuildPreview}
        * @name GuildPreviewEmoji#guild
        */
-      constructor(client2, data23, guild) {
-        super(client2, data23, guild);
-        this.roles = data23.roles;
+      constructor(client2, data24, guild) {
+        super(client2, data24, guild);
+        this.roles = data24.roles;
       }
     };
     module2.exports = GuildPreviewEmoji;
@@ -67369,36 +67369,36 @@ var require_GuildPreview = __commonJS({
     var GuildPreviewEmoji = require_GuildPreviewEmoji();
     var { Sticker: Sticker2 } = require_Sticker();
     var GuildPreview2 = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        if (!data23) return;
-        this._patch(data23);
+        if (!data24) return;
+        this._patch(data24);
       }
-      _patch(data23) {
-        this.id = data23.id;
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("icon" in data23) {
-          this.icon = data23.icon;
+        if ("icon" in data24) {
+          this.icon = data24.icon;
         }
-        if ("splash" in data23) {
-          this.splash = data23.splash;
+        if ("splash" in data24) {
+          this.splash = data24.splash;
         }
-        if ("discovery_splash" in data23) {
-          this.discoverySplash = data23.discovery_splash;
+        if ("discovery_splash" in data24) {
+          this.discoverySplash = data24.discovery_splash;
         }
-        if ("features" in data23) {
-          this.features = data23.features;
+        if ("features" in data24) {
+          this.features = data24.features;
         }
-        if ("approximate_member_count" in data23) {
-          this.approximateMemberCount = data23.approximate_member_count;
+        if ("approximate_member_count" in data24) {
+          this.approximateMemberCount = data24.approximate_member_count;
         }
-        if ("approximate_presence_count" in data23) {
-          this.approximatePresenceCount = data23.approximate_presence_count;
+        if ("approximate_presence_count" in data24) {
+          this.approximatePresenceCount = data24.approximate_presence_count;
         }
-        if ("description" in data23) {
-          this.description = data23.description;
+        if ("description" in data24) {
+          this.description = data24.description;
         } else {
           this.description ??= null;
         }
@@ -67407,10 +67407,10 @@ var require_GuildPreview = __commonJS({
         } else {
           this.emojis.clear();
         }
-        for (const emoji3 of data23.emojis) {
+        for (const emoji3 of data24.emojis) {
           this.emojis.set(emoji3.id, new GuildPreviewEmoji(this.client, emoji3, this));
         }
-        this.stickers = data23.stickers.reduce(
+        this.stickers = data24.stickers.reduce(
           (stickers, sticker) => stickers.set(sticker.id, new Sticker2(this.client, sticker)),
           new Collection3()
         );
@@ -67460,8 +67460,8 @@ var require_GuildPreview = __commonJS({
        * @returns {Promise<GuildPreview>}
        */
       async fetch() {
-        const data23 = await this.client.rest.get(Routes2.guildPreview(this.id));
-        this._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.guildPreview(this.id));
+        this._patch(data24);
         return this;
       }
       /**
@@ -67519,8 +67519,8 @@ var require_AutoModerationRuleManager = __commonJS({
        * @param {AutoModerationRuleResolvable} autoModerationRule The AutoModerationRule resolvable to resolve
        * @returns {?Snowflake}
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.guild] });
       }
       /**
        * Options used to set the trigger metadata of an auto moderation rule.
@@ -67589,7 +67589,7 @@ var require_AutoModerationRuleManager = __commonJS({
         exemptChannels,
         reason
       }) {
-        const data23 = await this.client.rest.post(Routes2.guildAutoModerationRules(this.guild.id), {
+        const data24 = await this.client.rest.post(Routes2.guildAutoModerationRules(this.guild.id), {
           body: {
             name,
             event_type: eventType,
@@ -67616,7 +67616,7 @@ var require_AutoModerationRuleManager = __commonJS({
           },
           reason
         });
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Options used to edit an auto moderation rule.
@@ -67641,7 +67641,7 @@ var require_AutoModerationRuleManager = __commonJS({
        */
       async edit(autoModerationRule, { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason }) {
         const autoModerationRuleId = this.resolveId(autoModerationRule);
-        const data23 = await this.client.rest.patch(Routes2.guildAutoModerationRule(this.guild.id, autoModerationRuleId), {
+        const data24 = await this.client.rest.patch(Routes2.guildAutoModerationRule(this.guild.id, autoModerationRuleId), {
           body: {
             name,
             event_type: eventType,
@@ -67667,7 +67667,7 @@ var require_AutoModerationRuleManager = __commonJS({
           },
           reason
         });
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Data that can be resolved to give an AutoModerationRule object. This can be:
@@ -67720,12 +67720,12 @@ var require_AutoModerationRuleManager = __commonJS({
           const existing = this.cache.get(autoModerationRule);
           if (existing) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.guildAutoModerationRule(this.guild.id, autoModerationRule));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.guildAutoModerationRule(this.guild.id, autoModerationRule));
+        return this._add(data24, cache);
       }
       async _fetchMany(options = {}) {
-        const data23 = await this.client.rest.get(Routes2.guildAutoModerationRules(this.guild.id));
-        return data23.reduce(
+        const data24 = await this.client.rest.get(Routes2.guildAutoModerationRules(this.guild.id));
+        return data24.reduce(
           (col, autoModerationRule) => col.set(autoModerationRule.id, this._add(autoModerationRule, options.cache)),
           new Collection3()
         );
@@ -67785,8 +67785,8 @@ var require_GuildBanManager = __commonJS({
        * @type {Collection<Snowflake, GuildBan>}
        * @name GuildBanManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { id: data23.user.id, extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { id: data24.user.id, extras: [this.guild] });
       }
       /**
        * Data that resolves to give a GuildBan object. This can be:
@@ -67860,14 +67860,14 @@ var require_GuildBanManager = __commonJS({
           const existing = this.cache.get(user);
           if (existing && !existing.partial) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.guildBan(this.guild.id, user));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.guildBan(this.guild.id, user));
+        return this._add(data24, cache);
       }
       async _fetchMany({ cache, ...apiOptions } = {}) {
-        const data23 = await this.client.rest.get(Routes2.guildBans(this.guild.id), {
+        const data24 = await this.client.rest.get(Routes2.guildBans(this.guild.id), {
           query: makeURLSearchParams2(apiOptions)
         });
-        return data23.reduce((col, ban) => col.set(ban.user.id, this._add(ban, cache)), new Collection3());
+        return data24.reduce((col, ban) => col.set(ban.user.id, this._add(ban, cache)), new Collection3());
       }
       /**
        * Options used to ban a user from a guild.
@@ -68137,7 +68137,7 @@ var require_GuildChannelManager = __commonJS({
       }) {
         parent &&= this.client.channels.resolveId(parent);
         permissionOverwrites &&= permissionOverwrites.map((overwrite) => PermissionOverwrites.resolve(overwrite, this.guild));
-        const data23 = await this.client.rest.post(Routes2.guildChannels(this.guild.id), {
+        const data24 = await this.client.rest.post(Routes2.guildChannels(this.guild.id), {
           body: {
             name,
             topic,
@@ -68160,7 +68160,7 @@ var require_GuildChannelManager = __commonJS({
           },
           reason
         });
-        return this.client.actions.ChannelCreate.handle(data23).channel;
+        return this.client.actions.ChannelCreate.handle(data24).channel;
       }
       /**
        * @typedef {ChannelWebhookCreateOptions} WebhookCreateOptions
@@ -68186,14 +68186,14 @@ var require_GuildChannelManager = __commonJS({
         const id = this.resolveId(channel);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "GuildChannelResolvable");
         const resolvedImage = await resolveImage(avatar);
-        const data23 = await this.client.rest.post(Routes2.channelWebhooks(id), {
+        const data24 = await this.client.rest.post(Routes2.channelWebhooks(id), {
           body: {
             name,
             avatar: resolvedImage
           },
           reason
         });
-        return new Webhook2(this.client, data23);
+        return new Webhook2(this.client, data24);
       }
       /**
        * Options used to edit a guild channel.
@@ -68336,13 +68336,13 @@ var require_GuildChannelManager = __commonJS({
           if (existing) return existing;
         }
         if (id) {
-          const data24 = await this.client.rest.get(Routes2.channel(id));
-          if (this.guild.id !== data24.guild_id) throw new DiscordjsError2(ErrorCodes2.GuildChannelUnowned);
-          return this.client.channels._add(data24, this.guild, { cache });
+          const data25 = await this.client.rest.get(Routes2.channel(id));
+          if (this.guild.id !== data25.guild_id) throw new DiscordjsError2(ErrorCodes2.GuildChannelUnowned);
+          return this.client.channels._add(data25, this.guild, { cache });
         }
-        const data23 = await this.client.rest.get(Routes2.guildChannels(this.guild.id));
+        const data24 = await this.client.rest.get(Routes2.guildChannels(this.guild.id));
         const channels = new Collection3();
-        for (const channel of data23) channels.set(channel.id, this.client.channels._add(channel, this.guild, { cache }));
+        for (const channel of data24) channels.set(channel.id, this.client.channels._add(channel, this.guild, { cache }));
         return channels;
       }
       /**
@@ -68358,8 +68358,8 @@ var require_GuildChannelManager = __commonJS({
       async fetchWebhooks(channel) {
         const id = this.resolveId(channel);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "GuildChannelResolvable");
-        const data23 = await this.client.rest.get(Routes2.channelWebhooks(id));
-        return data23.reduce((hooks, hook) => hooks.set(hook.id, new Webhook2(this.client, hook)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.channelWebhooks(id));
+        return data24.reduce((hooks, hook) => hooks.set(hook.id, new Webhook2(this.client, hook)), new Collection3());
       }
       /**
        * Data that can be resolved to give a Category Channel object. This can be:
@@ -68415,8 +68415,8 @@ var require_GuildChannelManager = __commonJS({
        *   .catch(console.error);
        */
       async fetchActiveThreads(cache = true) {
-        const data23 = await this.rawFetchGuildActiveThreads();
-        return GuildTextThreadManager._mapThreads(data23, this.client, { guild: this.guild, cache });
+        const data24 = await this.rawFetchGuildActiveThreads();
+        return GuildTextThreadManager._mapThreads(data24, this.client, { guild: this.guild, cache });
       }
       /**
        * `GET /guilds/{guild.id}/threads/active`
@@ -68462,8 +68462,8 @@ var require_GuildEmojiManager = __commonJS({
         super(guild.client, iterable);
         this.guild = guild;
       }
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.guild] });
       }
       /**
        * Options used for creating an emoji in a guild.
@@ -68538,9 +68538,9 @@ var require_GuildEmojiManager = __commonJS({
           const emoji3 = await this.client.rest.get(Routes2.guildEmoji(this.guild.id, id));
           return this._add(emoji3, cache);
         }
-        const data23 = await this.client.rest.get(Routes2.guildEmojis(this.guild.id));
+        const data24 = await this.client.rest.get(Routes2.guildEmojis(this.guild.id));
         const emojis = new Collection3();
-        for (const emoji3 of data23) emojis.set(emoji3.id, this._add(emoji3, cache));
+        for (const emoji3 of data24) emojis.set(emoji3.id, this._add(emoji3, cache));
         return emojis;
       }
       /**
@@ -68595,8 +68595,8 @@ var require_GuildEmojiManager = __commonJS({
         if (!me.permissions.any(PermissionFlagsBits6.CreateGuildExpressions | PermissionFlagsBits6.ManageGuildExpressions)) {
           throw new DiscordjsError2(ErrorCodes2.MissingManageGuildExpressionsPermission, this.guild);
         }
-        const data23 = await this.client.rest.get(Routes2.guildEmoji(this.guild.id, emoji3.id));
-        emoji3._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.guildEmoji(this.guild.id, emoji3.id));
+        emoji3._patch(data24);
         return emoji3.author;
       }
     };
@@ -68624,8 +68624,8 @@ var require_GuildInviteManager = __commonJS({
        * @type {Collection<string, Invite>}
        * @name GuildInviteManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { id: data23.code, extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { id: data24.code, extras: [this.guild] });
       }
       /**
        * Data that resolves to give an Invite object. This can be:
@@ -68742,12 +68742,12 @@ var require_GuildInviteManager = __commonJS({
         return invite;
       }
       async _fetchMany(cache) {
-        const data23 = await this.client.rest.get(Routes2.guildInvites(this.guild.id));
-        return data23.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.guildInvites(this.guild.id));
+        return data24.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection3());
       }
       async _fetchChannelMany(channelId, cache) {
-        const data23 = await this.client.rest.get(Routes2.channelInvites(channelId));
-        return data23.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.channelInvites(channelId));
+        return data24.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection3());
       }
       /**
        * Create an invite to the guild from the provided channel.
@@ -68823,8 +68823,8 @@ var require_GuildMemberManager = __commonJS({
        * @type {Collection<Snowflake, GuildMember>}
        * @name GuildMemberManager#cache
        */
-      _add(data23, cache = true) {
-        return super._add(data23, cache, { id: data23.user.id, extras: [this.guild] });
+      _add(data24, cache = true) {
+        return super._add(data24, cache, { id: data24.user.id, extras: [this.guild] });
       }
       /**
        * Data that resolves to give a GuildMember object. This can be:
@@ -68910,8 +68910,8 @@ var require_GuildMemberManager = __commonJS({
           }
           resolvedOptions.roles = resolvedRoles;
         }
-        const data23 = await this.client.rest.put(Routes2.guildMember(this.guild.id, userId), { body: resolvedOptions });
-        return data23 instanceof ArrayBuffer ? options.fetchWhenExisting === false ? null : this.fetch(userId) : this._add(data23);
+        const data24 = await this.client.rest.put(Routes2.guildMember(this.guild.id, userId), { body: resolvedOptions });
+        return data24 instanceof ArrayBuffer ? options.fetchWhenExisting === false ? null : this.fetch(userId) : this._add(data24);
       }
       /**
        * The client user as a GuildMember of this guild
@@ -68985,8 +68985,8 @@ var require_GuildMemberManager = __commonJS({
           const existing = this.cache.get(user);
           if (existing && !existing.partial) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.guildMember(this.guild.id, user));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.guildMember(this.guild.id, user));
+        return this._add(data24, cache);
       }
       async _fetchMany({
         limit = 0,
@@ -69069,10 +69069,10 @@ var require_GuildMemberManager = __commonJS({
        * @returns {Promise<Collection<Snowflake, GuildMember>>}
        */
       async search({ query, limit, cache = true } = {}) {
-        const data23 = await this.client.rest.get(Routes2.guildMembersSearch(this.guild.id), {
+        const data24 = await this.client.rest.get(Routes2.guildMembersSearch(this.guild.id), {
           query: makeURLSearchParams2({ query, limit })
         });
-        return data23.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection3());
+        return data24.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection3());
       }
       /**
        * Options used for listing guild members.
@@ -69088,8 +69088,8 @@ var require_GuildMemberManager = __commonJS({
        */
       async list({ after, limit, cache = true } = {}) {
         const query = makeURLSearchParams2({ limit, after });
-        const data23 = await this.client.rest.get(Routes2.guildMembers(this.guild.id), { query });
-        return data23.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.guildMembers(this.guild.id), { query });
+        return data24.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection3());
       }
       /**
        * The data for editing a guild member.
@@ -69172,7 +69172,7 @@ var require_GuildMemberManager = __commonJS({
        * @returns {Promise<GuildMember>}
        */
       async editMe({ reason, ...options }) {
-        const data23 = await this.client.rest.patch(Routes2.guildMember(this.guild.id, "@me"), {
+        const data24 = await this.client.rest.patch(Routes2.guildMember(this.guild.id, "@me"), {
           body: {
             ...options,
             banner: options.banner && await resolveImage(options.banner),
@@ -69181,8 +69181,8 @@ var require_GuildMemberManager = __commonJS({
           reason
         });
         const clone2 = this.me?._clone();
-        clone2?._patch(data23);
-        return clone2 ?? this._add(data23, false);
+        clone2?._patch(data24);
+        return clone2 ?? this._add(data24, false);
       }
       /**
        * Options used for pruning guild members.
@@ -69433,7 +69433,7 @@ var require_GuildScheduledEventManager = __commonJS({
           if (!channel_id) throw new DiscordjsError2(ErrorCodes2.GuildVoiceChannelResolve);
           entity_metadata = entityMetadata === void 0 ? entityMetadata : null;
         }
-        const data23 = await this.client.rest.post(Routes2.guildScheduledEvents(this.guild.id), {
+        const data24 = await this.client.rest.post(Routes2.guildScheduledEvents(this.guild.id), {
           body: {
             channel_id,
             name,
@@ -69448,7 +69448,7 @@ var require_GuildScheduledEventManager = __commonJS({
           },
           reason
         });
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Options used to fetch a single guild scheduled event from a guild.
@@ -69476,15 +69476,15 @@ var require_GuildScheduledEventManager = __commonJS({
             const existing = this.cache.get(id);
             if (existing) return existing;
           }
-          const data24 = await this.client.rest.get(Routes2.guildScheduledEvent(this.guild.id, id), {
+          const data25 = await this.client.rest.get(Routes2.guildScheduledEvent(this.guild.id, id), {
             query: makeURLSearchParams2({ with_user_count: options.withUserCount ?? true })
           });
-          return this._add(data24, options.cache);
+          return this._add(data25, options.cache);
         }
-        const data23 = await this.client.rest.get(Routes2.guildScheduledEvents(this.guild.id), {
+        const data24 = await this.client.rest.get(Routes2.guildScheduledEvents(this.guild.id), {
           query: makeURLSearchParams2({ with_user_count: options.withUserCount ?? true })
         });
-        return data23.reduce(
+        return data24.reduce(
           (coll, rawGuildScheduledEventData) => coll.set(rawGuildScheduledEventData.id, this._add(rawGuildScheduledEventData, options.cache)),
           new Collection3()
         );
@@ -69539,7 +69539,7 @@ var require_GuildScheduledEventManager = __commonJS({
             location: entityMetadata.location
           };
         }
-        const data23 = await this.client.rest.patch(Routes2.guildScheduledEvent(this.guild.id, guildScheduledEventId), {
+        const data24 = await this.client.rest.patch(Routes2.guildScheduledEvent(this.guild.id, guildScheduledEventId), {
           body: {
             channel_id: channel === void 0 ? channel : this.guild.channels.resolveId(channel),
             name,
@@ -69555,7 +69555,7 @@ var require_GuildScheduledEventManager = __commonJS({
           },
           reason
         });
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Deletes a guild scheduled event.
@@ -69598,10 +69598,10 @@ var require_GuildScheduledEventManager = __commonJS({
           before: options.before,
           after: options.after
         });
-        const data23 = await this.client.rest.get(Routes2.guildScheduledEventUsers(this.guild.id, guildScheduledEventId), {
+        const data24 = await this.client.rest.get(Routes2.guildScheduledEventUsers(this.guild.id, guildScheduledEventId), {
           query
         });
-        return data23.reduce(
+        return data24.reduce(
           (coll, rawData) => coll.set(rawData.user.id, {
             guildScheduledEventId: rawData.guild_scheduled_event_id,
             user: this.client.users._add(rawData.user),
@@ -69624,42 +69624,42 @@ var require_SoundboardSound = __commonJS({
     var { Emoji } = require_Emoji();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var SoundboardSound2 = class _SoundboardSound extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.soundId = data23.sound_id;
-        this._patch(data23);
+        this.soundId = data24.sound_id;
+        this._patch(data24);
       }
-      _patch(data23) {
-        if ("available" in data23) {
-          this.available = data23.available;
+      _patch(data24) {
+        if ("available" in data24) {
+          this.available = data24.available;
         } else {
           this.available ??= null;
         }
-        if ("name" in data23) {
-          this.name = data23.name;
+        if ("name" in data24) {
+          this.name = data24.name;
         } else {
           this.name ??= null;
         }
-        if ("volume" in data23) {
-          this.volume = data23.volume;
+        if ("volume" in data24) {
+          this.volume = data24.volume;
         } else {
           this.volume ??= null;
         }
-        if ("emoji_id" in data23) {
+        if ("emoji_id" in data24) {
           this._emoji = {
-            id: data23.emoji_id,
-            name: data23.emoji_name
+            id: data24.emoji_id,
+            name: data24.emoji_name
           };
         } else {
           this._emoji ??= null;
         }
-        if ("guild_id" in data23) {
-          this.guildId = data23.guild_id;
+        if ("guild_id" in data24) {
+          this.guildId = data24.guild_id;
         } else {
           this.guildId ??= null;
         }
-        if ("user" in data23) {
-          this.user = this.client.users._add(data23.user);
+        if ("user" in data24) {
+          this.user = this.client.users._add(data24.user);
         } else {
           this.user ??= null;
         }
@@ -69772,8 +69772,8 @@ var require_GuildSoundboardSoundManager = __commonJS({
        * @type {Collection<Snowflake, SoundboardSound>}
        * @name GuildSoundboardSoundManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.guild], id: data23.sound_id });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.guild], id: data24.sound_id });
       }
       /**
        * Data that resolves to give a SoundboardSound object. This can be:
@@ -69851,17 +69851,17 @@ var require_GuildSoundboardSoundManager = __commonJS({
         if (!soundId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "soundboardSound", "SoundboardSoundResolvable");
         const { emojiId, emojiName, name, reason, volume } = options;
         const body = { emoji_id: emojiId, emoji_name: emojiName, name, volume };
-        const data23 = await this.client.rest.patch(Routes2.guildSoundboardSound(this.guild.id, soundId), {
+        const data24 = await this.client.rest.patch(Routes2.guildSoundboardSound(this.guild.id, soundId), {
           body,
           reason
         });
         const existing = this.cache.get(soundId);
         if (existing) {
           const clone2 = existing._clone();
-          clone2._patch(data23);
+          clone2._patch(data24);
           return clone2;
         }
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Deletes a soundboard sound.
@@ -69913,12 +69913,12 @@ var require_GuildSoundboardSoundManager = __commonJS({
           const existing = this.cache.get(soundboardSound);
           if (existing) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.guildSoundboardSound(this.guild.id, soundboardSound));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.guildSoundboardSound(this.guild.id, soundboardSound));
+        return this._add(data24, cache);
       }
       async _fetchMany({ cache } = {}) {
-        const data23 = await this.client.rest.get(Routes2.guildSoundboardSounds(this.guild.id));
-        return data23.items.reduce((coll, sound) => coll.set(sound.sound_id, this._add(sound, cache)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.guildSoundboardSounds(this.guild.id));
+        return data24.items.reduce((coll, sound) => coll.set(sound.sound_id, this._add(sound, cache)), new Collection3());
       }
     };
     exports2.GuildSoundboardSoundManager = GuildSoundboardSoundManager;
@@ -69945,8 +69945,8 @@ var require_GuildStickerManager = __commonJS({
        * @type {Collection<Snowflake, Sticker>}
        * @name GuildStickerManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.guild] });
       }
       /**
        * Options used to create a guild sticker.
@@ -70064,8 +70064,8 @@ var require_GuildStickerManager = __commonJS({
           const sticker = await this.client.rest.get(Routes2.guildSticker(this.guild.id, id));
           return this._add(sticker, cache);
         }
-        const data23 = await this.client.rest.get(Routes2.guildStickers(this.guild.id));
-        return new Collection3(data23.map((sticker) => [sticker.id, this._add(sticker, cache)]));
+        const data24 = await this.client.rest.get(Routes2.guildStickers(this.guild.id));
+        return new Collection3(data24.map((sticker) => [sticker.id, this._add(sticker, cache)]));
       }
       /**
        * Fetches the user who uploaded this sticker, if this is a guild sticker.
@@ -70075,8 +70075,8 @@ var require_GuildStickerManager = __commonJS({
       async fetchUser(sticker) {
         sticker = this.resolve(sticker);
         if (!sticker) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "sticker", "StickerResolvable");
-        const data23 = await this.client.rest.get(Routes2.guildSticker(this.guild.id, sticker.id));
-        sticker._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.guildSticker(this.guild.id, sticker.id));
+        sticker._patch(data24);
         return sticker.user;
       }
     };
@@ -70111,11 +70111,11 @@ var require_Presence = __commonJS({
     var ActivityFlagsBitField = require_ActivityFlagsBitField();
     var { flatten } = require_Util();
     var Presence = class extends Base {
-      constructor(client2, data23 = {}) {
+      constructor(client2, data24 = {}) {
         super(client2);
-        this.userId = data23.user.id;
-        this.guild = data23.guild ?? null;
-        this._patch(data23);
+        this.userId = data24.user.id;
+        this.guild = data24.guild ?? null;
+        this._patch(data24);
       }
       /**
        * The user of this presence
@@ -70133,19 +70133,19 @@ var require_Presence = __commonJS({
       get member() {
         return this.guild.members.resolve(this.userId);
       }
-      _patch(data23) {
-        if ("status" in data23) {
-          this.status = data23.status;
+      _patch(data24) {
+        if ("status" in data24) {
+          this.status = data24.status;
         } else {
           this.status ??= "offline";
         }
-        if ("activities" in data23) {
-          this.activities = data23.activities.map((activity) => new Activity(this, activity));
+        if ("activities" in data24) {
+          this.activities = data24.activities.map((activity) => new Activity(this, activity));
         } else {
           this.activities ??= [];
         }
-        if ("client_status" in data23) {
-          this.clientStatus = data23.client_status;
+        if ("client_status" in data24) {
+          this.clientStatus = data24.client_status;
         } else {
           this.clientStatus ??= null;
         }
@@ -70169,25 +70169,25 @@ var require_Presence = __commonJS({
       }
     };
     var Activity = class {
-      constructor(presence, data23) {
+      constructor(presence, data24) {
         Object.defineProperty(this, "presence", { value: presence });
-        this.name = data23.name;
-        this.type = data23.type;
-        this.url = data23.url ?? null;
-        this.details = data23.details ?? null;
-        this.state = data23.state ?? null;
-        this.applicationId = data23.application_id ?? null;
-        this.timestamps = data23.timestamps ? {
-          start: data23.timestamps.start ? new Date(Number(data23.timestamps.start)) : null,
-          end: data23.timestamps.end ? new Date(Number(data23.timestamps.end)) : null
+        this.name = data24.name;
+        this.type = data24.type;
+        this.url = data24.url ?? null;
+        this.details = data24.details ?? null;
+        this.state = data24.state ?? null;
+        this.applicationId = data24.application_id ?? null;
+        this.timestamps = data24.timestamps ? {
+          start: data24.timestamps.start ? new Date(Number(data24.timestamps.start)) : null,
+          end: data24.timestamps.end ? new Date(Number(data24.timestamps.end)) : null
         } : null;
-        this.party = data23.party ?? null;
-        this.syncId = data23.sync_id ?? null;
-        this.assets = data23.assets ? new RichPresenceAssets(this, data23.assets) : null;
-        this.flags = new ActivityFlagsBitField(data23.flags).freeze();
-        this.emoji = data23.emoji ? new Emoji(presence.client, data23.emoji) : null;
-        this.buttons = data23.buttons ?? [];
-        this.createdTimestamp = data23.created_at;
+        this.party = data24.party ?? null;
+        this.syncId = data24.sync_id ?? null;
+        this.assets = data24.assets ? new RichPresenceAssets(this, data24.assets) : null;
+        this.flags = new ActivityFlagsBitField(data24.flags).freeze();
+        this.emoji = data24.emoji ? new Emoji(presence.client, data24.emoji) : null;
+        this.buttons = data24.buttons ?? [];
+        this.createdTimestamp = data24.created_at;
       }
       /**
        * Whether this activity is equal to another activity.
@@ -70288,8 +70288,8 @@ var require_PresenceManager = __commonJS({
        * @type {Collection<Snowflake, Presence>}
        * @name PresenceManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { id: data23.user.id });
+      _add(data24, cache) {
+        return super._add(data24, cache, { id: data24.user.id });
       }
       /**
        * Data that can be resolved to a Presence object. This can be:
@@ -70359,8 +70359,8 @@ var require_RoleManager = __commonJS({
        * @type {Collection<Snowflake, Role>}
        * @name RoleManager#cache
        */
-      _add(data23, cache) {
-        return super._add(data23, cache, { extras: [this.guild] });
+      _add(data24, cache) {
+        return super._add(data24, cache, { extras: [this.guild] });
       }
       /**
        * Obtains a role from Discord, or the role cache if they're already available.
@@ -70380,9 +70380,9 @@ var require_RoleManager = __commonJS({
        */
       async fetch(id, { cache = true, force = false } = {}) {
         if (!id) {
-          const data23 = await this.client.rest.get(Routes2.guildRoles(this.guild.id));
+          const data24 = await this.client.rest.get(Routes2.guildRoles(this.guild.id));
           const roles = new Collection3();
-          for (const role of data23) roles.set(role.id, this._add(role, cache));
+          for (const role of data24) roles.set(role.id, this._add(role, cache));
           return roles;
         }
         if (!force) {
@@ -70390,8 +70390,8 @@ var require_RoleManager = __commonJS({
           if (existing) return existing;
         }
         try {
-          const data23 = await this.client.rest.get(Routes2.guildRole(this.guild.id, id));
-          return this._add(data23, cache);
+          const data24 = await this.client.rest.get(Routes2.guildRole(this.guild.id, id));
+          return this._add(data24, cache);
         } catch (error40) {
           if (error40 instanceof DiscordAPIError && error40.code === RESTJSONErrorCodes.UnknownRole) {
             return null;
@@ -70508,7 +70508,7 @@ var require_RoleManager = __commonJS({
             tertiary_color: null
           };
         }
-        const data23 = await this.client.rest.post(Routes2.guildRoles(this.guild.id), {
+        const data24 = await this.client.rest.post(Routes2.guildRoles(this.guild.id), {
           body: {
             name,
             colors,
@@ -70522,7 +70522,7 @@ var require_RoleManager = __commonJS({
         });
         const { role } = this.client.actions.GuildRoleCreate.handle({
           guild_id: this.guild.id,
-          role: data23
+          role: data24
         });
         if (position) return this.setPosition(role, position, { reason });
         return role;
@@ -70770,7 +70770,7 @@ var require_StageInstanceManager = __commonJS({
         if (typeof options !== "object") throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "options", "object", true);
         const { guildScheduledEvent, topic, privacyLevel, sendStartNotification } = options;
         const guildScheduledEventId = guildScheduledEvent && this.resolveId(guildScheduledEvent);
-        const data23 = await this.client.rest.post(Routes2.stageInstances(), {
+        const data24 = await this.client.rest.post(Routes2.stageInstances(), {
           body: {
             channel_id: channelId,
             topic,
@@ -70779,7 +70779,7 @@ var require_StageInstanceManager = __commonJS({
             guild_scheduled_event_id: guildScheduledEventId
           }
         });
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Fetches the stage instance associated with a stage channel, if it exists.
@@ -70799,8 +70799,8 @@ var require_StageInstanceManager = __commonJS({
           const existing = this.cache.find((stageInstance) => stageInstance.channelId === channelId);
           if (existing) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.stageInstance(channelId));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.stageInstance(channelId));
+        return this._add(data24, cache);
       }
       /**
        * Options used to edit an existing stage instance.
@@ -70824,18 +70824,18 @@ var require_StageInstanceManager = __commonJS({
         const channelId = this.guild.channels.resolveId(channel);
         if (!channelId) throw new DiscordjsError2(ErrorCodes2.StageChannelResolve);
         let { topic, privacyLevel } = options;
-        const data23 = await this.client.rest.patch(Routes2.stageInstance(channelId), {
+        const data24 = await this.client.rest.patch(Routes2.stageInstance(channelId), {
           body: {
             topic,
             privacy_level: privacyLevel
           }
         });
-        if (this.cache.has(data23.id)) {
-          const clone2 = this.cache.get(data23.id)._clone();
-          clone2._patch(data23);
+        if (this.cache.has(data24.id)) {
+          const clone2 = this.cache.get(data24.id)._clone();
+          clone2._patch(data24);
           return clone2;
         }
-        return this._add(data23);
+        return this._add(data24);
       }
       /**
        * Deletes an existing stage instance.
@@ -70869,11 +70869,11 @@ var require_VoiceStateManager = __commonJS({
        * @type {Collection<Snowflake, VoiceState>}
        * @name VoiceStateManager#cache
        */
-      _add(data23, cache = true) {
-        const existing = this.cache.get(data23.user_id);
-        if (existing) return existing._patch(data23);
-        const entry = new this.holds(this.guild, data23);
-        if (cache) this.cache.set(data23.user_id, entry);
+      _add(data24, cache = true) {
+        const existing = this.cache.get(data24.user_id);
+        if (existing) return existing._patch(data24);
+        const entry = new this.holds(this.guild, data24);
+        if (cache) this.cache.set(data24.user_id, entry);
         return entry;
       }
       /**
@@ -70893,8 +70893,8 @@ var require_VoiceStateManager = __commonJS({
           const existing = this.cache.get(id === "@me" ? this.client.user.id : id);
           if (existing) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.guildVoiceState(this.guild.id, id));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.guildVoiceState(this.guild.id, id));
+        return this._add(data24, cache);
       }
     };
     module2.exports = VoiceStateManager;
@@ -70956,8 +70956,8 @@ var require_Guild = __commonJS({
     var { _transformAPIIncidentsData } = require_Transformers();
     var { discordSort, getSortableGroupTypes, resolvePartialEmoji } = require_Util();
     var Guild = class extends AnonymousGuild {
-      constructor(client2, data23) {
-        super(client2, data23, false);
+      constructor(client2, data24) {
+        super(client2, data24, false);
         this.commands = new GuildApplicationCommandManager(this);
         this.members = new GuildMemberManager(this);
         this.channels = new GuildChannelManager(this);
@@ -70970,14 +70970,14 @@ var require_Guild = __commonJS({
         this.scheduledEvents = new GuildScheduledEventManager(this);
         this.autoModerationRules = new AutoModerationRuleManager(this);
         this.soundboardSounds = new GuildSoundboardSoundManager(this);
-        if (!data23) return;
-        if (data23.unavailable) {
+        if (!data24) return;
+        if (data24.unavailable) {
           this.available = false;
         } else {
-          this._patch(data23);
-          if (!data23.channels) this.available = false;
+          this._patch(data24);
+          if (!data24.channels) this.available = false;
         }
-        this.shardId = data23.shardId;
+        this.shardId = data24.shardId;
       }
       /**
        * The Shard this Guild belongs to.
@@ -70987,184 +70987,184 @@ var require_Guild = __commonJS({
       get shard() {
         return this.client.ws.shards.get(this.shardId);
       }
-      _patch(data23) {
-        super._patch(data23);
-        this.id = data23.id;
-        if ("name" in data23) this.name = data23.name;
-        if ("icon" in data23) this.icon = data23.icon;
-        if ("unavailable" in data23) {
-          this.available = !data23.unavailable;
+      _patch(data24) {
+        super._patch(data24);
+        this.id = data24.id;
+        if ("name" in data24) this.name = data24.name;
+        if ("icon" in data24) this.icon = data24.icon;
+        if ("unavailable" in data24) {
+          this.available = !data24.unavailable;
         } else {
           this.available ??= true;
         }
-        if ("discovery_splash" in data23) {
-          this.discoverySplash = data23.discovery_splash;
+        if ("discovery_splash" in data24) {
+          this.discoverySplash = data24.discovery_splash;
         }
-        if ("member_count" in data23) {
-          this.memberCount = data23.member_count;
+        if ("member_count" in data24) {
+          this.memberCount = data24.member_count;
         }
-        if ("large" in data23) {
-          this.large = Boolean(data23.large);
+        if ("large" in data24) {
+          this.large = Boolean(data24.large);
         }
-        if ("premium_progress_bar_enabled" in data23) {
-          this.premiumProgressBarEnabled = data23.premium_progress_bar_enabled;
+        if ("premium_progress_bar_enabled" in data24) {
+          this.premiumProgressBarEnabled = data24.premium_progress_bar_enabled;
         }
-        if ("application_id" in data23) {
-          this.applicationId = data23.application_id;
+        if ("application_id" in data24) {
+          this.applicationId = data24.application_id;
         }
-        if ("afk_timeout" in data23) {
-          this.afkTimeout = data23.afk_timeout;
+        if ("afk_timeout" in data24) {
+          this.afkTimeout = data24.afk_timeout;
         }
-        if ("afk_channel_id" in data23) {
-          this.afkChannelId = data23.afk_channel_id;
+        if ("afk_channel_id" in data24) {
+          this.afkChannelId = data24.afk_channel_id;
         }
-        if ("system_channel_id" in data23) {
-          this.systemChannelId = data23.system_channel_id;
+        if ("system_channel_id" in data24) {
+          this.systemChannelId = data24.system_channel_id;
         }
-        if ("premium_tier" in data23) {
-          this.premiumTier = data23.premium_tier;
+        if ("premium_tier" in data24) {
+          this.premiumTier = data24.premium_tier;
         }
-        if ("widget_enabled" in data23) {
-          this.widgetEnabled = data23.widget_enabled;
+        if ("widget_enabled" in data24) {
+          this.widgetEnabled = data24.widget_enabled;
         } else {
           this.widgetEnabled ??= null;
         }
-        if ("widget_channel_id" in data23) {
-          this.widgetChannelId = data23.widget_channel_id;
+        if ("widget_channel_id" in data24) {
+          this.widgetChannelId = data24.widget_channel_id;
         } else {
           this.widgetChannelId ??= null;
         }
-        if ("explicit_content_filter" in data23) {
-          this.explicitContentFilter = data23.explicit_content_filter;
+        if ("explicit_content_filter" in data24) {
+          this.explicitContentFilter = data24.explicit_content_filter;
         }
-        if ("mfa_level" in data23) {
-          this.mfaLevel = data23.mfa_level;
+        if ("mfa_level" in data24) {
+          this.mfaLevel = data24.mfa_level;
         }
-        if ("joined_at" in data23) {
-          this.joinedTimestamp = Date.parse(data23.joined_at);
+        if ("joined_at" in data24) {
+          this.joinedTimestamp = Date.parse(data24.joined_at);
         }
-        if ("default_message_notifications" in data23) {
-          this.defaultMessageNotifications = data23.default_message_notifications;
+        if ("default_message_notifications" in data24) {
+          this.defaultMessageNotifications = data24.default_message_notifications;
         }
-        if ("system_channel_flags" in data23) {
-          this.systemChannelFlags = new SystemChannelFlagsBitField(data23.system_channel_flags).freeze();
+        if ("system_channel_flags" in data24) {
+          this.systemChannelFlags = new SystemChannelFlagsBitField(data24.system_channel_flags).freeze();
         }
-        if ("max_members" in data23) {
-          this.maximumMembers = data23.max_members;
+        if ("max_members" in data24) {
+          this.maximumMembers = data24.max_members;
         } else {
           this.maximumMembers ??= null;
         }
-        if ("max_presences" in data23) {
-          this.maximumPresences = data23.max_presences;
+        if ("max_presences" in data24) {
+          this.maximumPresences = data24.max_presences;
         } else {
           this.maximumPresences ??= null;
         }
-        if ("max_video_channel_users" in data23) {
-          this.maxVideoChannelUsers = data23.max_video_channel_users;
+        if ("max_video_channel_users" in data24) {
+          this.maxVideoChannelUsers = data24.max_video_channel_users;
         } else {
           this.maxVideoChannelUsers ??= null;
         }
-        if ("max_stage_video_channel_users" in data23) {
-          this.maxStageVideoChannelUsers = data23.max_stage_video_channel_users;
+        if ("max_stage_video_channel_users" in data24) {
+          this.maxStageVideoChannelUsers = data24.max_stage_video_channel_users;
         } else {
           this.maxStageVideoChannelUsers ??= null;
         }
-        if ("approximate_member_count" in data23) {
-          this.approximateMemberCount = data23.approximate_member_count;
+        if ("approximate_member_count" in data24) {
+          this.approximateMemberCount = data24.approximate_member_count;
         } else {
           this.approximateMemberCount ??= null;
         }
-        if ("approximate_presence_count" in data23) {
-          this.approximatePresenceCount = data23.approximate_presence_count;
+        if ("approximate_presence_count" in data24) {
+          this.approximatePresenceCount = data24.approximate_presence_count;
         } else {
           this.approximatePresenceCount ??= null;
         }
         this.vanityURLUses ??= null;
-        if ("rules_channel_id" in data23) {
-          this.rulesChannelId = data23.rules_channel_id;
+        if ("rules_channel_id" in data24) {
+          this.rulesChannelId = data24.rules_channel_id;
         }
-        if ("public_updates_channel_id" in data23) {
-          this.publicUpdatesChannelId = data23.public_updates_channel_id;
+        if ("public_updates_channel_id" in data24) {
+          this.publicUpdatesChannelId = data24.public_updates_channel_id;
         }
-        if ("preferred_locale" in data23) {
-          this.preferredLocale = data23.preferred_locale;
+        if ("preferred_locale" in data24) {
+          this.preferredLocale = data24.preferred_locale;
         }
-        if ("safety_alerts_channel_id" in data23) {
-          this.safetyAlertsChannelId = data23.safety_alerts_channel_id;
+        if ("safety_alerts_channel_id" in data24) {
+          this.safetyAlertsChannelId = data24.safety_alerts_channel_id;
         } else {
           this.safetyAlertsChannelId ??= null;
         }
-        if (data23.channels) {
+        if (data24.channels) {
           this.channels.cache.clear();
-          for (const rawChannel of data23.channels) {
+          for (const rawChannel of data24.channels) {
             this.client.channels._add(rawChannel, this);
           }
         }
-        if (data23.threads) {
-          for (const rawThread of data23.threads) {
+        if (data24.threads) {
+          for (const rawThread of data24.threads) {
             this.client.channels._add(rawThread, this);
           }
         }
-        if (data23.roles) {
+        if (data24.roles) {
           this.roles.cache.clear();
-          for (const role of data23.roles) this.roles._add(role);
+          for (const role of data24.roles) this.roles._add(role);
         }
-        if (data23.members) {
+        if (data24.members) {
           this.members.cache.clear();
-          for (const guildUser of data23.members) this.members._add(guildUser);
+          for (const guildUser of data24.members) this.members._add(guildUser);
         }
-        if ("owner_id" in data23) {
-          this.ownerId = data23.owner_id;
+        if ("owner_id" in data24) {
+          this.ownerId = data24.owner_id;
         }
-        if (data23.presences) {
-          for (const presence of data23.presences) {
+        if (data24.presences) {
+          for (const presence of data24.presences) {
             this.presences._add(Object.assign(presence, { guild: this }));
           }
         }
-        if (data23.stage_instances) {
+        if (data24.stage_instances) {
           this.stageInstances.cache.clear();
-          for (const stageInstance of data23.stage_instances) {
+          for (const stageInstance of data24.stage_instances) {
             this.stageInstances._add(stageInstance);
           }
         }
-        if (data23.guild_scheduled_events) {
+        if (data24.guild_scheduled_events) {
           this.scheduledEvents.cache.clear();
-          for (const scheduledEvent of data23.guild_scheduled_events) {
+          for (const scheduledEvent of data24.guild_scheduled_events) {
             this.scheduledEvents._add(scheduledEvent);
           }
         }
-        if (data23.voice_states) {
+        if (data24.voice_states) {
           this.voiceStates.cache.clear();
-          for (const voiceState of data23.voice_states) {
+          for (const voiceState of data24.voice_states) {
             this.voiceStates._add(voiceState);
           }
         }
         if (!this.emojis) {
           this.emojis = new GuildEmojiManager(this);
-          if (data23.emojis) for (const emoji3 of data23.emojis) this.emojis._add(emoji3);
-        } else if (data23.emojis) {
+          if (data24.emojis) for (const emoji3 of data24.emojis) this.emojis._add(emoji3);
+        } else if (data24.emojis) {
           this.client.actions.GuildEmojisUpdate.handle({
             guild_id: this.id,
-            emojis: data23.emojis
+            emojis: data24.emojis
           });
         }
         if (!this.stickers) {
           this.stickers = new GuildStickerManager(this);
-          if (data23.stickers) for (const sticker of data23.stickers) this.stickers._add(sticker);
-        } else if (data23.stickers) {
+          if (data24.stickers) for (const sticker of data24.stickers) this.stickers._add(sticker);
+        } else if (data24.stickers) {
           this.client.actions.GuildStickersUpdate.handle({
             guild_id: this.id,
-            stickers: data23.stickers
+            stickers: data24.stickers
           });
         }
-        if ("incidents_data" in data23) {
-          this.incidentsData = data23.incidents_data && _transformAPIIncidentsData(data23.incidents_data);
+        if ("incidents_data" in data24) {
+          this.incidentsData = data24.incidents_data && _transformAPIIncidentsData(data24.incidents_data);
         } else {
           this.incidentsData ??= null;
         }
-        if (data23.soundboard_sounds) {
+        if (data24.soundboard_sounds) {
           this.soundboardSounds.cache.clear();
-          for (const soundboardSound of data23.soundboard_sounds) {
+          for (const soundboardSound of data24.soundboard_sounds) {
             this.soundboardSounds._add(soundboardSound);
           }
         }
@@ -71277,8 +71277,8 @@ var require_Guild = __commonJS({
        *   .catch(console.error);
        */
       async fetchIntegrations() {
-        const data23 = await this.client.rest.get(Routes2.guildIntegrations(this.id));
-        return data23.reduce(
+        const data24 = await this.client.rest.get(Routes2.guildIntegrations(this.id));
+        return data24.reduce(
           (collection, integration) => collection.set(integration.id, new Integration(this.client, integration, this)),
           new Collection3()
         );
@@ -71290,15 +71290,15 @@ var require_Guild = __commonJS({
        */
       async fetchTemplates() {
         const templates = await this.client.rest.get(Routes2.guildTemplates(this.id));
-        return templates.reduce((col, data23) => col.set(data23.code, new GuildTemplate2(this.client, data23)), new Collection3());
+        return templates.reduce((col, data24) => col.set(data24.code, new GuildTemplate2(this.client, data24)), new Collection3());
       }
       /**
        * Fetches the welcome screen for this guild.
        * @returns {Promise<WelcomeScreen>}
        */
       async fetchWelcomeScreen() {
-        const data23 = await this.client.rest.get(Routes2.guildWelcomeScreen(this.id));
-        return new WelcomeScreen(this, data23);
+        const data24 = await this.client.rest.get(Routes2.guildWelcomeScreen(this.id));
+        return new WelcomeScreen(this, data24);
       }
       /**
        * Creates a template for the guild.
@@ -71307,16 +71307,16 @@ var require_Guild = __commonJS({
        * @returns {Promise<GuildTemplate>}
        */
       async createTemplate(name, description) {
-        const data23 = await this.client.rest.post(Routes2.guildTemplates(this.id), { body: { name, description } });
-        return new GuildTemplate2(this.client, data23);
+        const data24 = await this.client.rest.post(Routes2.guildTemplates(this.id), { body: { name, description } });
+        return new GuildTemplate2(this.client, data24);
       }
       /**
        * Obtains a guild preview for this guild from Discord.
        * @returns {Promise<GuildPreview>}
        */
       async fetchPreview() {
-        const data23 = await this.client.rest.get(Routes2.guildPreview(this.id));
-        return new GuildPreview2(this.client, data23);
+        const data24 = await this.client.rest.get(Routes2.guildPreview(this.id));
+        return new GuildPreview2(this.client, data24);
       }
       /**
        * An object containing information about a guild's vanity invite.
@@ -71337,10 +71337,10 @@ var require_Guild = __commonJS({
        *   .catch(console.error);
        */
       async fetchVanityData() {
-        const data23 = await this.client.rest.get(Routes2.guildVanityUrl(this.id));
-        this.vanityURLCode = data23.code;
-        this.vanityURLUses = data23.uses;
-        return data23;
+        const data24 = await this.client.rest.get(Routes2.guildVanityUrl(this.id));
+        this.vanityURLCode = data24.code;
+        this.vanityURLUses = data24.uses;
+        return data24;
       }
       /**
        * Fetches all webhooks for the guild.
@@ -71393,12 +71393,12 @@ var require_Guild = __commonJS({
        *   .catch(console.error);
        */
       async fetchWidgetSettings() {
-        const data23 = await this.client.rest.get(Routes2.guildWidgetSettings(this.id));
-        this.widgetEnabled = data23.enabled;
-        this.widgetChannelId = data23.channel_id;
+        const data24 = await this.client.rest.get(Routes2.guildWidgetSettings(this.id));
+        this.widgetEnabled = data24.enabled;
+        this.widgetChannelId = data24.channel_id;
         return {
-          enabled: data23.enabled,
-          channel: data23.channel_id ? this.channels.cache.get(data23.channel_id) : null
+          enabled: data24.enabled,
+          channel: data24.channel_id ? this.channels.cache.get(data24.channel_id) : null
         };
       }
       /**
@@ -71440,16 +71440,16 @@ var require_Guild = __commonJS({
           if (!userId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "user", "UserResolvable");
           query.set("user_id", userId);
         }
-        const data23 = await this.client.rest.get(Routes2.guildAuditLog(this.id), { query });
-        return new GuildAuditLogs(this, data23);
+        const data24 = await this.client.rest.get(Routes2.guildAuditLog(this.id), { query });
+        return new GuildAuditLogs(this, data24);
       }
       /**
        * Fetches the guild onboarding data for this guild.
        * @returns {Promise<GuildOnboarding>}
        */
       async fetchOnboarding() {
-        const data23 = await this.client.rest.get(Routes2.guildOnboarding(this.id));
-        return new GuildOnboarding(this.client, data23);
+        const data24 = await this.client.rest.get(Routes2.guildOnboarding(this.id));
+        return new GuildOnboarding(this.client, data24);
       }
       /**
        * The data for editing a guild.
@@ -71522,7 +71522,7 @@ var require_Guild = __commonJS({
         safetyAlertsChannel,
         ...options
       }) {
-        const data23 = await this.client.rest.patch(Routes2.guild(this.id), {
+        const data24 = await this.client.rest.patch(Routes2.guild(this.id), {
           body: {
             ...options,
             verification_level: verificationLevel,
@@ -71545,7 +71545,7 @@ var require_Guild = __commonJS({
           },
           reason: options.reason
         });
-        return this.client.actions.GuildUpdate.handle(data23).updated;
+        return this.client.actions.GuildUpdate.handle(data24).updated;
       }
       /**
        * Options used to edit the guild onboarding.
@@ -72026,9 +72026,9 @@ var require_Guild = __commonJS({
         return (methods) => {
           this.client.voice.adapters.set(this.id, methods);
           return {
-            sendPayload: (data23) => {
+            sendPayload: (data24) => {
               if (this.shard.status !== Status2.Ready) return false;
-              this.shard.send(data23);
+              this.shard.send(data24);
               return true;
             },
             destroy: () => {
@@ -72072,10 +72072,10 @@ var require_OAuth2Guild = __commonJS({
     var BaseGuild = require_BaseGuild();
     var PermissionsBitField2 = require_PermissionsBitField();
     var OAuth2Guild = class extends BaseGuild {
-      constructor(client2, data23) {
-        super(client2, data23);
-        this.owner = data23.owner;
-        this.permissions = new PermissionsBitField2(BigInt(data23.permissions)).freeze();
+      constructor(client2, data24) {
+        super(client2, data24);
+        this.owner = data24.owner;
+        this.permissions = new PermissionsBitField2(BigInt(data24.permissions)).freeze();
       }
     };
     module2.exports = OAuth2Guild;
@@ -72238,7 +72238,7 @@ var require_GuildManager = __commonJS({
         systemChannelId,
         systemChannelFlags
       }) {
-        const data23 = await this.client.rest.post(Routes2.guilds(), {
+        const data24 = await this.client.rest.post(Routes2.guilds(), {
           body: {
             name,
             icon: icon && await resolveImage(icon),
@@ -72279,9 +72279,9 @@ var require_GuildManager = __commonJS({
             system_channel_flags: systemChannelFlags === void 0 ? void 0 : SystemChannelFlagsBitField.resolve(systemChannelFlags)
           }
         });
-        return this.client.guilds.cache.get(data23.id) ?? new Promise((resolve) => {
+        return this.client.guilds.cache.get(data24.id) ?? new Promise((resolve) => {
           const handleGuild = (guild) => {
-            if (guild.id === data23.id) {
+            if (guild.id === data24.id) {
               clearTimeout2(timeout);
               this.client.decrementMaxListeners();
               resolve(guild);
@@ -72292,7 +72292,7 @@ var require_GuildManager = __commonJS({
           const timeout = setTimeout2(() => {
             this.client.removeListener(Events3.GuildCreate, handleGuild);
             this.client.decrementMaxListeners();
-            resolve(this.client.guilds._add(data23));
+            resolve(this.client.guilds._add(data24));
           }, 1e4).unref();
         });
       }
@@ -72321,14 +72321,14 @@ var require_GuildManager = __commonJS({
             const existing = this.cache.get(id);
             if (existing) return existing;
           }
-          const data24 = await this.client.rest.get(Routes2.guild(id), {
+          const data25 = await this.client.rest.get(Routes2.guild(id), {
             query: makeURLSearchParams2({ with_counts: options.withCounts ?? true })
           });
-          data24.shardId = ShardClientUtil2.shardIdForGuildId(id, this.client.options.shardCount);
-          return this._add(data24, options.cache);
+          data25.shardId = ShardClientUtil2.shardIdForGuildId(id, this.client.options.shardCount);
+          return this._add(data25, options.cache);
         }
-        const data23 = await this.client.rest.get(Routes2.userGuilds(), { query: makeURLSearchParams2(options) });
-        return data23.reduce((coll, guild) => coll.set(guild.id, new OAuth2Guild(this.client, guild)), new Collection3());
+        const data24 = await this.client.rest.get(Routes2.userGuilds(), { query: makeURLSearchParams2(options) });
+        return data24.reduce((coll, guild) => coll.set(guild.id, new OAuth2Guild(this.client, guild)), new Collection3());
       }
       /**
        * @typedef {Object} FetchSoundboardSoundsOptions
@@ -72402,13 +72402,13 @@ var require_GuildManager = __commonJS({
        */
       async setIncidentActions(guild, { invitesDisabledUntil, dmsDisabledUntil }) {
         const guildId = this.resolveId(guild);
-        const data23 = await this.client.rest.put(Routes2.guildIncidentActions(guildId), {
+        const data24 = await this.client.rest.put(Routes2.guildIncidentActions(guildId), {
           body: {
             invites_disabled_until: invitesDisabledUntil && new Date(invitesDisabledUntil).toISOString(),
             dms_disabled_until: dmsDisabledUntil && new Date(dmsDisabledUntil).toISOString()
           }
         });
-        const parsedData = _transformAPIIncidentsData(data23);
+        const parsedData = _transformAPIIncidentsData(data24);
         const resolvedGuild = this.resolve(guild);
         if (resolvedGuild) {
           resolvedGuild.incidentsData = parsedData;
@@ -72484,8 +72484,8 @@ var require_UserManager = __commonJS({
           const dmChannel = this.dmChannel(id);
           if (dmChannel && !dmChannel.partial) return dmChannel;
         }
-        const data23 = await this.client.rest.post(Routes2.userChannels(), { body: { recipient_id: id } });
-        return this.client.channels._add(data23, null, { cache });
+        const data24 = await this.client.rest.post(Routes2.userChannels(), { body: { recipient_id: id } });
+        return this.client.channels._add(data24, null, { cache });
       }
       /**
        * Deletes a {@link DMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
@@ -72512,8 +72512,8 @@ var require_UserManager = __commonJS({
           const existing = this.cache.get(id);
           if (existing && !existing.partial) return existing;
         }
-        const data23 = await this.client.rest.get(Routes2.user(id));
-        return this._add(data23, cache);
+        const data24 = await this.client.rest.get(Routes2.user(id));
+        return this._add(data24, cache);
       }
       /**
        * Fetches a user's flags.
@@ -72570,8 +72570,8 @@ var require_ClientPresence = __commonJS({
     var { Presence } = require_Presence();
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var ClientPresence2 = class extends Presence {
-      constructor(client2, data23 = {}) {
-        super(client2, Object.assign(data23, { status: data23.status ?? "online", user: { id: null } }));
+      constructor(client2, data24 = {}) {
+        super(client2, Object.assign(data24, { status: data24.status ?? "online", user: { id: null } }));
       }
       /**
        * Sets the client's presence
@@ -72599,7 +72599,7 @@ var require_ClientPresence = __commonJS({
        * @private
        */
       _parse({ status, since, afk, activities }) {
-        const data23 = {
+        const data24 = {
           activities: [],
           afk: typeof afk === "boolean" ? afk : false,
           since: typeof since === "number" && !Number.isNaN(since) ? since : null,
@@ -72615,7 +72615,7 @@ var require_ClientPresence = __commonJS({
               activity.state = activity.name;
               activity.name = "Custom Status";
             }
-            data23.activities.push({
+            data24.activities.push({
               type: activity.type,
               name: activity.name,
               state: activity.state,
@@ -72623,7 +72623,7 @@ var require_ClientPresence = __commonJS({
             });
           }
         } else if (!activities && (status || afk || since) && this.activities.length) {
-          data23.activities.push(
+          data24.activities.push(
             ...this.activities.map((activity) => ({
               name: activity.name,
               state: activity.state ?? void 0,
@@ -72632,7 +72632,7 @@ var require_ClientPresence = __commonJS({
             }))
           );
         }
-        return data23;
+        return data24;
       }
     };
     module2.exports = ClientPresence2;
@@ -72701,12 +72701,12 @@ var require_VoiceRegion = __commonJS({
     "use strict";
     var { flatten } = require_Util();
     var VoiceRegion2 = class {
-      constructor(data23) {
-        this.id = data23.id;
-        this.name = data23.name;
-        this.deprecated = data23.deprecated;
-        this.optimal = data23.optimal;
-        this.custom = data23.custom;
+      constructor(data24) {
+        this.id = data24.id;
+        this.name = data24.name;
+        this.deprecated = data24.deprecated;
+        this.optimal = data24.optimal;
+        this.custom = data24.custom;
       }
       toJSON() {
         return flatten(this);
@@ -72727,21 +72727,21 @@ var require_WidgetMember = __commonJS({
        * @typedef {Object} WidgetActivity
        * @property {string} name The name of the activity
        */
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this.id = data23.id;
-        this.username = data23.username;
-        this.discriminator = data23.discriminator;
-        this.avatar = data23.avatar;
-        this.status = data23.status;
-        this.deaf = data23.deaf ?? null;
-        this.mute = data23.mute ?? null;
-        this.selfDeaf = data23.self_deaf ?? null;
-        this.selfMute = data23.self_mute ?? null;
-        this.suppress = data23.suppress ?? null;
-        this.channelId = data23.channel_id ?? null;
-        this.avatarURL = data23.avatar_url;
-        this.activity = data23.activity ?? null;
+        this.id = data24.id;
+        this.username = data24.username;
+        this.discriminator = data24.discriminator;
+        this.avatar = data24.avatar;
+        this.status = data24.status;
+        this.deaf = data24.deaf ?? null;
+        this.mute = data24.mute ?? null;
+        this.selfDeaf = data24.self_deaf ?? null;
+        this.selfMute = data24.self_mute ?? null;
+        this.suppress = data24.suppress ?? null;
+        this.channelId = data24.channel_id ?? null;
+        this.avatarURL = data24.avatar_url;
+        this.activity = data24.activity ?? null;
       }
     };
     module2.exports = WidgetMember;
@@ -72757,9 +72757,9 @@ var require_Widget = __commonJS({
     var Base = require_Base();
     var WidgetMember = require_WidgetMember();
     var Widget2 = class extends Base {
-      constructor(client2, data23) {
+      constructor(client2, data24) {
         super(client2);
-        this._patch(data23);
+        this._patch(data24);
       }
       /**
        * Represents a channel in a Widget
@@ -72768,24 +72768,24 @@ var require_Widget = __commonJS({
        * @property {string} name Name of the channel
        * @property {number} position Position of the channel
        */
-      _patch(data23) {
-        this.id = data23.id;
-        if ("name" in data23) {
-          this.name = data23.name;
+      _patch(data24) {
+        this.id = data24.id;
+        if ("name" in data24) {
+          this.name = data24.name;
         }
-        if ("instant_invite" in data23) {
-          this.instantInvite = data23.instant_invite;
+        if ("instant_invite" in data24) {
+          this.instantInvite = data24.instant_invite;
         }
         this.channels = new Collection3();
-        for (const channel of data23.channels) {
+        for (const channel of data24.channels) {
           this.channels.set(channel.id, channel);
         }
         this.members = new Collection3();
-        for (const member of data23.members) {
+        for (const member of data24.members) {
           this.members.set(member.id, new WidgetMember(this.client, member));
         }
-        if ("presence_count" in data23) {
-          this.presenceCount = data23.presence_count;
+        if ("presence_count" in data24) {
+          this.presenceCount = data24.presence_count;
         }
       }
       /**
@@ -72793,8 +72793,8 @@ var require_Widget = __commonJS({
        * @returns {Promise<Widget>}
        */
       async fetch() {
-        const data23 = await this.client.rest.get(Routes2.guildWidgetJSON(this.id));
-        this._patch(data23);
+        const data24 = await this.client.rest.get(Routes2.guildWidgetJSON(this.id));
+        this._patch(data24);
         return this;
       }
       /**
@@ -73281,16 +73281,16 @@ var require_Client = __commonJS({
        */
       constructor(options) {
         super(options);
-        const data23 = require("node:worker_threads").workerData ?? process.env;
+        const data24 = require("node:worker_threads").workerData ?? process.env;
         const defaults2 = Options.createDefault();
         if (this.options.shards === defaults2.shards) {
-          if ("SHARDS" in data23) {
-            this.options.shards = JSON.parse(data23.SHARDS);
+          if ("SHARDS" in data24) {
+            this.options.shards = JSON.parse(data24.SHARDS);
           }
         }
         if (this.options.shardCount === defaults2.shardCount) {
-          if ("SHARD_COUNT" in data23) {
-            this.options.shardCount = Number(data23.SHARD_COUNT);
+          if ("SHARD_COUNT" in data24) {
+            this.options.shardCount = Number(data24.SHARD_COUNT);
           } else if (Array.isArray(this.options.shards)) {
             this.options.shardCount = this.options.shards.length;
           }
@@ -73421,8 +73421,8 @@ var require_Client = __commonJS({
           with_counts: true,
           guild_scheduled_event_id: options?.guildScheduledEventId
         });
-        const data23 = await this.rest.get(Routes.invite(code), { query });
-        return new Invite(this, data23);
+        const data24 = await this.rest.get(Routes.invite(code), { query });
+        return new Invite(this, data24);
       }
       /**
        * Obtains a template from Discord.
@@ -73435,8 +73435,8 @@ var require_Client = __commonJS({
        */
       async fetchGuildTemplate(template) {
         const code = resolveGuildTemplateCode(template);
-        const data23 = await this.rest.get(Routes.template(code));
-        return new GuildTemplate(this, data23);
+        const data24 = await this.rest.get(Routes.template(code));
+        return new GuildTemplate(this, data24);
       }
       /**
        * Obtains a webhook from Discord.
@@ -73449,8 +73449,8 @@ var require_Client = __commonJS({
        *   .catch(console.error);
        */
       async fetchWebhook(id, token) {
-        const data23 = await this.rest.get(Routes.webhook(id, token), { auth: token === void 0 });
-        return new Webhook(this, { token, ...data23 });
+        const data24 = await this.rest.get(Routes.webhook(id, token), { auth: token === void 0 });
+        return new Webhook(this, { token, ...data24 });
       }
       /**
        * Obtains the available voice regions from Discord.
@@ -73476,8 +73476,8 @@ var require_Client = __commonJS({
        *   .catch(console.error);
        */
       async fetchSticker(id) {
-        const data23 = await this.rest.get(Routes.sticker(id));
-        return new Sticker(this, data23);
+        const data24 = await this.rest.get(Routes.sticker(id));
+        return new Sticker(this, data24);
       }
       /**
        * Options for fetching sticker packs.
@@ -73500,11 +73500,11 @@ var require_Client = __commonJS({
        */
       async fetchStickerPacks({ packId } = {}) {
         if (packId) {
-          const data24 = await this.rest.get(Routes.stickerPack(packId));
-          return new StickerPack(this, data24);
+          const data25 = await this.rest.get(Routes.stickerPack(packId));
+          return new StickerPack(this, data25);
         }
-        const data23 = await this.rest.get(Routes.stickerPacks());
-        return new Collection(data23.sticker_packs.map((stickerPack) => [stickerPack.id, new StickerPack(this, stickerPack)]));
+        const data24 = await this.rest.get(Routes.stickerPacks());
+        return new Collection(data24.sticker_packs.map((stickerPack) => [stickerPack.id, new StickerPack(this, stickerPack)]));
       }
       /**
        * Obtains the list of available sticker packs.
@@ -73530,8 +73530,8 @@ var require_Client = __commonJS({
        *  .catch(console.error);
        */
       async fetchDefaultSoundboardSounds() {
-        const data23 = await this.rest.get(Routes.soundboardDefaultSounds());
-        return new Collection(data23.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]));
+        const data24 = await this.rest.get(Routes.soundboardDefaultSounds());
+        return new Collection(data24.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]));
       }
       /**
        * Obtains a guild preview from Discord, available for all guilds the bot is in and all Discoverable guilds.
@@ -73541,8 +73541,8 @@ var require_Client = __commonJS({
       async fetchGuildPreview(guild) {
         const id = this.guilds.resolveId(guild);
         if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, "guild", "GuildResolvable");
-        const data23 = await this.rest.get(Routes.guildPreview(id));
-        return new GuildPreview(this, data23);
+        const data24 = await this.rest.get(Routes.guildPreview(id));
+        return new GuildPreview(this, data24);
       }
       /**
        * Obtains the widget data of a guild from Discord, available for guilds with the widget enabled.
@@ -73552,8 +73552,8 @@ var require_Client = __commonJS({
       async fetchGuildWidget(guild) {
         const id = this.guilds.resolveId(guild);
         if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, "guild", "GuildResolvable");
-        const data23 = await this.rest.get(Routes.guildWidgetJSON(id));
-        return new Widget(this, data23);
+        const data24 = await this.rest.get(Routes.guildWidgetJSON(id));
+        return new Widget(this, data24);
       }
       /**
        * Options for {@link Client#generateInvite}.
@@ -74529,9 +74529,9 @@ var require_EmbedBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var { resolveColor } = require_Util();
-    var EmbedBuilder10 = class extends BuildersEmbed {
-      constructor(data23) {
-        super(toSnakeCase2(data23));
+    var EmbedBuilder11 = class extends BuildersEmbed {
+      constructor(data24) {
+        super(toSnakeCase2(data24));
       }
       /**
        * Sets the color of this embed
@@ -74558,7 +74558,7 @@ var require_EmbedBuilder = __commonJS({
         return embedLength(this.data);
       }
     };
-    module2.exports = EmbedBuilder10;
+    module2.exports = EmbedBuilder11;
   }
 });
 
@@ -74572,10 +74572,10 @@ var require_AttachmentBuilder = __commonJS({
        * @param {BufferResolvable|Stream} attachment The file
        * @param {AttachmentData} [data] Extra data
        */
-      constructor(attachment, data23 = {}) {
+      constructor(attachment, data24 = {}) {
         this.attachment = attachment;
-        this.name = data23.name;
-        this.description = data23.description;
+        this.name = data24.name;
+        this.description = data24.description;
       }
       /**
        * Sets the description of this attachment.
@@ -74655,9 +74655,9 @@ var require_ModalBuilder = __commonJS({
     var { isJSONEncodable } = require_dist();
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var ModalBuilder = class extends BuildersModal {
-      constructor({ components, ...data23 } = {}) {
+      constructor({ components, ...data24 } = {}) {
         super({
-          ...toSnakeCase2(data23),
+          ...toSnakeCase2(data24),
           components: components?.map(
             (component) => component instanceof ComponentBuilder ? component : toSnakeCase2(component)
           )
@@ -74754,10 +74754,10 @@ var require_StringSelectMenuOptionBuilder = __commonJS({
     var { toSnakeCase: toSnakeCase2 } = require_Transformers();
     var { resolvePartialEmoji } = require_Util();
     var StringSelectMenuOptionBuilder = class extends BuildersSelectMenuOption {
-      constructor({ emoji: emoji3, ...data23 } = {}) {
+      constructor({ emoji: emoji3, ...data24 } = {}) {
         super(
           toSnakeCase2({
-            ...data23,
+            ...data24,
             emoji: emoji3 && typeof emoji3 === "string" ? resolvePartialEmoji(emoji3) : emoji3
           })
         );
@@ -75681,7 +75681,7 @@ var require_pg_int8 = __commonJS({
 var require_binaryParsers = __commonJS({
   "../../node_modules/.pnpm/pg-types@2.2.0/node_modules/pg-types/lib/binaryParsers.js"(exports2, module2) {
     var parseInt64 = require_pg_int8();
-    var parseBits = function(data23, bits, offset, invert, callback) {
+    var parseBits = function(data24, bits, offset, invert, callback) {
       offset = offset || 0;
       invert = invert || false;
       callback = callback || function(lastValue, newValue, bits2) {
@@ -75705,22 +75705,22 @@ var require_binaryParsers = __commonJS({
       }
       var result = 0;
       if (offset % 8 + bits >= 8) {
-        result = callback(0, inv(data23[offsetBytes]) & mask, firstBits);
+        result = callback(0, inv(data24[offsetBytes]) & mask, firstBits);
       }
       var bytes = bits + offset >> 3;
       for (var i = offsetBytes + 1; i < bytes; i++) {
-        result = callback(result, inv(data23[i]), 8);
+        result = callback(result, inv(data24[i]), 8);
       }
       var lastBits = (bits + offset) % 8;
       if (lastBits > 0) {
-        result = callback(result, inv(data23[bytes]) >> 8 - lastBits, lastBits);
+        result = callback(result, inv(data24[bytes]) >> 8 - lastBits, lastBits);
       }
       return result;
     };
-    var parseFloatFromBits = function(data23, precisionBits, exponentBits) {
+    var parseFloatFromBits = function(data24, precisionBits, exponentBits) {
       var bias = Math.pow(2, exponentBits - 1) - 1;
-      var sign = parseBits(data23, 1);
-      var exponent = parseBits(data23, exponentBits, 1);
+      var sign = parseBits(data24, 1);
+      var exponent = parseBits(data24, exponentBits, 1);
       if (exponent === 0) {
         return 0;
       }
@@ -75737,7 +75737,7 @@ var require_binaryParsers = __commonJS({
         }
         return lastValue;
       };
-      var mantissa = parseBits(data23, precisionBits, exponentBits + 1, false, parsePrecisionBits);
+      var mantissa = parseBits(data24, precisionBits, exponentBits + 1, false, parsePrecisionBits);
       if (exponent == Math.pow(2, exponentBits + 1) - 1) {
         if (mantissa === 0) {
           return sign === 0 ? Infinity : -Infinity;
@@ -76272,8 +76272,8 @@ var require_utils_webcrypto = __commonJS({
       try {
         return nodeCrypto.createHash("md5").update(string4, "utf-8").digest("hex");
       } catch (e) {
-        const data23 = typeof string4 === "string" ? textEncoder.encode(string4) : string4;
-        const hash = await subtleCrypto.digest("MD5", data23);
+        const data24 = typeof string4 === "string" ? textEncoder.encode(string4) : string4;
+        const hash = await subtleCrypto.digest("MD5", data24);
         return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
       }
     }
@@ -76319,28 +76319,28 @@ var require_cert_signatures = __commonJS({
     function x509Error(msg, cert) {
       return new Error("SASL channel binding: " + msg + " when parsing public certificate " + cert.toString("base64"));
     }
-    function readASN1Length(data23, index) {
-      let length = data23[index++];
+    function readASN1Length(data24, index) {
+      let length = data24[index++];
       if (length < 128) return { length, index };
       const lengthBytes = length & 127;
-      if (lengthBytes > 4) throw x509Error("bad length", data23);
+      if (lengthBytes > 4) throw x509Error("bad length", data24);
       length = 0;
       for (let i = 0; i < lengthBytes; i++) {
-        length = length << 8 | data23[index++];
+        length = length << 8 | data24[index++];
       }
       return { length, index };
     }
-    function readASN1OID(data23, index) {
-      if (data23[index++] !== 6) throw x509Error("non-OID data", data23);
-      const { length: OIDLength, index: indexAfterOIDLength } = readASN1Length(data23, index);
+    function readASN1OID(data24, index) {
+      if (data24[index++] !== 6) throw x509Error("non-OID data", data24);
+      const { length: OIDLength, index: indexAfterOIDLength } = readASN1Length(data24, index);
       index = indexAfterOIDLength;
       const lastIndex = index + OIDLength;
-      const byte1 = data23[index++];
+      const byte1 = data24[index++];
       let oid = (byte1 / 40 >> 0) + "." + byte1 % 40;
       while (index < lastIndex) {
         let value = 0;
         while (index < lastIndex) {
-          const nextByte = data23[index++];
+          const nextByte = data24[index++];
           value = value << 7 | nextByte & 127;
           if (nextByte < 128) break;
         }
@@ -76348,17 +76348,17 @@ var require_cert_signatures = __commonJS({
       }
       return { oid, index };
     }
-    function expectASN1Seq(data23, index) {
-      if (data23[index++] !== 48) throw x509Error("non-sequence data", data23);
-      return readASN1Length(data23, index);
+    function expectASN1Seq(data24, index) {
+      if (data24[index++] !== 48) throw x509Error("non-sequence data", data24);
+      return readASN1Length(data24, index);
     }
-    function signatureAlgorithmHashFromCertificate(data23, index) {
+    function signatureAlgorithmHashFromCertificate(data24, index) {
       if (index === void 0) index = 0;
-      index = expectASN1Seq(data23, index).index;
-      const { length: certInfoLength, index: indexAfterCertInfoLength } = expectASN1Seq(data23, index);
+      index = expectASN1Seq(data24, index).index;
+      const { length: certInfoLength, index: indexAfterCertInfoLength } = expectASN1Seq(data24, index);
       index = indexAfterCertInfoLength + certInfoLength;
-      index = expectASN1Seq(data23, index).index;
-      const { oid, index: indexAfterOID } = readASN1OID(data23, index);
+      index = expectASN1Seq(data24, index).index;
+      const { oid, index: indexAfterOID } = readASN1OID(data24, index);
       switch (oid) {
         // RSA
         case "1.2.840.113549.1.1.4":
@@ -76391,11 +76391,11 @@ var require_cert_signatures = __commonJS({
         // RSASSA-PSS: hash is indicated separately
         case "1.2.840.113549.1.1.10": {
           index = indexAfterOID;
-          index = expectASN1Seq(data23, index).index;
-          if (data23[index++] !== 160) throw x509Error("non-tag data", data23);
-          index = readASN1Length(data23, index).index;
-          index = expectASN1Seq(data23, index).index;
-          const { oid: hashOID } = readASN1OID(data23, index);
+          index = expectASN1Seq(data24, index).index;
+          if (data24[index++] !== 160) throw x509Error("non-tag data", data24);
+          index = readASN1Length(data24, index).index;
+          index = expectASN1Seq(data24, index).index;
+          const { oid: hashOID } = readASN1OID(data24, index);
           switch (hashOID) {
             // standalone hash OIDs
             case "1.2.840.113549.2.5":
@@ -76409,7 +76409,7 @@ var require_cert_signatures = __commonJS({
             case "2.16.840.1.101.3.4.2.3":
               return "SHA-512";
           }
-          throw x509Error("unknown hash OID " + hashOID, data23);
+          throw x509Error("unknown hash OID " + hashOID, data24);
         }
         // Ed25519 -- see https: return//github.com/openssl/openssl/issues/15477
         case "1.3.101.110":
@@ -76420,7 +76420,7 @@ var require_cert_signatures = __commonJS({
         case "1.3.101.113":
           throw x509Error("Ed448 certificate channel binding is not currently supported by Postgres");
       }
-      throw x509Error("unknown OID " + oid, data23);
+      throw x509Error("unknown OID " + oid, data24);
     }
     module2.exports = { signatureAlgorithmHashFromCertificate };
   }
@@ -76531,8 +76531,8 @@ var require_sasl = __commonJS({
         })
       );
     }
-    function parseServerFirstMessage(data23) {
-      const attrPairs = parseAttributePairs(data23);
+    function parseServerFirstMessage(data24) {
+      const attrPairs = parseAttributePairs(data24);
       const nonce = attrPairs.get("r");
       if (!nonce) {
         throw new Error("SASL: SCRAM-SERVER-FIRST-MESSAGE: nonce missing");
@@ -77605,7 +77605,7 @@ var require_serializer = __commonJS({
       );
     };
     var emptyExecute = Buffer.from([69, 0, 0, 0, 9, 0, 0, 0, 0, 0]);
-    var execute23 = (config2) => {
+    var execute24 = (config2) => {
       if (!config2 || !config2.portal && !config2.rows) {
         return emptyExecute;
       }
@@ -77690,7 +77690,7 @@ var require_serializer = __commonJS({
       query,
       parse: parse3,
       bind,
-      execute: execute23,
+      execute: execute24,
       describe,
       close,
       flush: () => flushBuffer,
@@ -79073,30 +79073,30 @@ var require_client2 = __commonJS({
       }
       getStartupConf() {
         const params = this.connectionParameters;
-        const data23 = {
+        const data24 = {
           user: params.user,
           database: params.database
         };
         const appName = params.application_name || params.fallback_application_name;
         if (appName) {
-          data23.application_name = appName;
+          data24.application_name = appName;
         }
         if (params.replication) {
-          data23.replication = "" + params.replication;
+          data24.replication = "" + params.replication;
         }
         if (params.statement_timeout) {
-          data23.statement_timeout = String(parseInt(params.statement_timeout, 10));
+          data24.statement_timeout = String(parseInt(params.statement_timeout, 10));
         }
         if (params.lock_timeout) {
-          data23.lock_timeout = String(parseInt(params.lock_timeout, 10));
+          data24.lock_timeout = String(parseInt(params.lock_timeout, 10));
         }
         if (params.idle_in_transaction_session_timeout) {
-          data23.idle_in_transaction_session_timeout = String(parseInt(params.idle_in_transaction_session_timeout, 10));
+          data24.idle_in_transaction_session_timeout = String(parseInt(params.idle_in_transaction_session_timeout, 10));
         }
         if (params.options) {
-          data23.options = params.options;
+          data24.options = params.options;
         }
-        return data23;
+        return data24;
       }
       cancel(client2, query) {
         if (client2.activeQuery === query) {
@@ -80159,7 +80159,7 @@ var require_lib2 = __commonJS({
 });
 
 // src/index.ts
-var import_discord27 = __toESM(require_src());
+var import_discord28 = __toESM(require_src());
 
 // src/handlers/ticketHandler.ts
 var import_discord2 = __toESM(require_src());
@@ -81652,39 +81652,39 @@ function getColumnNameAndConfig(a, b) {
     config: typeof a === "object" ? a : b
   };
 }
-function isConfig(data23) {
-  if (typeof data23 !== "object" || data23 === null) return false;
-  if (data23.constructor.name !== "Object") return false;
-  if ("logger" in data23) {
-    const type = typeof data23["logger"];
-    if (type !== "boolean" && (type !== "object" || typeof data23["logger"]["logQuery"] !== "function") && type !== "undefined") return false;
+function isConfig(data24) {
+  if (typeof data24 !== "object" || data24 === null) return false;
+  if (data24.constructor.name !== "Object") return false;
+  if ("logger" in data24) {
+    const type = typeof data24["logger"];
+    if (type !== "boolean" && (type !== "object" || typeof data24["logger"]["logQuery"] !== "function") && type !== "undefined") return false;
     return true;
   }
-  if ("schema" in data23) {
-    const type = typeof data23["schema"];
+  if ("schema" in data24) {
+    const type = typeof data24["schema"];
     if (type !== "object" && type !== "undefined") return false;
     return true;
   }
-  if ("casing" in data23) {
-    const type = typeof data23["casing"];
+  if ("casing" in data24) {
+    const type = typeof data24["casing"];
     if (type !== "string" && type !== "undefined") return false;
     return true;
   }
-  if ("mode" in data23) {
-    if (data23["mode"] !== "default" || data23["mode"] !== "planetscale" || data23["mode"] !== void 0) return false;
+  if ("mode" in data24) {
+    if (data24["mode"] !== "default" || data24["mode"] !== "planetscale" || data24["mode"] !== void 0) return false;
     return true;
   }
-  if ("connection" in data23) {
-    const type = typeof data23["connection"];
+  if ("connection" in data24) {
+    const type = typeof data24["connection"];
     if (type !== "string" && type !== "object" && type !== "undefined") return false;
     return true;
   }
-  if ("client" in data23) {
-    const type = typeof data23["client"];
+  if ("client" in data24) {
+    const type = typeof data24["client"];
     if (type !== "object" && type !== "function" && type !== "undefined") return false;
     return true;
   }
-  if (Object.keys(data23).length === 0) return true;
+  if (Object.keys(data24).length === 0) return true;
   return false;
 }
 var textDecoder = typeof TextDecoder === "undefined" ? null : new TextDecoder();
@@ -86351,9 +86351,9 @@ var PgRelationalQuery = class extends QueryPromise {
 
 // ../../node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.20.0/node_modules/drizzle-orm/pg-core/query-builders/raw.js
 var PgRaw = class extends QueryPromise {
-  constructor(execute23, sql2, query, mapBatchResult) {
+  constructor(execute24, sql2, query, mapBatchResult) {
     super();
-    this.execute = execute23;
+    this.execute = execute24;
     this.sql = sql2;
     this.query = query;
     this.mapBatchResult = mapBatchResult;
@@ -86677,8 +86677,8 @@ var NoopCache = class extends Cache {
 async function hashQuery(sql2, params) {
   const dataToHash = `${sql2}-${JSON.stringify(params)}`;
   const encoder = new TextEncoder();
-  const data23 = encoder.encode(dataToHash);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data23);
+  const data24 = encoder.encode(dataToHash);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data24);
   const hashArray = [...new Uint8Array(hashBuffer)];
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   return hashHex;
@@ -87829,8 +87829,8 @@ function esc(str) {
 }
 var captureStackTrace = Error.captureStackTrace ? Error.captureStackTrace : (..._args) => {
 };
-function isObject(data23) {
-  return typeof data23 === "object" && data23 !== null && !Array.isArray(data23);
+function isObject(data24) {
+  return typeof data24 === "object" && data24 !== null && !Array.isArray(data24);
 }
 var allowsEval = cached(() => {
   if (typeof navigator !== "undefined" && navigator?.userAgent?.includes("Cloudflare")) {
@@ -87858,24 +87858,24 @@ function isPlainObject(o) {
   }
   return true;
 }
-function numKeys(data23) {
+function numKeys(data24) {
   let keyCount = 0;
-  for (const key in data23) {
-    if (Object.prototype.hasOwnProperty.call(data23, key)) {
+  for (const key in data24) {
+    if (Object.prototype.hasOwnProperty.call(data24, key)) {
       keyCount++;
     }
   }
   return keyCount;
 }
-var getParsedType = (data23) => {
-  const t = typeof data23;
+var getParsedType = (data24) => {
+  const t = typeof data24;
   switch (t) {
     case "undefined":
       return "undefined";
     case "string":
       return "string";
     case "number":
-      return Number.isNaN(data23) ? "nan" : "number";
+      return Number.isNaN(data24) ? "nan" : "number";
     case "boolean":
       return "boolean";
     case "function":
@@ -87885,25 +87885,25 @@ var getParsedType = (data23) => {
     case "symbol":
       return "symbol";
     case "object":
-      if (Array.isArray(data23)) {
+      if (Array.isArray(data24)) {
         return "array";
       }
-      if (data23 === null) {
+      if (data24 === null) {
         return "null";
       }
-      if (data23.then && typeof data23.then === "function" && data23.catch && typeof data23.catch === "function") {
+      if (data24.then && typeof data24.then === "function" && data24.catch && typeof data24.catch === "function") {
         return "promise";
       }
-      if (typeof Map !== "undefined" && data23 instanceof Map) {
+      if (typeof Map !== "undefined" && data24 instanceof Map) {
         return "map";
       }
-      if (typeof Set !== "undefined" && data23 instanceof Set) {
+      if (typeof Set !== "undefined" && data24 instanceof Set) {
         return "set";
       }
-      if (typeof Date !== "undefined" && data23 instanceof Date) {
+      if (typeof Date !== "undefined" && data24 instanceof Date) {
         return "date";
       }
-      if (typeof File !== "undefined" && data23 instanceof File) {
+      if (typeof File !== "undefined" && data24 instanceof File) {
         return "file";
       }
       return "object";
@@ -89369,13 +89369,13 @@ var $ZodCIDRv6 = /* @__PURE__ */ $constructor("$ZodCIDRv6", (inst, def) => {
     }
   };
 });
-function isValidBase64(data23) {
-  if (data23 === "")
+function isValidBase64(data24) {
+  if (data24 === "")
     return true;
-  if (data23.length % 4 !== 0)
+  if (data24.length % 4 !== 0)
     return false;
   try {
-    atob(data23);
+    atob(data24);
     return true;
   } catch {
     return false;
@@ -89399,10 +89399,10 @@ var $ZodBase64 = /* @__PURE__ */ $constructor("$ZodBase64", (inst, def) => {
     });
   };
 });
-function isValidBase64URL(data23) {
-  if (!base64url.test(data23))
+function isValidBase64URL(data24) {
+  if (!base64url.test(data24))
     return false;
-  const base643 = data23.replace(/[-_]/g, (c) => c === "-" ? "+" : "/");
+  const base643 = data24.replace(/[-_]/g, (c) => c === "-" ? "+" : "/");
   const padded = base643.padEnd(Math.ceil(base643.length / 4) * 4, "=");
   return isValidBase64(padded);
 }
@@ -90760,21 +90760,21 @@ var error = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -90877,21 +90877,21 @@ var error2 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91036,21 +91036,21 @@ var error3 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u043B\u0456\u043A";
+        return Number.isNaN(data24) ? "NaN" : "\u043B\u0456\u043A";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u043C\u0430\u0441\u0456\u045E";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91158,21 +91158,21 @@ var error4 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91278,11 +91278,11 @@ var error5 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u010D\xEDslo";
+        return Number.isNaN(data24) ? "NaN" : "\u010D\xEDslo";
       }
       case "string": {
         return "\u0159et\u011Bzec";
@@ -91303,14 +91303,14 @@ var error5 = () => {
         return "undefined";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "pole";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91414,21 +91414,21 @@ var error6 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "Zahl";
+        return Number.isNaN(data24) ? "NaN" : "Zahl";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "Array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91521,21 +91521,21 @@ function de_default() {
 }
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/locales/en.js
-var parsedType = (data23) => {
-  const t = typeof data23;
+var parsedType = (data24) => {
+  const t = typeof data24;
   switch (t) {
     case "number": {
-      return Number.isNaN(data23) ? "NaN" : "number";
+      return Number.isNaN(data24) ? "NaN" : "number";
     }
     case "object": {
-      if (Array.isArray(data23)) {
+      if (Array.isArray(data24)) {
         return "array";
       }
-      if (data23 === null) {
+      if (data24 === null) {
         return "null";
       }
-      if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-        return data23.constructor.name;
+      if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+        return data24.constructor.name;
       }
     }
   }
@@ -91639,21 +91639,21 @@ function en_default() {
 }
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/locales/eo.js
-var parsedType2 = (data23) => {
-  const t = typeof data23;
+var parsedType2 = (data24) => {
+  const t = typeof data24;
   switch (t) {
     case "number": {
-      return Number.isNaN(data23) ? "NaN" : "nombro";
+      return Number.isNaN(data24) ? "NaN" : "nombro";
     }
     case "object": {
-      if (Array.isArray(data23)) {
+      if (Array.isArray(data24)) {
         return "tabelo";
       }
-      if (data23 === null) {
+      if (data24 === null) {
         return "senvalora";
       }
-      if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-        return data23.constructor.name;
+      if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+        return data24.constructor.name;
       }
     }
   }
@@ -91766,21 +91766,21 @@ var error9 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "n\xFAmero";
+        return Number.isNaN(data24) ? "NaN" : "n\xFAmero";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "arreglo";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "nulo";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype) {
+          return data24.constructor.name;
         }
       }
     }
@@ -91884,21 +91884,21 @@ var error10 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0639\u062F\u062F";
+        return Number.isNaN(data24) ? "NaN" : "\u0639\u062F\u062F";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u0622\u0631\u0627\u06CC\u0647";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92011,21 +92011,21 @@ var error11 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92130,21 +92130,21 @@ var error12 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "nombre";
+        return Number.isNaN(data24) ? "NaN" : "nombre";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "tableau";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92247,21 +92247,21 @@ var error13 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92365,21 +92365,21 @@ var error14 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92483,21 +92483,21 @@ var error15 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "sz\xE1m";
+        return Number.isNaN(data24) ? "NaN" : "sz\xE1m";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "t\xF6mb";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92601,21 +92601,21 @@ var error16 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92718,21 +92718,21 @@ var error17 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "numero";
+        return Number.isNaN(data24) ? "NaN" : "numero";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "vettore";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92836,21 +92836,21 @@ var error18 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u6570\u5024";
+        return Number.isNaN(data24) ? "NaN" : "\u6570\u5024";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u914D\u5217";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -92952,21 +92952,21 @@ var error19 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "\u1798\u17B7\u1793\u1798\u17C2\u1793\u1787\u17B6\u179B\u17C1\u1781 (NaN)" : "\u179B\u17C1\u1781";
+        return Number.isNaN(data24) ? "\u1798\u17B7\u1793\u1798\u17C2\u1793\u1787\u17B6\u179B\u17C1\u1781 (NaN)" : "\u179B\u17C1\u1781";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u17A2\u17B6\u179A\u17C1 (Array)";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "\u1782\u17D2\u1798\u17B6\u1793\u178F\u1798\u17D2\u179B\u17C3 (null)";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93070,21 +93070,21 @@ var error20 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93192,21 +93192,21 @@ var error21 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0431\u0440\u043E\u0458";
+        return Number.isNaN(data24) ? "NaN" : "\u0431\u0440\u043E\u0458";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u043D\u0438\u0437\u0430";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93311,21 +93311,21 @@ var error22 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "nombor";
+        return Number.isNaN(data24) ? "NaN" : "nombor";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93428,21 +93428,21 @@ var error23 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "getal";
+        return Number.isNaN(data24) ? "NaN" : "getal";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93546,21 +93546,21 @@ var error24 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "tall";
+        return Number.isNaN(data24) ? "NaN" : "tall";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "liste";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93663,21 +93663,21 @@ var error25 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "numara";
+        return Number.isNaN(data24) ? "NaN" : "numara";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "saf";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "gayb";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93781,21 +93781,21 @@ var error26 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0639\u062F\u062F";
+        return Number.isNaN(data24) ? "NaN" : "\u0639\u062F\u062F";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u0627\u0631\u06D0";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -93904,21 +93904,21 @@ var error27 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "liczba";
+        return Number.isNaN(data24) ? "NaN" : "liczba";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "tablica";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94022,21 +94022,21 @@ var error28 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "n\xFAmero";
+        return Number.isNaN(data24) ? "NaN" : "n\xFAmero";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "nulo";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94182,21 +94182,21 @@ var error29 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0447\u0438\u0441\u043B\u043E";
+        return Number.isNaN(data24) ? "NaN" : "\u0447\u0438\u0441\u043B\u043E";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u043C\u0430\u0441\u0441\u0438\u0432";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94304,21 +94304,21 @@ var error30 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0161tevilo";
+        return Number.isNaN(data24) ? "NaN" : "\u0161tevilo";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "tabela";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94422,21 +94422,21 @@ var error31 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "antal";
+        return Number.isNaN(data24) ? "NaN" : "antal";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "lista";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94541,21 +94541,21 @@ var error32 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "\u0B8E\u0BA3\u0BCD \u0B85\u0BB2\u0BCD\u0BB2\u0BBE\u0BA4\u0BA4\u0BC1" : "\u0B8E\u0BA3\u0BCD";
+        return Number.isNaN(data24) ? "\u0B8E\u0BA3\u0BCD \u0B85\u0BB2\u0BCD\u0BB2\u0BBE\u0BA4\u0BA4\u0BC1" : "\u0B8E\u0BA3\u0BCD";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u0B85\u0BA3\u0BBF";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "\u0BB5\u0BC6\u0BB1\u0BC1\u0BAE\u0BC8";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94659,21 +94659,21 @@ var error33 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "\u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02 (NaN)" : "\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02";
+        return Number.isNaN(data24) ? "\u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02 (NaN)" : "\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u0E2D\u0E32\u0E23\u0E4C\u0E40\u0E23\u0E22\u0E4C (Array)";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32 (null)";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -94767,21 +94767,21 @@ function th_default() {
 }
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/locales/tr.js
-var parsedType3 = (data23) => {
-  const t = typeof data23;
+var parsedType3 = (data24) => {
+  const t = typeof data24;
   switch (t) {
     case "number": {
-      return Number.isNaN(data23) ? "NaN" : "number";
+      return Number.isNaN(data24) ? "NaN" : "number";
     }
     case "object": {
-      if (Array.isArray(data23)) {
+      if (Array.isArray(data24)) {
         return "array";
       }
-      if (data23 === null) {
+      if (data24 === null) {
         return "null";
       }
-      if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-        return data23.constructor.name;
+      if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+        return data24.constructor.name;
       }
     }
   }
@@ -94893,21 +94893,21 @@ var error35 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0447\u0438\u0441\u043B\u043E";
+        return Number.isNaN(data24) ? "NaN" : "\u0447\u0438\u0441\u043B\u043E";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u043C\u0430\u0441\u0438\u0432";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -95011,21 +95011,21 @@ var error36 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "\u0646\u0645\u0628\u0631";
+        return Number.isNaN(data24) ? "NaN" : "\u0646\u0645\u0628\u0631";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u0622\u0631\u06D2";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "\u0646\u0644";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -95129,21 +95129,21 @@ var error37 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "s\u1ED1";
+        return Number.isNaN(data24) ? "NaN" : "s\u1ED1";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "m\u1EA3ng";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -95246,21 +95246,21 @@ var error38 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "\u975E\u6570\u5B57(NaN)" : "\u6570\u5B57";
+        return Number.isNaN(data24) ? "\u975E\u6570\u5B57(NaN)" : "\u6570\u5B57";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "\u6570\u7EC4";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "\u7A7A\u503C(null)";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -95363,21 +95363,21 @@ var error39 = () => {
   function getSizing(origin) {
     return Sizable[origin] ?? null;
   }
-  const parsedType4 = (data23) => {
-    const t = typeof data23;
+  const parsedType4 = (data24) => {
+    const t = typeof data24;
     switch (t) {
       case "number": {
-        return Number.isNaN(data23) ? "NaN" : "number";
+        return Number.isNaN(data24) ? "NaN" : "number";
       }
       case "object": {
-        if (Array.isArray(data23)) {
+        if (Array.isArray(data24)) {
           return "array";
         }
-        if (data23 === null) {
+        if (data24 === null) {
           return "null";
         }
-        if (Object.getPrototypeOf(data23) !== Object.prototype && data23.constructor) {
-          return data23.constructor.name;
+        if (Object.getPrototypeOf(data24) !== Object.prototype && data24.constructor) {
+          return data24.constructor.name;
         }
       }
     }
@@ -96324,12 +96324,12 @@ function _stringbool(Classes, _params) {
   const tx = new _Transform({
     type: "transform",
     transform: (input, payload) => {
-      let data23 = input;
+      let data24 = input;
       if (params.case !== "sensitive")
-        data23 = data23.toLowerCase();
-      if (truthySet.has(data23)) {
+        data24 = data24.toLowerCase();
+      if (truthySet.has(data24)) {
         return true;
-      } else if (falsySet.has(data23)) {
+      } else if (falsySet.has(data24)) {
         return false;
       } else {
         payload.issues.push({
@@ -97322,10 +97322,10 @@ var ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
     reg.add(inst, meta);
     return inst;
   });
-  inst.parse = (data23, params) => parse2(inst, data23, params, { callee: inst.parse });
-  inst.safeParse = (data23, params) => safeParse2(inst, data23, params);
-  inst.parseAsync = async (data23, params) => parseAsync2(inst, data23, params, { callee: inst.parseAsync });
-  inst.safeParseAsync = async (data23, params) => safeParseAsync2(inst, data23, params);
+  inst.parse = (data24, params) => parse2(inst, data24, params, { callee: inst.parse });
+  inst.safeParse = (data24, params) => safeParse2(inst, data24, params);
+  inst.parseAsync = async (data24, params) => parseAsync2(inst, data24, params, { callee: inst.parseAsync });
+  inst.safeParseAsync = async (data24, params) => safeParseAsync2(inst, data24, params);
   inst.spa = inst.safeParseAsync;
   inst.refine = (check2, params) => inst.check(refine(check2, params));
   inst.superRefine = (refinement) => inst.check(superRefine(refinement));
@@ -98213,7 +98213,7 @@ function _instanceof(cls, params = {
   const inst = new ZodCustom({
     type: "custom",
     check: "custom",
-    fn: (data23) => data23 instanceof cls,
+    fn: (data24) => data24 instanceof cls,
     abort: true,
     ...util_exports.normalizeParams(params)
   });
@@ -99170,49 +99170,67 @@ async function handlePrefixMessage(message) {
     }
     if (cmd === "help") {
       const isOwner = await checkOwnerMessage(message);
-      const lines = [
-        "**\u{1F4B0} Economy**",
-        "`.balance` / `.bal` \u2014 Check balance",
-        "`.daily` \u2014 Claim daily 1,000 Robux",
-        "`.demo` \u2014 Claim 1,000 Demo Robux",
-        "`.give @user <amount>` \u2014 Give Robux to another user",
-        "`.deposit <amount>` \u2014 Request a deposit",
-        "`.withdraw <amount>` \u2014 Request a withdrawal",
-        "",
-        "**\u{1F3AE} Games**",
-        "`.cf <bet> <heads/tails>` \u2014 Coinflip",
-        "`.slots <bet>` \u2014 Slot machine",
-        "`.rl <bet> <choice>` \u2014 Roulette",
-        "`.bj <bet>` \u2014 Blackjack (buttons)",
-        "`.crash <bet>` \u2014 Crash (buttons)",
-        "`.mines <bet> <mines>` \u2014 Mines (buttons)",
-        "",
-        "**\u{1F4CA} Stats**",
-        "`.stats` \u2014 View your stats",
-        "`.lb` \u2014 Leaderboard",
-        "`.verify <game_id>` \u2014 Verify a game",
-        "`.setseed <seed>` \u2014 Set your client seed",
-        "",
-        "**\u{1F381} Bonuses**",
-        "`.promo <code>` \u2014 Claim a promo code",
-        "`.affiliate` \u2014 View affiliate info",
-        "`.affiliate <code>` \u2014 Link a referrer",
-        "`.statusbonus` \u2014 Claim status bonus"
-      ];
-      if (isOwner) {
-        lines.push(
-          "",
-          "**\u{1F512} Admin**",
-          "`.promo create <code> <amount> <uses>`",
-          "`.promo delete <code>`",
-          "`.promo list`",
-          "`.autoban watch <msg_id> [chan_id] [label]`",
-          "`.autoban unwatch <msg_id>`",
-          "`.autoban list`",
-          "`.banreacters <msg_id> [chan_id]`"
-        );
-      }
-      await replyEmbed(message, baseEmbed("\u{1F4CB} Prefix Commands (.)").setDescription(lines.join("\n")));
+      const embed = new import_discord5.EmbedBuilder().setTitle("\u{1F4CB} Command List").setColor(BOT_COLOR).setDescription("All commands work with `.` prefix. Interactive games (blackjack, crash, mines) also available as `/` slash commands.").addFields(
+        {
+          name: "\u{1F4B0} Economy",
+          value: [
+            "`.bal` \u2014 Check your balance",
+            "`.daily` \u2014 Claim 1,000 free Robux (24h)",
+            "`.demo` \u2014 Claim 1,000 Demo Robux (24h)",
+            "`.give @user <amount>` \u2014 Send Robux to someone",
+            "`.deposit <amount>` \u2014 Request a deposit (min 50)",
+            "`.withdraw <amount>` \u2014 Request a withdrawal"
+          ].join("\n")
+        },
+        {
+          name: "\u{1F3AE} Games",
+          value: [
+            "`.cf <bet> <heads/tails>` \u2014 Coinflip",
+            "`.slots <bet>` \u2014 Slot machine",
+            "`.rl <bet> <red/black/0-36/...>` \u2014 Roulette",
+            "`.bj <bet>` \u2014 Blackjack *(use `/blackjack`)*",
+            "`.crash <bet>` \u2014 Crash *(use `/crash`)*",
+            "`.mines <bet> <mines>` \u2014 Mines *(use `/mines`)*"
+          ].join("\n")
+        },
+        {
+          name: "\u{1F4CA} Stats & Tools",
+          value: [
+            "`.stats` \u2014 View your gambling stats",
+            "`.lb` \u2014 Top 10 leaderboard",
+            "`.verify <game_id>` \u2014 Verify provably fair result",
+            "`.setseed <seed>` \u2014 Set your client seed",
+            "`.ping` \u2014 Check bot latency"
+          ].join("\n")
+        },
+        {
+          name: "\u{1F381} Bonuses",
+          value: [
+            "`.promo <code>` \u2014 Redeem a promo code",
+            "`.affiliate` \u2014 View your affiliate info & code",
+            "`.affiliate <code>` \u2014 Link a referrer",
+            "`.statusbonus` \u2014 Claim daily status bonus"
+          ].join("\n")
+        },
+        ...isOwner ? [{
+          name: "\u{1F512} Admin (Owner Only)",
+          value: [
+            "`.admin setbalance @user <amount>`",
+            "`.admin addbalance @user <amount> [reason]`",
+            "`.admin setdemo @user <amount>`",
+            "`.admin resetbalance @user`",
+            "`.admin lookup @user`",
+            "`.admin txhistory @user [limit]`",
+            "`.promo create <code> <amount> <uses>`",
+            "`.promo delete <code>` / `.promo list`",
+            "`.autoban watch <msg_id> [chan_id] [label]`",
+            "`.autoban unwatch <msg_id>` / `.autoban list`",
+            "`.banreacters <msg_id> [chan_id]`"
+          ].join("\n")
+        }] : []
+      ).setFooter({ text: "Slash commands (/balance, /coinflip, etc.) also work for everything." }).setTimestamp();
+      await message.reply({ embeds: [embed] }).catch(() => {
+      });
       return;
     }
     const needsUser = !["help", "ping", "promo", "autoban", "banreacters"].includes(cmd ?? "");
@@ -99693,6 +99711,139 @@ Label: **${label ?? messageId}**`));
         await replyEmbed(message, baseEmbed(`\u{1F441}\uFE0F Watching ${watchedMessages.size} message(s)`).setDescription(lines.join("\n")));
       } else {
         await replyEmbed(message, errorEmbed2("Usage: `.autoban watch/unwatch/list`"));
+      }
+    } else if (cmd === "admin") {
+      if (!await checkOwnerMessage(message)) {
+        await replyEmbed(message, errorEmbed2("This command is restricted to the bot owner."));
+        return;
+      }
+      const sub = args[0]?.toLowerCase();
+      const targetMention = args[1];
+      const targetId = parseMention(targetMention);
+      const ADMIN_USAGE = [
+        "`.admin setbalance @user <amount>`",
+        "`.admin addbalance @user <amount> [reason]`",
+        "`.admin setdemo @user <amount>`",
+        "`.admin resetbalance @user`",
+        "`.admin lookup @user`",
+        "`.admin txhistory @user [limit]`"
+      ].join("\n");
+      if (!sub) {
+        await replyEmbed(message, baseEmbed("\u{1F512} Admin Commands").setDescription(ADMIN_USAGE));
+        return;
+      }
+      if (!targetId) {
+        await replyEmbed(message, errorEmbed2(`Provide a valid @user mention.
+
+${ADMIN_USAGE}`));
+        return;
+      }
+      const targetUser = await message.client.users.fetch(targetId).catch(() => null);
+      const targetName = targetUser?.username ?? targetId;
+      if (sub === "setbalance") {
+        const amount = parseBet(args[2]);
+        if (amount === null) {
+          await replyEmbed(message, errorEmbed2("Usage: `.admin setbalance @user <amount>`"));
+          return;
+        }
+        const existing = await getOrCreateUser(targetId, targetName);
+        const diff = amount - existing.balance;
+        await db.update(usersTable).set({ balance: amount }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId,
+          type: "admin_setbalance",
+          amount: diff,
+          balanceBefore: existing.balance,
+          balanceAfter: amount,
+          description: `Admin set balance to ${amount} (by ${message.author.username})`
+        });
+        await replyEmbed(message, winEmbed("\u{1F4B0} Balance Set", `**${targetName}**: ${formatRobux(existing.balance)} \u2192 ${formatRobux(amount)}`));
+      } else if (sub === "addbalance") {
+        const amount = parseInt(args[2]);
+        if (isNaN(amount)) {
+          await replyEmbed(message, errorEmbed2("Usage: `.admin addbalance @user <amount> [reason]`"));
+          return;
+        }
+        const reason = args.slice(3).join(" ") || `Admin adjustment by ${message.author.username}`;
+        const existing = await getOrCreateUser(targetId, targetName);
+        if (existing.balance + amount < 0) {
+          await replyEmbed(message, errorEmbed2(`This would make the balance negative. Current: ${formatRobux(existing.balance)}`));
+          return;
+        }
+        const updated = await updateBalance(targetId, amount, "admin_adjustment", reason);
+        await replyEmbed(message, winEmbed(
+          `\u{1F4B0} Balance ${amount >= 0 ? "Added" : "Deducted"}`,
+          `**${targetName}**: ${formatRobux(existing.balance)} \u2192 ${formatRobux(updated.balance)}
+**Reason:** ${reason}`
+        ));
+      } else if (sub === "setdemo") {
+        const amount = parseBet(args[2]);
+        if (amount === null) {
+          await replyEmbed(message, errorEmbed2("Usage: `.admin setdemo @user <amount>`"));
+          return;
+        }
+        const existing = await getOrCreateUser(targetId, targetName);
+        const diff = amount - existing.demoBalance;
+        await db.update(usersTable).set({ demoBalance: amount }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId,
+          type: "admin_setdemo",
+          amount: diff,
+          balanceBefore: existing.demoBalance,
+          balanceAfter: amount,
+          description: `Admin set demo balance to ${amount} (by ${message.author.username})`
+        });
+        await replyEmbed(message, winEmbed("\u{1F3AE} Demo Balance Set", `**${targetName}**: ${formatRobux(existing.demoBalance)} \u2192 ${formatRobux(amount)}`));
+      } else if (sub === "resetbalance") {
+        const existing = await getOrCreateUser(targetId, targetName);
+        await db.update(usersTable).set({ balance: 0 }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId,
+          type: "admin_resetbalance",
+          amount: -existing.balance,
+          balanceBefore: existing.balance,
+          balanceAfter: 0,
+          description: `Admin reset balance to 0 (by ${message.author.username})`
+        });
+        await replyEmbed(message, baseEmbed("\u{1F504} Balance Reset").setDescription(`**${targetName}**'s balance reset from ${formatRobux(existing.balance)} to ${formatRobux(0)}.`));
+      } else if (sub === "lookup") {
+        const rows = await db.select().from(usersTable).where(eq(usersTable.id, targetId)).limit(1);
+        if (rows.length === 0) {
+          await replyEmbed(message, errorEmbed2(`${targetName} has no profile yet.`));
+          return;
+        }
+        const u = rows[0];
+        const net = u.totalWon - u.totalLost;
+        const embed = new import_discord5.EmbedBuilder().setTitle(`\u{1F50D} Lookup \u2014 ${u.username}`).setColor(BOT_COLOR).addFields(
+          { name: "ID", value: `\`${u.id}\``, inline: true },
+          { name: "\u{1F4B0} Balance", value: formatRobux(u.balance), inline: true },
+          { name: "\u{1F3AE} Demo", value: formatRobux(u.demoBalance), inline: true },
+          { name: "Won", value: formatRobux(u.totalWon), inline: true },
+          { name: "Lost", value: formatRobux(u.totalLost), inline: true },
+          { name: "Net P/L", value: `${net >= 0 ? "+" : ""}${formatRobux(Math.abs(net))}`, inline: true },
+          { name: "Games", value: `${u.gameCount}`, inline: true },
+          { name: "Invites", value: `${u.inviteCount}`, inline: true },
+          { name: "Affiliate Code", value: u.affiliateCode ?? "N/A", inline: true },
+          { name: "Affiliate Earnings", value: formatRobux(u.affiliateTotalEarned), inline: true },
+          { name: "Referrals", value: `${u.affiliateCount}`, inline: true },
+          { name: "Referred By", value: u.affiliateOf ? `<@${u.affiliateOf}>` : "None", inline: true }
+        ).setTimestamp();
+        await replyEmbed(message, embed);
+      } else if (sub === "txhistory") {
+        const limit = Math.min(parseInt(args[2]) || 10, 20);
+        const rows = await db.select().from(transactionsTable).where(eq(transactionsTable.userId, targetId)).orderBy(desc(transactionsTable.createdAt)).limit(limit);
+        if (rows.length === 0) {
+          await replyEmbed(message, baseEmbed(`\u{1F4DC} Transactions \u2014 ${targetName}`).setDescription("No transactions found."));
+          return;
+        }
+        const lines = rows.map((tx, i) => {
+          const sign = tx.amount >= 0 ? "+" : "";
+          const ts = Math.floor(new Date(tx.createdAt).getTime() / 1e3);
+          return `\`${i + 1}.\` <t:${ts}:R> **${sign}${tx.amount.toLocaleString()}** \u2014 \`${tx.type}\``;
+        });
+        await replyEmbed(message, baseEmbed(`\u{1F4DC} Last ${rows.length} Txns \u2014 ${targetName}`).setDescription(lines.join("\n")));
+      } else {
+        await replyEmbed(message, baseEmbed("\u{1F512} Admin Commands").setDescription(ADMIN_USAGE));
       }
     } else if (cmd === "banreacters") {
       if (!await checkOwnerMessage(message)) {
@@ -101343,8 +101494,161 @@ async function execute22(interaction) {
   }
 }
 
+// src/commands/admin.ts
+var admin_exports = {};
+__export(admin_exports, {
+  data: () => data23,
+  execute: () => execute23
+});
+var import_discord27 = __toESM(require_src());
+var data23 = new import_discord27.SlashCommandBuilder().setName("admin").setDescription("[Owner only] Admin panel").addSubcommand(
+  (sub) => sub.setName("setbalance").setDescription("Set a user's real Robux balance to an exact amount").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true)).addIntegerOption((opt) => opt.setName("amount").setDescription("New balance amount").setRequired(true).setMinValue(0))
+).addSubcommand(
+  (sub) => sub.setName("addbalance").setDescription("Add (or subtract) Robux from a user's balance").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true)).addIntegerOption((opt) => opt.setName("amount").setDescription("Amount to add (use negative to subtract)").setRequired(true)).addStringOption((opt) => opt.setName("reason").setDescription("Reason for this adjustment").setRequired(false))
+).addSubcommand(
+  (sub) => sub.setName("setdemo").setDescription("Set a user's demo balance to an exact amount").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true)).addIntegerOption((opt) => opt.setName("amount").setDescription("New demo balance amount").setRequired(true).setMinValue(0))
+).addSubcommand(
+  (sub) => sub.setName("resetbalance").setDescription("Reset a user's real balance to 0").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true))
+).addSubcommand(
+  (sub) => sub.setName("lookup").setDescription("View full profile info for any user").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true))
+).addSubcommand(
+  (sub) => sub.setName("txhistory").setDescription("View recent transactions for a user").addUserOption((opt) => opt.setName("user").setDescription("Target user").setRequired(true)).addIntegerOption((opt) => opt.setName("limit").setDescription("Number of transactions (default 10, max 20)").setRequired(false).setMinValue(1).setMaxValue(20))
+);
+async function execute23(interaction) {
+  try {
+    if (!await checkOwnerInteraction(interaction)) {
+      await interaction.reply({ content: "\u274C This command is restricted to the bot owner.", flags: 64 });
+      return;
+    }
+    await interaction.deferReply({ flags: 64 });
+    const sub = interaction.options.getSubcommand();
+    const target = interaction.options.getUser("user", true);
+    if (sub === "setbalance") {
+      const amount = interaction.options.getInteger("amount", true);
+      const user = await getOrCreateUser(target.id, target.username);
+      const diff = amount - user.balance;
+      await db.update(usersTable).set({ balance: amount }).where(eq(usersTable.id, target.id));
+      await db.insert(transactionsTable).values({
+        userId: target.id,
+        type: "admin_setbalance",
+        amount: diff,
+        balanceBefore: user.balance,
+        balanceAfter: amount,
+        description: `Admin set balance to ${amount} (by ${interaction.user.username})`
+      });
+      await interaction.editReply({
+        embeds: [winEmbed("\u{1F4B0} Balance Set", [
+          `**User:** ${target.username} (<@${target.id}>)`,
+          `**Old Balance:** ${formatRobux(user.balance)}`,
+          `**New Balance:** ${formatRobux(amount)}`,
+          `**Change:** ${diff >= 0 ? "+" : ""}${formatRobux(Math.abs(diff))}`
+        ].join("\n"))]
+      });
+    } else if (sub === "addbalance") {
+      const amount = interaction.options.getInteger("amount", true);
+      const reason = interaction.options.getString("reason") ?? `Admin adjustment by ${interaction.user.username}`;
+      const user = await getOrCreateUser(target.id, target.username);
+      if (user.balance + amount < 0) {
+        await interaction.editReply({ embeds: [errorEmbed2(`This would make ${target.username}'s balance negative (${formatRobux(user.balance + amount)}). Use \`setbalance\` to set an exact value, or use a smaller amount.`)] });
+        return;
+      }
+      const updated = await updateBalance(target.id, amount, "admin_adjustment", reason);
+      await interaction.editReply({
+        embeds: [winEmbed(`\u{1F4B0} Balance ${amount >= 0 ? "Added" : "Deducted"}`, [
+          `**User:** ${target.username} (<@${target.id}>)`,
+          `**Amount:** ${amount >= 0 ? "+" : ""}${formatRobux(Math.abs(amount))}`,
+          `**New Balance:** ${formatRobux(updated.balance)}`,
+          `**Reason:** ${reason}`
+        ].join("\n"))]
+      });
+    } else if (sub === "setdemo") {
+      const amount = interaction.options.getInteger("amount", true);
+      const user = await getOrCreateUser(target.id, target.username);
+      const diff = amount - user.demoBalance;
+      await db.update(usersTable).set({ demoBalance: amount }).where(eq(usersTable.id, target.id));
+      await db.insert(transactionsTable).values({
+        userId: target.id,
+        type: "admin_setdemo",
+        amount: diff,
+        balanceBefore: user.demoBalance,
+        balanceAfter: amount,
+        description: `Admin set demo balance to ${amount} (by ${interaction.user.username})`
+      });
+      await interaction.editReply({
+        embeds: [winEmbed("\u{1F3AE} Demo Balance Set", [
+          `**User:** ${target.username} (<@${target.id}>)`,
+          `**Old Demo Balance:** ${formatRobux(user.demoBalance)}`,
+          `**New Demo Balance:** ${formatRobux(amount)}`
+        ].join("\n"))]
+      });
+    } else if (sub === "resetbalance") {
+      const user = await getOrCreateUser(target.id, target.username);
+      await db.update(usersTable).set({ balance: 0 }).where(eq(usersTable.id, target.id));
+      await db.insert(transactionsTable).values({
+        userId: target.id,
+        type: "admin_resetbalance",
+        amount: -user.balance,
+        balanceBefore: user.balance,
+        balanceAfter: 0,
+        description: `Admin reset balance to 0 (by ${interaction.user.username})`
+      });
+      await interaction.editReply({
+        embeds: [baseEmbed("\u{1F504} Balance Reset").setDescription(`**${target.username}**'s balance has been reset from ${formatRobux(user.balance)} to ${formatRobux(0)}.`)]
+      });
+    } else if (sub === "lookup") {
+      const rows = await db.select().from(usersTable).where(eq(usersTable.id, target.id)).limit(1);
+      if (rows.length === 0) {
+        await interaction.editReply({ embeds: [errorEmbed2(`${target.username} has no profile yet \u2014 they've never used the bot.`)] });
+        return;
+      }
+      const u = rows[0];
+      const net = u.totalWon - u.totalLost;
+      const embed = new import_discord27.EmbedBuilder().setTitle(`\u{1F50D} Admin Lookup \u2014 ${u.username}`).setColor(BOT_COLOR).setThumbnail(target.displayAvatarURL()).addFields(
+        { name: "User ID", value: `\`${u.id}\``, inline: true },
+        { name: "Affiliate Code", value: u.affiliateCode ?? "N/A", inline: true },
+        { name: "Referred By", value: u.affiliateOf ? `<@${u.affiliateOf}>` : "None", inline: true },
+        { name: "\u{1F4B0} Real Balance", value: formatRobux(u.balance), inline: true },
+        { name: "\u{1F3AE} Demo Balance", value: formatRobux(u.demoBalance), inline: true },
+        { name: "\u200B", value: "\u200B", inline: true },
+        { name: "Total Won", value: formatRobux(u.totalWon), inline: true },
+        { name: "Total Lost", value: formatRobux(u.totalLost), inline: true },
+        { name: "Net P/L", value: `${net >= 0 ? "+" : ""}${formatRobux(Math.abs(net))}`, inline: true },
+        { name: "Games Played", value: `${u.gameCount}`, inline: true },
+        { name: "Messages", value: `${u.messageCount}`, inline: true },
+        { name: "Invites", value: `${u.inviteCount}`, inline: true },
+        { name: "Affiliate Earnings", value: formatRobux(u.affiliateTotalEarned), inline: true },
+        { name: "Referral Count", value: `${u.affiliateCount}`, inline: true },
+        { name: "Joined", value: `<t:${Math.floor(new Date(u.createdAt).getTime() / 1e3)}:R>`, inline: true }
+      ).setTimestamp();
+      await interaction.editReply({ embeds: [embed] });
+    } else if (sub === "txhistory") {
+      const limit = interaction.options.getInteger("limit") ?? 10;
+      const rows = await db.select().from(transactionsTable).where(eq(transactionsTable.userId, target.id)).orderBy(desc(transactionsTable.createdAt)).limit(limit);
+      if (rows.length === 0) {
+        await interaction.editReply({ embeds: [baseEmbed(`\u{1F4DC} Transactions \u2014 ${target.username}`).setDescription("No transactions found.")] });
+        return;
+      }
+      const lines = rows.map((tx, i) => {
+        const sign = tx.amount >= 0 ? "+" : "";
+        const ts = Math.floor(new Date(tx.createdAt).getTime() / 1e3);
+        return `\`${i + 1}.\` <t:${ts}:R> **${sign}${tx.amount.toLocaleString()}** \u2014 \`${tx.type}\` \u2014 ${tx.description.slice(0, 50)}`;
+      });
+      await interaction.editReply({
+        embeds: [baseEmbed(`\u{1F4DC} Last ${rows.length} Transactions \u2014 ${target.username}`).setDescription(lines.join("\n").slice(0, 2e3))]
+      });
+    }
+  } catch (err) {
+    console.error("[Admin Error]", err?.message ?? err);
+    try {
+      if (interaction.deferred) await interaction.editReply({ embeds: [errorEmbed2("Something went wrong.")] });
+      else await interaction.reply({ embeds: [errorEmbed2("Something went wrong.")], flags: 64 });
+    } catch {
+    }
+  }
+}
+
 // src/index.ts
-var commands = new import_discord27.Collection();
+var commands = new import_discord28.Collection();
 var allCommands = [
   balance_exports,
   daily_exports,
@@ -101367,20 +101671,21 @@ var allCommands = [
   crash_exports,
   mines_exports,
   autoban_exports,
-  ping_exports
+  ping_exports,
+  admin_exports
 ];
 for (const cmd of allCommands) {
   commands.set(cmd.data.name, cmd);
 }
-var client = new import_discord27.Client({
+var client = new import_discord28.Client({
   intents: [
-    import_discord27.GatewayIntentBits.Guilds,
-    import_discord27.GatewayIntentBits.GuildMessages,
-    import_discord27.GatewayIntentBits.GuildMembers,
-    import_discord27.GatewayIntentBits.MessageContent,
-    import_discord27.GatewayIntentBits.GuildInvites,
-    import_discord27.GatewayIntentBits.GuildPresences,
-    import_discord27.GatewayIntentBits.GuildMessageReactions
+    import_discord28.GatewayIntentBits.Guilds,
+    import_discord28.GatewayIntentBits.GuildMessages,
+    import_discord28.GatewayIntentBits.GuildMembers,
+    import_discord28.GatewayIntentBits.MessageContent,
+    import_discord28.GatewayIntentBits.GuildInvites,
+    import_discord28.GatewayIntentBits.GuildPresences,
+    import_discord28.GatewayIntentBits.GuildMessageReactions
   ]
 });
 var MESSAGE_REWARD_AMOUNT = 5;
@@ -101388,7 +101693,7 @@ var MESSAGE_REWARD_COOLDOWN_MS = 60 * 1e3;
 var MESSAGE_REWARD_THRESHOLD = 5;
 var messageCounters = /* @__PURE__ */ new Map();
 var inviteCache = /* @__PURE__ */ new Map();
-client.once(import_discord27.Events.ClientReady, async (c) => {
+client.once(import_discord28.Events.ClientReady, async (c) => {
   console.log(`\u2705 Bot ready as ${c.user.tag}`);
   for (const [, guild] of c.guilds.cache) {
     try {
@@ -101400,7 +101705,7 @@ client.once(import_discord27.Events.ClientReady, async (c) => {
     }
   }
 });
-client.on(import_discord27.Events.MessageReactionAdd, async (reaction, user) => {
+client.on(import_discord28.Events.MessageReactionAdd, async (reaction, user) => {
   if (user.bot) return;
   try {
     if (reaction.partial) await reaction.fetch();
@@ -101424,10 +101729,10 @@ client.on(import_discord27.Events.MessageReactionAdd, async (reaction, user) => 
     console.error(`[AutoBan] Failed to ban ${user.id}:`, err.message);
   }
 });
-client.on(import_discord27.Events.InviteCreate, (invite) => {
+client.on(import_discord28.Events.InviteCreate, (invite) => {
   inviteCache.set(invite.code, invite.uses ?? 0);
 });
-client.on(import_discord27.Events.GuildMemberAdd, async (member) => {
+client.on(import_discord28.Events.GuildMemberAdd, async (member) => {
   try {
     const invites = await member.guild.invites.fetch();
     for (const [code, invite] of invites) {
@@ -101448,7 +101753,7 @@ client.on(import_discord27.Events.GuildMemberAdd, async (member) => {
   } catch {
   }
 });
-client.on(import_discord27.Events.MessageCreate, async (message) => {
+client.on(import_discord28.Events.MessageCreate, async (message) => {
   if (message.author.bot || !message.guild) return;
   if (message.content.startsWith(".")) {
     await handlePrefixMessage(message).catch((err) => console.error("Prefix handler error:", err));
@@ -101475,7 +101780,7 @@ client.on(import_discord27.Events.MessageCreate, async (message) => {
     }
   }
 });
-client.on(import_discord27.Events.InteractionCreate, async (interaction) => {
+client.on(import_discord28.Events.InteractionCreate, async (interaction) => {
   if (interaction.isButton()) {
     const id = interaction.customId;
     if (id.startsWith("ticket_approve_") || id.startsWith("ticket_deny_") || id === "ticket_close") {

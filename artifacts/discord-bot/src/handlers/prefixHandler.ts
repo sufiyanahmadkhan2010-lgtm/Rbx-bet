@@ -7,9 +7,9 @@ import { playRoulette, parseRouletteBet, colorEmoji } from "../games/roulette";
 import { getFairContext, saveGameRecord } from "../utils/provably-fair";
 import { isHoneypotActive, honeypotRoll, honeypotRolls } from "../utils/honeypot";
 import { incrementCounts } from "../utils/gameUtils";
-import { checkOwnerMessage, OWNER_ID } from "../utils/admin";
-import { db, usersTable, ticketsTable, promoCodesTable, promoClaimsTable, gameRecordsTable } from "@workspace/db";
-import { eq, and, sql } from "drizzle-orm";
+import { checkOwnerMessage } from "../utils/admin";
+import { db, usersTable, ticketsTable, promoCodesTable, promoClaimsTable, gameRecordsTable, transactionsTable } from "@workspace/db";
+import { eq, and, sql, desc } from "drizzle-orm";
 import { hashSeed, computeFairHash } from "../utils/provably-fair";
 import { watchedMessages } from "../commands/autoban";
 
@@ -52,47 +52,73 @@ export async function handlePrefixMessage(message: Message) {
     // ── HELP ──────────────────────────────────────────────────────────────────
     if (cmd === "help") {
       const isOwner = await checkOwnerMessage(message);
-      const lines = [
-        "**💰 Economy**",
-        "`.balance` / `.bal` — Check balance",
-        "`.daily` — Claim daily 1,000 Robux",
-        "`.demo` — Claim 1,000 Demo Robux",
-        "`.give @user <amount>` — Give Robux to another user",
-        "`.deposit <amount>` — Request a deposit",
-        "`.withdraw <amount>` — Request a withdrawal",
-        "",
-        "**🎮 Games**",
-        "`.cf <bet> <heads/tails>` — Coinflip",
-        "`.slots <bet>` — Slot machine",
-        "`.rl <bet> <choice>` — Roulette",
-        "`.bj <bet>` — Blackjack (buttons)",
-        "`.crash <bet>` — Crash (buttons)",
-        "`.mines <bet> <mines>` — Mines (buttons)",
-        "",
-        "**📊 Stats**",
-        "`.stats` — View your stats",
-        "`.lb` — Leaderboard",
-        "`.verify <game_id>` — Verify a game",
-        "`.setseed <seed>` — Set your client seed",
-        "",
-        "**🎁 Bonuses**",
-        "`.promo <code>` — Claim a promo code",
-        "`.affiliate` — View affiliate info",
-        "`.affiliate <code>` — Link a referrer",
-        "`.statusbonus` — Claim status bonus",
-      ];
-      if (isOwner) {
-        lines.push("", "**🔒 Admin**",
-          "`.promo create <code> <amount> <uses>`",
-          "`.promo delete <code>`",
-          "`.promo list`",
-          "`.autoban watch <msg_id> [chan_id] [label]`",
-          "`.autoban unwatch <msg_id>`",
-          "`.autoban list`",
-          "`.banreacters <msg_id> [chan_id]`",
-        );
-      }
-      await replyEmbed(message, baseEmbed("📋 Prefix Commands (.)").setDescription(lines.join("\n")));
+      const embed = new EmbedBuilder()
+        .setTitle("📋 Command List")
+        .setColor(BOT_COLOR)
+        .setDescription("All commands work with `.` prefix. Interactive games (blackjack, crash, mines) also available as `/` slash commands.")
+        .addFields(
+          {
+            name: "💰 Economy",
+            value: [
+              "`.bal` — Check your balance",
+              "`.daily` — Claim 1,000 free Robux (24h)",
+              "`.demo` — Claim 1,000 Demo Robux (24h)",
+              "`.give @user <amount>` — Send Robux to someone",
+              "`.deposit <amount>` — Request a deposit (min 50)",
+              "`.withdraw <amount>` — Request a withdrawal",
+            ].join("\n"),
+          },
+          {
+            name: "🎮 Games",
+            value: [
+              "`.cf <bet> <heads/tails>` — Coinflip",
+              "`.slots <bet>` — Slot machine",
+              "`.rl <bet> <red/black/0-36/...>` — Roulette",
+              "`.bj <bet>` — Blackjack *(use `/blackjack`)*",
+              "`.crash <bet>` — Crash *(use `/crash`)*",
+              "`.mines <bet> <mines>` — Mines *(use `/mines`)*",
+            ].join("\n"),
+          },
+          {
+            name: "📊 Stats & Tools",
+            value: [
+              "`.stats` — View your gambling stats",
+              "`.lb` — Top 10 leaderboard",
+              "`.verify <game_id>` — Verify provably fair result",
+              "`.setseed <seed>` — Set your client seed",
+              "`.ping` — Check bot latency",
+            ].join("\n"),
+          },
+          {
+            name: "🎁 Bonuses",
+            value: [
+              "`.promo <code>` — Redeem a promo code",
+              "`.affiliate` — View your affiliate info & code",
+              "`.affiliate <code>` — Link a referrer",
+              "`.statusbonus` — Claim daily status bonus",
+            ].join("\n"),
+          },
+          ...(isOwner ? [{
+            name: "🔒 Admin (Owner Only)",
+            value: [
+              "`.admin setbalance @user <amount>`",
+              "`.admin addbalance @user <amount> [reason]`",
+              "`.admin setdemo @user <amount>`",
+              "`.admin resetbalance @user`",
+              "`.admin lookup @user`",
+              "`.admin txhistory @user [limit]`",
+              "`.promo create <code> <amount> <uses>`",
+              "`.promo delete <code>` / `.promo list`",
+              "`.autoban watch <msg_id> [chan_id] [label]`",
+              "`.autoban unwatch <msg_id>` / `.autoban list`",
+              "`.banreacters <msg_id> [chan_id]`",
+            ].join("\n"),
+          }] : []),
+        )
+        .setFooter({ text: "Slash commands (/balance, /coinflip, etc.) also work for everything." })
+        .setTimestamp();
+
+      await message.reply({ embeds: [embed] }).catch(() => {});
       return;
     }
 
@@ -555,6 +581,119 @@ export async function handlePrefixMessage(message: Message) {
         await replyEmbed(message, baseEmbed(`👁️ Watching ${watchedMessages.size} message(s)`).setDescription(lines.join("\n")));
       } else {
         await replyEmbed(message, errorEmbed("Usage: `.autoban watch/unwatch/list`"));
+      }
+
+    // ── ADMIN (owner only) ────────────────────────────────────────────────────
+    } else if (cmd === "admin") {
+      if (!(await checkOwnerMessage(message))) {
+        await replyEmbed(message, errorEmbed("This command is restricted to the bot owner."));
+        return;
+      }
+      const sub = args[0]?.toLowerCase();
+      const targetMention = args[1];
+      const targetId = parseMention(targetMention);
+
+      const ADMIN_USAGE = [
+        "`.admin setbalance @user <amount>`",
+        "`.admin addbalance @user <amount> [reason]`",
+        "`.admin setdemo @user <amount>`",
+        "`.admin resetbalance @user`",
+        "`.admin lookup @user`",
+        "`.admin txhistory @user [limit]`",
+      ].join("\n");
+
+      if (!sub) { await replyEmbed(message, baseEmbed("🔒 Admin Commands").setDescription(ADMIN_USAGE)); return; }
+      if (!targetId) { await replyEmbed(message, errorEmbed(`Provide a valid @user mention.\n\n${ADMIN_USAGE}`)); return; }
+
+      const targetUser = await message.client.users.fetch(targetId).catch(() => null);
+      const targetName = targetUser?.username ?? targetId;
+
+      if (sub === "setbalance") {
+        const amount = parseBet(args[2]);
+        if (amount === null) { await replyEmbed(message, errorEmbed("Usage: `.admin setbalance @user <amount>`")); return; }
+        const existing = await getOrCreateUser(targetId, targetName);
+        const diff = amount - existing.balance;
+        await db.update(usersTable).set({ balance: amount }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId, type: "admin_setbalance", amount: diff,
+          balanceBefore: existing.balance, balanceAfter: amount,
+          description: `Admin set balance to ${amount} (by ${message.author.username})`,
+        });
+        await replyEmbed(message, winEmbed("💰 Balance Set", `**${targetName}**: ${formatRobux(existing.balance)} → ${formatRobux(amount)}`));
+
+      } else if (sub === "addbalance") {
+        const amount = parseInt(args[2]);
+        if (isNaN(amount)) { await replyEmbed(message, errorEmbed("Usage: `.admin addbalance @user <amount> [reason]`")); return; }
+        const reason = args.slice(3).join(" ") || `Admin adjustment by ${message.author.username}`;
+        const existing = await getOrCreateUser(targetId, targetName);
+        if (existing.balance + amount < 0) {
+          await replyEmbed(message, errorEmbed(`This would make the balance negative. Current: ${formatRobux(existing.balance)}`)); return;
+        }
+        const updated = await updateBalance(targetId, amount, "admin_adjustment", reason);
+        await replyEmbed(message, winEmbed(`💰 Balance ${amount >= 0 ? "Added" : "Deducted"}`,
+          `**${targetName}**: ${formatRobux(existing.balance)} → ${formatRobux(updated.balance)}\n**Reason:** ${reason}`));
+
+      } else if (sub === "setdemo") {
+        const amount = parseBet(args[2]);
+        if (amount === null) { await replyEmbed(message, errorEmbed("Usage: `.admin setdemo @user <amount>`")); return; }
+        const existing = await getOrCreateUser(targetId, targetName);
+        const diff = amount - existing.demoBalance;
+        await db.update(usersTable).set({ demoBalance: amount }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId, type: "admin_setdemo", amount: diff,
+          balanceBefore: existing.demoBalance, balanceAfter: amount,
+          description: `Admin set demo balance to ${amount} (by ${message.author.username})`,
+        });
+        await replyEmbed(message, winEmbed("🎮 Demo Balance Set", `**${targetName}**: ${formatRobux(existing.demoBalance)} → ${formatRobux(amount)}`));
+
+      } else if (sub === "resetbalance") {
+        const existing = await getOrCreateUser(targetId, targetName);
+        await db.update(usersTable).set({ balance: 0 }).where(eq(usersTable.id, targetId));
+        await db.insert(transactionsTable).values({
+          userId: targetId, type: "admin_resetbalance", amount: -existing.balance,
+          balanceBefore: existing.balance, balanceAfter: 0,
+          description: `Admin reset balance to 0 (by ${message.author.username})`,
+        });
+        await replyEmbed(message, baseEmbed("🔄 Balance Reset").setDescription(`**${targetName}**'s balance reset from ${formatRobux(existing.balance)} to ${formatRobux(0)}.`));
+
+      } else if (sub === "lookup") {
+        const rows = await db.select().from(usersTable).where(eq(usersTable.id, targetId)).limit(1);
+        if (rows.length === 0) { await replyEmbed(message, errorEmbed(`${targetName} has no profile yet.`)); return; }
+        const u = rows[0];
+        const net = u.totalWon - u.totalLost;
+        const embed = new EmbedBuilder().setTitle(`🔍 Lookup — ${u.username}`).setColor(BOT_COLOR)
+          .addFields(
+            { name: "ID", value: `\`${u.id}\``, inline: true },
+            { name: "💰 Balance", value: formatRobux(u.balance), inline: true },
+            { name: "🎮 Demo", value: formatRobux(u.demoBalance), inline: true },
+            { name: "Won", value: formatRobux(u.totalWon), inline: true },
+            { name: "Lost", value: formatRobux(u.totalLost), inline: true },
+            { name: "Net P/L", value: `${net >= 0 ? "+" : ""}${formatRobux(Math.abs(net))}`, inline: true },
+            { name: "Games", value: `${u.gameCount}`, inline: true },
+            { name: "Invites", value: `${u.inviteCount}`, inline: true },
+            { name: "Affiliate Code", value: u.affiliateCode ?? "N/A", inline: true },
+            { name: "Affiliate Earnings", value: formatRobux(u.affiliateTotalEarned), inline: true },
+            { name: "Referrals", value: `${u.affiliateCount}`, inline: true },
+            { name: "Referred By", value: u.affiliateOf ? `<@${u.affiliateOf}>` : "None", inline: true },
+          ).setTimestamp();
+        await replyEmbed(message, embed);
+
+      } else if (sub === "txhistory") {
+        const limit = Math.min(parseInt(args[2]) || 10, 20);
+        const rows = await db.select().from(transactionsTable)
+          .where(eq(transactionsTable.userId, targetId))
+          .orderBy(desc(transactionsTable.createdAt))
+          .limit(limit);
+        if (rows.length === 0) { await replyEmbed(message, baseEmbed(`📜 Transactions — ${targetName}`).setDescription("No transactions found.")); return; }
+        const lines = rows.map((tx, i) => {
+          const sign = tx.amount >= 0 ? "+" : "";
+          const ts = Math.floor(new Date(tx.createdAt).getTime() / 1000);
+          return `\`${i + 1}.\` <t:${ts}:R> **${sign}${tx.amount.toLocaleString()}** — \`${tx.type}\``;
+        });
+        await replyEmbed(message, baseEmbed(`📜 Last ${rows.length} Txns — ${targetName}`).setDescription(lines.join("\n")));
+
+      } else {
+        await replyEmbed(message, baseEmbed("🔒 Admin Commands").setDescription(ADMIN_USAGE));
       }
 
     // ── BANREACTERS (owner only) ───────────────────────────────────────────────

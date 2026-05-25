@@ -22,10 +22,11 @@ import * as crash from "./commands/crash";
 import * as mines from "./commands/mines";
 import * as autoban from "./commands/autoban";
 import * as ping from "./commands/ping";
+import * as admin from "./commands/admin";
 
 const commands = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin,
 ].map(c => c.data.toJSON());
 
 const token = process.env.DISCORD_TOKEN;
