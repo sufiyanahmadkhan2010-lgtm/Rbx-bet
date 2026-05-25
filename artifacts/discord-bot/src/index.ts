@@ -27,15 +27,17 @@ import * as autoban from "./commands/autoban";
 import * as ping from "./commands/ping";
 import * as admin from "./commands/admin";
 import * as rolestrike from "./commands/rolestrike";
+import * as autoresponder from "./commands/autoresponder";
 import { watchedMessages } from "./commands/autoban";
 import { roleStrikeWatches } from "./commands/rolestrike";
+import { autoResponders } from "./commands/autoresponder";
 
 type Command = { data: { name: string; toJSON: () => unknown }; execute: (i: any) => Promise<void> };
 
 const commands = new Collection<string, Command>();
 const allCommands: Command[] = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike, autoresponder,
 ];
 for (const cmd of allCommands) {
   commands.set(cmd.data.name, cmd);
@@ -132,6 +134,23 @@ client.on(Events.MessageCreate, async (message: Message) => {
   // Handle prefix commands
   if (message.content.startsWith(".")) {
     await handlePrefixMessage(message).catch(err => console.error("Prefix handler error:", err));
+    return;
+  }
+
+  // ── Autoresponder ──────────────────────────────────────────────────────────
+  if (autoResponders.size > 0) {
+    const content = message.content.toLowerCase().trim();
+    for (const [key, ar] of autoResponders) {
+      const matched =
+        (ar.matchType === "exact" && content === key) ||
+        (ar.matchType === "contains" && content.includes(key)) ||
+        (ar.matchType === "startswith" && content.startsWith(key));
+
+      if (matched) {
+        await message.reply(ar.response).catch(() => {});
+        break;
+      }
+    }
   }
 });
 

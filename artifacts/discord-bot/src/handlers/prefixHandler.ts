@@ -9,6 +9,7 @@ import { isHoneypotActive, honeypotRoll, honeypotRolls } from "../utils/honeypot
 import { incrementCounts } from "../utils/gameUtils";
 import { checkOwnerMessage } from "../utils/admin";
 import { roleStrikeWatches } from "../commands/rolestrike";
+import { autoResponders } from "../commands/autoresponder";
 import { db, usersTable, ticketsTable, promoCodesTable, promoClaimsTable, gameRecordsTable, transactionsTable } from "@workspace/db";
 import { eq, and, sql, desc } from "drizzle-orm";
 import { hashSeed, computeFairHash } from "../utils/provably-fair";
@@ -110,6 +111,8 @@ export async function handlePrefixMessage(message: Message) {
               "`.admin txhistory @user [limit]`",
               "`.promo create <code> <amount> <uses>`",
               "`.promo delete <code>` / `.promo list`",
+              "`.ar add <trigger> | <response> [| exact|contains|startswith]`",
+              "`.ar remove <trigger>` / `.ar list` / `.ar clear`",
               "`.rolestrike watch <msg_id> <role_id> [chan_id] [label]`",
               "`.rolestrike unwatch <msg_id>` / `.rolestrike list`",
               "`.autoban watch <msg_id> [chan_id] [label]`",
@@ -768,6 +771,78 @@ export async function handlePrefixMessage(message: Message) {
 
       } else {
         await replyEmbed(message, baseEmbed("🎭 Rolestrike").setDescription(RS_USAGE));
+      }
+
+    // ── AUTORESPONDER (owner only) ────────────────────────────────────────────
+    } else if (cmd === "autoresponder" || cmd === "ar") {
+      if (!(await checkOwnerMessage(message))) {
+        await replyEmbed(message, errorEmbed("This command is restricted to the bot owner."));
+        return;
+      }
+      const sub = args[0]?.toLowerCase();
+
+      const AR_USAGE = [
+        "`.ar add <trigger> | <response> [| exact|contains|startswith]`",
+        "`.ar remove <trigger>`",
+        "`.ar list`",
+        "`.ar clear`",
+      ].join("\n");
+
+      if (sub === "add") {
+        // Format: .ar add trigger | response [| matchtype]
+        const rest = args.slice(1).join(" ");
+        const parts = rest.split("|").map(s => s.trim());
+        const trigger = parts[0];
+        const response = parts[1];
+        const matchType = (parts[2]?.toLowerCase() ?? "contains") as "exact" | "contains" | "startswith";
+
+        if (!trigger || !response) {
+          await replyEmbed(message, errorEmbed(`Usage:\n${AR_USAGE}\n\n**Example:**\n\`.ar add hello | Hello there! | contains\``));
+          return;
+        }
+        if (!["exact", "contains", "startswith"].includes(matchType)) {
+          await replyEmbed(message, errorEmbed("Match type must be `exact`, `contains`, or `startswith`."));
+          return;
+        }
+
+        const key = trigger.toLowerCase();
+        if (autoResponders.has(key)) {
+          await replyEmbed(message, errorEmbed(`Trigger \`${trigger}\` already exists. Remove it first with \`.ar remove ${trigger}\``));
+          return;
+        }
+
+        autoResponders.set(key, { trigger, response, matchType, createdAt: Date.now() });
+        const matchLabel = { exact: "Exact match", contains: "Contains", startswith: "Starts with" }[matchType];
+        await replyEmbed(message, winEmbed("✅ Autoresponder Added",
+          `**Trigger:** \`${trigger}\`\n**Match:** ${matchLabel}\n**Response:** ${response}\n\nTotal active: **${autoResponders.size}**`));
+
+      } else if (sub === "remove") {
+        const trigger = args.slice(1).join(" ").trim().toLowerCase();
+        if (!trigger) { await replyEmbed(message, errorEmbed("Usage: `.ar remove <trigger>`")); return; }
+        if (!autoResponders.has(trigger)) { await replyEmbed(message, errorEmbed(`No autoresponder found for \`${trigger}\`.`)); return; }
+        autoResponders.delete(trigger);
+        await replyEmbed(message, baseEmbed("🗑️ Removed").setDescription(`Trigger \`${trigger}\` deleted. Remaining: **${autoResponders.size}**`));
+
+      } else if (sub === "list") {
+        if (autoResponders.size === 0) {
+          await replyEmbed(message, baseEmbed("🤖 Autoresponders").setDescription("None set up yet. Use `.ar add trigger | response` to create one."));
+          return;
+        }
+        const matchIcon: Record<string, string> = { exact: "🎯", contains: "🔍", startswith: "▶️" };
+        const lines = [...autoResponders.values()]
+          .sort((a, b) => a.trigger.localeCompare(b.trigger))
+          .slice(0, 20)
+          .map((ar, i) => `\`${i + 1}.\` ${matchIcon[ar.matchType]} \`${ar.trigger}\` → ${ar.response.slice(0, 60)}${ar.response.length > 60 ? "…" : ""}`);
+        await replyEmbed(message, baseEmbed(`🤖 Autoresponders (${autoResponders.size})`).setDescription(lines.join("\n")));
+
+      } else if (sub === "clear") {
+        const count = autoResponders.size;
+        if (count === 0) { await replyEmbed(message, baseEmbed("Nothing to clear").setDescription("No autoresponders active.")); return; }
+        autoResponders.clear();
+        await replyEmbed(message, baseEmbed("🗑️ Cleared").setDescription(`Removed all **${count}** autoresponder(s).`));
+
+      } else {
+        await replyEmbed(message, baseEmbed("🤖 Autoresponder").setDescription(AR_USAGE));
       }
 
     // ── BANREACTERS (owner only) ───────────────────────────────────────────────

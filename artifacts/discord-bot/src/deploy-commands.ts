@@ -24,10 +24,11 @@ import * as autoban from "./commands/autoban";
 import * as ping from "./commands/ping";
 import * as admin from "./commands/admin";
 import * as rolestrike from "./commands/rolestrike";
+import * as autoresponder from "./commands/autoresponder";
 
 const commands = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike, autoresponder,
 ].map(c => c.data.toJSON());
 
 const token = process.env.DISCORD_TOKEN;
