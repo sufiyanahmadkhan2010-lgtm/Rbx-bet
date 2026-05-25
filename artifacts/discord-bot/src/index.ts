@@ -1,9 +1,6 @@
 import { Client, GatewayIntentBits, Collection, Events, Interaction, Message } from "discord.js";
 import { handleTicketButton } from "./handlers/ticketHandler";
 import { handlePrefixMessage } from "./handlers/prefixHandler";
-import { db, usersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
-import { getOrCreateUser, updateBalance } from "./utils/db";
 
 import * as balance from "./commands/balance";
 import * as daily from "./commands/daily";
@@ -55,22 +52,8 @@ const client = new Client({
   ],
 });
 
-const MESSAGE_REWARD_AMOUNT = 5;
-const MESSAGE_REWARD_COOLDOWN_MS = 60 * 1000;
-const MESSAGE_REWARD_THRESHOLD = 5;
-const messageCounters = new Map<string, { count: number; lastReset: number }>();
-const inviteCache = new Map<string, number>();
-
-client.once(Events.ClientReady, async (c) => {
+client.once(Events.ClientReady, (c) => {
   console.log(`✅ Bot ready as ${c.user.tag}`);
-  for (const [, guild] of c.guilds.cache) {
-    try {
-      const invites = await guild.invites.fetch();
-      for (const [code, invite] of invites) {
-        inviteCache.set(code, invite.uses ?? 0);
-      }
-    } catch {}
-  }
 });
 
 client.on(Events.MessageReactionAdd, async (reaction, user) => {
@@ -142,61 +125,12 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
   }
 });
 
-client.on(Events.InviteCreate, (invite) => {
-  inviteCache.set(invite.code, invite.uses ?? 0);
-});
-
-client.on(Events.GuildMemberAdd, async (member) => {
-  try {
-    const invites = await member.guild.invites.fetch();
-    for (const [code, invite] of invites) {
-      const oldUses = inviteCache.get(code) ?? 0;
-      if ((invite.uses ?? 0) > oldUses && invite.inviter) {
-        inviteCache.set(code, invite.uses ?? 0);
-        const inviter = invite.inviter;
-        await getOrCreateUser(inviter.id, inviter.username);
-        await db.update(usersTable)
-          .set({ inviteCount: sql`${usersTable.inviteCount} + 1` })
-          .where(eq(usersTable.id, inviter.id));
-        await updateBalance(inviter.id, 200, "invite_reward", `Invited ${member.user.username}`);
-        try { await inviter.send(`🎉 You earned **200 Robux** for inviting **${member.user.username}**!`); } catch {}
-        break;
-      }
-    }
-  } catch {}
-});
-
 client.on(Events.MessageCreate, async (message: Message) => {
   if (message.author.bot || !message.guild) return;
 
   // Handle prefix commands
   if (message.content.startsWith(".")) {
     await handlePrefixMessage(message).catch(err => console.error("Prefix handler error:", err));
-    return;
-  }
-
-  const userId = message.author.id;
-  const now = Date.now();
-  let counter = messageCounters.get(userId);
-  if (!counter || now - counter.lastReset > MESSAGE_REWARD_COOLDOWN_MS) {
-    counter = { count: 0, lastReset: now };
-  }
-  counter.count++;
-  messageCounters.set(userId, counter);
-
-  await db.update(usersTable)
-    .set({ messageCount: sql`${usersTable.messageCount} + 1` })
-    .where(eq(usersTable.id, userId))
-    .catch(() => {});
-
-  if (counter.count >= MESSAGE_REWARD_THRESHOLD) {
-    counter.count = 0;
-    counter.lastReset = now;
-    messageCounters.set(userId, counter);
-    try {
-      await getOrCreateUser(userId, message.author.username);
-      await updateBalance(userId, MESSAGE_REWARD_AMOUNT, "message_reward", "Message activity reward");
-    } catch {}
   }
 });
 

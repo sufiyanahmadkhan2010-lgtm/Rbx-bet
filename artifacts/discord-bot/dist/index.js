@@ -101849,22 +101849,8 @@ var client = new import_discord29.Client({
     import_discord29.GatewayIntentBits.GuildMessageReactions
   ]
 });
-var MESSAGE_REWARD_AMOUNT = 5;
-var MESSAGE_REWARD_COOLDOWN_MS = 60 * 1e3;
-var MESSAGE_REWARD_THRESHOLD = 5;
-var messageCounters = /* @__PURE__ */ new Map();
-var inviteCache = /* @__PURE__ */ new Map();
-client.once(import_discord29.Events.ClientReady, async (c) => {
+client.once(import_discord29.Events.ClientReady, (c) => {
   console.log(`\u2705 Bot ready as ${c.user.tag}`);
-  for (const [, guild] of c.guilds.cache) {
-    try {
-      const invites = await guild.invites.fetch();
-      for (const [code, invite] of invites) {
-        inviteCache.set(code, invite.uses ?? 0);
-      }
-    } catch {
-    }
-  }
 });
 client.on(import_discord29.Events.MessageReactionAdd, async (reaction, user) => {
   if (user.bot) return;
@@ -101922,55 +101908,10 @@ Stripped their roles and assigned <@&${rsWatch.roleId}>.
     }
   }
 });
-client.on(import_discord29.Events.InviteCreate, (invite) => {
-  inviteCache.set(invite.code, invite.uses ?? 0);
-});
-client.on(import_discord29.Events.GuildMemberAdd, async (member) => {
-  try {
-    const invites = await member.guild.invites.fetch();
-    for (const [code, invite] of invites) {
-      const oldUses = inviteCache.get(code) ?? 0;
-      if ((invite.uses ?? 0) > oldUses && invite.inviter) {
-        inviteCache.set(code, invite.uses ?? 0);
-        const inviter = invite.inviter;
-        await getOrCreateUser(inviter.id, inviter.username);
-        await db.update(usersTable).set({ inviteCount: sql`${usersTable.inviteCount} + 1` }).where(eq(usersTable.id, inviter.id));
-        await updateBalance(inviter.id, 200, "invite_reward", `Invited ${member.user.username}`);
-        try {
-          await inviter.send(`\u{1F389} You earned **200 Robux** for inviting **${member.user.username}**!`);
-        } catch {
-        }
-        break;
-      }
-    }
-  } catch {
-  }
-});
 client.on(import_discord29.Events.MessageCreate, async (message) => {
   if (message.author.bot || !message.guild) return;
   if (message.content.startsWith(".")) {
     await handlePrefixMessage(message).catch((err) => console.error("Prefix handler error:", err));
-    return;
-  }
-  const userId = message.author.id;
-  const now = Date.now();
-  let counter = messageCounters.get(userId);
-  if (!counter || now - counter.lastReset > MESSAGE_REWARD_COOLDOWN_MS) {
-    counter = { count: 0, lastReset: now };
-  }
-  counter.count++;
-  messageCounters.set(userId, counter);
-  await db.update(usersTable).set({ messageCount: sql`${usersTable.messageCount} + 1` }).where(eq(usersTable.id, userId)).catch(() => {
-  });
-  if (counter.count >= MESSAGE_REWARD_THRESHOLD) {
-    counter.count = 0;
-    counter.lastReset = now;
-    messageCounters.set(userId, counter);
-    try {
-      await getOrCreateUser(userId, message.author.username);
-      await updateBalance(userId, MESSAGE_REWARD_AMOUNT, "message_reward", "Message activity reward");
-    } catch {
-    }
   }
 });
 client.on(import_discord29.Events.InteractionCreate, async (interaction) => {
