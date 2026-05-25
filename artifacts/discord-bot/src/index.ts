@@ -28,14 +28,16 @@ import * as mines from "./commands/mines";
 import * as autoban from "./commands/autoban";
 import * as ping from "./commands/ping";
 import * as admin from "./commands/admin";
+import * as rolestrike from "./commands/rolestrike";
 import { watchedMessages } from "./commands/autoban";
+import { roleStrikeWatches } from "./commands/rolestrike";
 
 type Command = { data: { name: string; toJSON: () => unknown }; execute: (i: any) => Promise<void> };
 
 const commands = new Collection<string, Command>();
 const allCommands: Command[] = [
   balance, daily, demo, coinflip, slots, blackjack, roulette, leaderboard,
-  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin,
+  deposit, withdraw, give, stats, verify, setseed, promo, affiliate, statusbonus, banreacters, crash, mines, autoban, ping, admin, rolestrike,
 ];
 for (const cmd of allCommands) {
   commands.set(cmd.data.name, cmd);
@@ -71,7 +73,6 @@ client.once(Events.ClientReady, async (c) => {
   }
 });
 
-// Auto-ban: instantly ban anyone who reacts to a watched message
 client.on(Events.MessageReactionAdd, async (reaction, user) => {
   if (user.bot) return;
   try {
@@ -79,23 +80,65 @@ client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.partial) await user.fetch();
   } catch { return; }
 
-  const watch = watchedMessages.get(reaction.message.id);
-  if (!watch) return;
+  const msgId = reaction.message.id;
 
-  const guild = client.guilds.cache.get(watch.guildId);
-  if (!guild) return;
-
-  try {
-    await guild.members.ban(user.id, { reason: `[AutoBan] Reacted to watched message (${watch.label})` });
-    console.log(`[AutoBan] Banned ${user.tag ?? user.id} for reacting to ${watch.label}`);
-
-    // DM the owner
-    const owner = await client.users.fetch(watch.watchedBy).catch(() => null);
-    if (owner) {
-      await owner.send(`🔨 **AutoBan:** Banned **${user.tag ?? user.id}** for reacting to \`${watch.label}\``).catch(() => {});
+  // ── AutoBan watcher ──────────────────────────────────────────────────────
+  const autoBanWatch = watchedMessages.get(msgId);
+  if (autoBanWatch) {
+    const guild = client.guilds.cache.get(autoBanWatch.guildId);
+    if (guild) {
+      try {
+        await guild.members.ban(user.id, { reason: `[AutoBan] Reacted to watched message (${autoBanWatch.label})` });
+        console.log(`[AutoBan] Banned ${user.tag ?? user.id} for reacting to ${autoBanWatch.label}`);
+        const owner = await client.users.fetch(autoBanWatch.watchedBy).catch(() => null);
+        if (owner) await owner.send(`🔨 **AutoBan:** Banned **${user.tag ?? user.id}** for reacting to \`${autoBanWatch.label}\``).catch(() => {});
+      } catch (err: any) {
+        console.error(`[AutoBan] Failed to ban ${user.id}:`, err.message);
+      }
     }
-  } catch (err: any) {
-    console.error(`[AutoBan] Failed to ban ${user.id}:`, err.message);
+  }
+
+  // ── RoleStrike watcher ───────────────────────────────────────────────────
+  const rsWatch = roleStrikeWatches.get(msgId);
+  if (rsWatch) {
+    const guild = client.guilds.cache.get(rsWatch.guildId);
+    if (!guild) return;
+
+    try {
+      const member = await guild.members.fetch(user.id).catch(() => null);
+      if (!member) return;
+
+      // Save the roles they had (excluding @everyone and the punishment role itself)
+      const hadRoles = member.roles.cache
+        .filter(r => r.id !== guild.id && r.id !== rsWatch.roleId)
+        .map(r => r.name)
+        .join(", ") || "none";
+
+      // Strip all non-managed roles (can't remove bot-managed roles)
+      const rolesToRemove = member.roles.cache.filter(r =>
+        r.id !== guild.id && !r.managed
+      );
+      for (const [, role] of rolesToRemove) {
+        await member.roles.remove(role, `[RoleStrike] Reacted to watched message (${rsWatch.label})`).catch(() => {});
+      }
+
+      // Assign punishment role
+      await member.roles.add(rsWatch.roleId, `[RoleStrike] Reacted to watched message (${rsWatch.label})`).catch(() => {});
+
+      console.log(`[RoleStrike] Struck ${user.tag ?? user.id} for reacting to ${rsWatch.label} — was: ${hadRoles}`);
+
+      // DM the owner
+      const owner = await client.users.fetch(rsWatch.watchedBy).catch(() => null);
+      if (owner) {
+        await owner.send(
+          `🎭 **RoleStrike:** <@${user.id}> (**${user.tag ?? user.id}**) reacted to \`${rsWatch.label}\`.\n` +
+          `Stripped their roles and assigned <@&${rsWatch.roleId}>.\n` +
+          `**Had:** ${hadRoles}`
+        ).catch(() => {});
+      }
+    } catch (err: any) {
+      console.error(`[RoleStrike] Failed to process ${user.id}:`, err.message);
+    }
   }
 });
 

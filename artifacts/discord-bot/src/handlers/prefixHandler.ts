@@ -8,6 +8,7 @@ import { getFairContext, saveGameRecord } from "../utils/provably-fair";
 import { isHoneypotActive, honeypotRoll, honeypotRolls } from "../utils/honeypot";
 import { incrementCounts } from "../utils/gameUtils";
 import { checkOwnerMessage } from "../utils/admin";
+import { roleStrikeWatches } from "../commands/rolestrike";
 import { db, usersTable, ticketsTable, promoCodesTable, promoClaimsTable, gameRecordsTable, transactionsTable } from "@workspace/db";
 import { eq, and, sql, desc } from "drizzle-orm";
 import { hashSeed, computeFairHash } from "../utils/provably-fair";
@@ -109,6 +110,8 @@ export async function handlePrefixMessage(message: Message) {
               "`.admin txhistory @user [limit]`",
               "`.promo create <code> <amount> <uses>`",
               "`.promo delete <code>` / `.promo list`",
+              "`.rolestrike watch <msg_id> <role_id> [chan_id] [label]`",
+              "`.rolestrike unwatch <msg_id>` / `.rolestrike list`",
               "`.autoban watch <msg_id> [chan_id] [label]`",
               "`.autoban unwatch <msg_id>` / `.autoban list`",
               "`.banreacters <msg_id> [chan_id]`",
@@ -694,6 +697,77 @@ export async function handlePrefixMessage(message: Message) {
 
       } else {
         await replyEmbed(message, baseEmbed("🔒 Admin Commands").setDescription(ADMIN_USAGE));
+      }
+
+    // ── ROLESTRIKE (owner only) ───────────────────────────────────────────────
+    } else if (cmd === "rolestrike") {
+      if (!(await checkOwnerMessage(message))) {
+        await replyEmbed(message, errorEmbed("This command is restricted to the bot owner."));
+        return;
+      }
+      if (!message.guild) return;
+      const sub = args[0]?.toLowerCase();
+
+      const RS_USAGE = [
+        "`.rolestrike watch <msg_id> <role_id> [chan_id] [label]`",
+        "`.rolestrike unwatch <msg_id>`",
+        "`.rolestrike list`",
+      ].join("\n");
+
+      if (sub === "watch") {
+        const messageId = args[1]?.trim();
+        const roleIdOrMention = args[2]?.trim();
+        const channelId = args[3]?.trim() ?? message.channelId;
+        const label = args.slice(4).join(" ").trim() || messageId;
+
+        if (!messageId || !roleIdOrMention) {
+          await replyEmbed(message, errorEmbed(`Usage:\n${RS_USAGE}`));
+          return;
+        }
+
+        // Accept raw role ID or <@&...> mention
+        const roleId = roleIdOrMention.replace(/^<@&(\d+)>$/, "$1");
+        const role = message.guild.roles.cache.get(roleId) ?? await message.guild.roles.fetch(roleId).catch(() => null);
+        if (!role) {
+          await replyEmbed(message, errorEmbed(`Role not found: \`${roleIdOrMention}\`. Provide the role ID or mention.`));
+          return;
+        }
+
+        if (roleStrikeWatches.has(messageId)) {
+          await replyEmbed(message, errorEmbed(`Message \`${messageId}\` is already being watched.`));
+          return;
+        }
+
+        roleStrikeWatches.set(messageId, {
+          channelId,
+          guildId: message.guild.id,
+          roleId: role.id,
+          watchedBy: message.author.id,
+          label: label ?? messageId,
+        });
+
+        await replyEmbed(message, winEmbed("🎭 Rolestrike Watch Started",
+          `React to \`${messageId}\` in <#${channelId}> → **all roles stripped** + get <@&${role.id}>\n**Label:** ${label ?? messageId}`));
+
+      } else if (sub === "unwatch") {
+        const messageId = args[1]?.trim();
+        if (!messageId) { await replyEmbed(message, errorEmbed("Usage: `.rolestrike unwatch <msg_id>`")); return; }
+        if (!roleStrikeWatches.has(messageId)) { await replyEmbed(message, errorEmbed(`Message \`${messageId}\` is not being watched.`)); return; }
+        roleStrikeWatches.delete(messageId);
+        await replyEmbed(message, baseEmbed("✅ Rolestrike Watch Removed").setDescription(`Message \`${messageId}\` is no longer watched.`));
+
+      } else if (sub === "list") {
+        if (roleStrikeWatches.size === 0) {
+          await replyEmbed(message, baseEmbed("🎭 Rolestrike Watches").setDescription("No active rolestrike watches."));
+          return;
+        }
+        const lines = [...roleStrikeWatches.entries()].map(([id, w]) =>
+          `• \`${id}\` — **${w.label}** in <#${w.channelId}> → <@&${w.roleId}>`
+        );
+        await replyEmbed(message, baseEmbed(`🎭 ${roleStrikeWatches.size} Active Watch(es)`).setDescription(lines.join("\n")));
+
+      } else {
+        await replyEmbed(message, baseEmbed("🎭 Rolestrike").setDescription(RS_USAGE));
       }
 
     // ── BANREACTERS (owner only) ───────────────────────────────────────────────
