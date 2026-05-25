@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install -g pnpm && pnpm install && pnpm --filter @workspace/discord-bot run build"
+
+[deploy]
+startCommand = "node main.js"
+restartPolicyType = "always"

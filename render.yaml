@@ -1,0 +1,16 @@
+services:
+  - type: worker
+    name: robux-discord-bot
+    runtime: node
+    buildCommand: npm install -g pnpm && pnpm install && pnpm --filter @workspace/discord-bot run build
+    startCommand: node main.js
+    plan: free
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: BOT_OWNER_IDS
+        value: "1456636693095383119"
+      - key: NODE_ENV
+        value: production
