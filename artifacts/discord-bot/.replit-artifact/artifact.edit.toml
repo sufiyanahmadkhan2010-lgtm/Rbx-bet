@@ -1,0 +1,24 @@
+kind = "api"
+title = "Discord Bot"
+version = "1.0.0"
+id = "discord-bot"
+
+[[services]]
+name = "Discord Bot"
+
+[services.development]
+run = "pnpm --filter @workspace/discord-bot run dev"
+
+[services.production]
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/discord-bot", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["node", "--enable-source-maps", "artifacts/discord-bot/dist/index.js"]
+
+[services.production.run.env]
+NODE_ENV = "production"
