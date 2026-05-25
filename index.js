@@ -1,6 +1,6 @@
 /**
- * Startup file for Render/Railway hosting.
- * Runs the pre-built Discord bot from artifacts/discord-bot/dist/index.js
+ * Alternative startup file — same as main.js.
+ * Render can start the bot with either `node index.js` or `node main.js`.
  */
 
 // Validate required environment variables before booting
